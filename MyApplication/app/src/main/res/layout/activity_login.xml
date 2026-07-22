@@ -16,36 +16,44 @@
         <!-- Logo App -->
         <ImageView
             android:id="@+id/imgLogo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="24dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="32dp"
             android:src="@drawable/ic_emerald_logo"
             android:contentDescription="Emerald Finance Logo" />
 
-        <!-- Tiêu đề -->
+        <!-- Tên App & Lời chào -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Tạo tài khoản mới"
+            android:text="Emerald Finance"
+            android:textColor="#059669"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Chào mừng trở lại!"
             android:textColor="#1F2937"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Bắt đầu hành trình quản lý tài chính thông minh ngay hôm nay"
+            android:text="Quản lý tài chính cá nhân một cách thông minh"
             android:textColor="#6B7280"
-            android:gravity="center"
             android:textSize="14sp" />
 
-        <!-- Form Đăng ký -->
+        <!-- Form nhập thông tin -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:orientation="vertical">
 
             <!-- Tên đăng nhập -->
@@ -59,7 +67,7 @@
                 app:startIconDrawable="@drawable/ic_person">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRegisterUsername"
+                    android:id="@+id/etUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
@@ -70,7 +78,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:hint="Mật khẩu"
                 app:boxStrokeColor="#059669"
                 app:hintTextColor="#059669"
@@ -78,62 +86,44 @@
                 app:startIconDrawable="@drawable/ic_lock">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRegisterPassword"
+                    android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Nhập lại mật khẩu -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Nhập lại mật khẩu"
-                app:boxStrokeColor="#059669"
-                app:hintTextColor="#059669"
-                app:passwordToggleEnabled="true"
-                app:startIconDrawable="@drawable/ic_lock">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etConfirmPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Nút Đăng ký -->
+            <!-- Nút Đăng nhập -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRegister"
+                android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
-                android:text="Đăng ký"
+                android:text="Đăng nhập"
                 android:textSize="16sp"
                 app:backgroundTint="#059669"
                 app:cornerRadius="12dp" />
 
         </LinearLayout>
 
-        <!-- Chuyển về Đăng nhập -->
+        <!-- Chuyển sang Đăng ký -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đã có tài khoản? "
+                android:text="Chưa có tài khoản? "
                 android:textColor="#6B7280" />
 
             <TextView
-                android:id="@+id/tvLogin"
+                android:id="@+id/tvRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đăng nhập"
+                android:text="Đăng ký ngay"
                 android:textColor="#059669"
                 android:textStyle="bold" />
         </LinearLayout>
