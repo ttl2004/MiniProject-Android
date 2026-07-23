@@ -7,11 +7,19 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.myapplication.data.dao.UserDAO;
+import com.example.myapplication.data.entity.Budget;
+import com.example.myapplication.data.entity.Category;
+import com.example.myapplication.data.entity.Transaction;
 import com.example.myapplication.data.entity.User;
 
 @Database(
-        entities = {User.class},
-        version = 1
+        entities = {
+                User.class,
+                Category.class,
+                Budget.class,
+                Transaction.class
+        },
+        version = 2
 )
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "expense_manager.db";
@@ -27,7 +35,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             DATABASE_NAME
-                    ).allowMainThreadQueries().build();
+                    ).allowMainThreadQueries().fallbackToDestructiveMigration().build();
                 }
             }
         }

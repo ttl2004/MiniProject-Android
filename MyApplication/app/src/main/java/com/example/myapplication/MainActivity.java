@@ -9,32 +9,28 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.Manager.UserManager;
-import com.example.myapplication.data.AppDatabase;
+import com.example.myapplication.activity.home.HomeActivity;
+import com.example.myapplication.activity.register.RegisterActivity;
 import com.example.myapplication.data.entity.User;
-import com.example.myapplication.data.repository.UserRepository;
+import com.example.myapplication.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText userName;
-    private EditText password;
-    private Button login;
-    private Button register;
+    private ActivityMainBinding activityMainBinding;
     private UserManager userManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        init();
+
+        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(activityMainBinding.getRoot());
 
         userManager = new UserManager(this);
 
-        register.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, RegisterActivity.class);
@@ -44,24 +40,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        login.setOnClickListener(v -> login());
-    }
-
-    private void init() {
-        userName = findViewById(R.id.editTextTextMultiLine_Main_UserName);
-        password = findViewById(R.id.editTextNumberPassword_Main);
-        login = findViewById(R.id.button_Main_Login);
-        register = findViewById(R.id.button_Main_Register);
+        activityMainBinding.btnLogin.setOnClickListener(v -> login());
     }
 
     private void login() {
-        String Username = userName.getText().toString().trim();
-        String Password = password.getText().toString().trim();
+        String Username = activityMainBinding.etUsername.getText().toString().trim();
+        String Password = activityMainBinding.etPassword.getText().toString().trim();
 
         User res = userManager.login(Username, Password);
 
         if (res != null) {
             Toast.makeText(this, "Dang nhap thanh cong!", Toast.LENGTH_LONG).show();
+
+            Intent i = new Intent(MainActivity.this, HomeActivity.class);
+            i.putExtra("EXTRA_USER", res);
+            startActivity(i);
         }
         else {
             Toast.makeText(this, "Dang nhap that bai!!!!!!!", Toast.LENGTH_LONG).show();
