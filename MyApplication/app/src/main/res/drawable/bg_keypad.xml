@@ -1,0 +1,25 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Khi bấm -->
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#E2F3EA"/>
+            <stroke
+                android:width="1dp"
+                android:color="@color/greenApp"/>
+            <corners android:radius="14dp"/>
+        </shape>
+    </item>
+
+    <!-- Bình thường -->
+    <item>
+        <shape>
+            <solid android:color="@android:color/white"/>
+            <stroke
+                android:width="1dp"
+                android:color="#E2E2E2"/>
+            <corners android:radius="14dp"/>
+        </shape>
+    </item>
+
+</selector>

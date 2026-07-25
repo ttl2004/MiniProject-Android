@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
@@ -78,6 +79,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
             notifyItemChanged(oldPosition);
             notifyItemChanged(selectedPosition);
+        }
+    }
+
+    public void selectCategoryById(int categoryId) {
+        if (categoryList == null) return;
+
+        for (int i = 0; i < categoryList.size(); i++) {
+            if (categoryList.get(i).getId() == categoryId) {
+                int old = selectedPosition;
+                selectedPosition = i;
+                notifyItemChanged(old);
+                notifyItemChanged(selectedPosition);
+                return;
+            }
         }
     }
 
@@ -150,7 +165,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.itemView.setOnClickListener(v -> {
 
             if (selectable) {
-                setSelectedPosition(holder.getAdapterPosition());
+
+                int old = selectedPosition;
+                selectedPosition = holder.getAdapterPosition();
+
+                notifyItemChanged(old);
+                notifyItemChanged(selectedPosition);
             }
 
             if (listener != null) {
