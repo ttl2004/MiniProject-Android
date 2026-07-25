@@ -20,6 +20,10 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\ic_logout.xml"
     },
     {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_bg_month_chip.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\bg_month_chip.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_launcher_background.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\ic_launcher_background.xml"
     },
@@ -36,8 +40,8 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\ic_category.xml"
     },
     {
-        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_bg_category_selected.xml.flat",
-        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\bg_category_selected.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_item_transaction_detail.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_transaction_detail.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_activity_account.xml.flat",
@@ -46,6 +50,10 @@
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\mipmap-xxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_item_transaction_group.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_transaction_group.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
@@ -58,6 +66,10 @@
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_fragment_home.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_item_month_chip.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_month_chip.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_launcher_foreground.xml.flat",
@@ -82,6 +94,10 @@
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_category_eat.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\ic_category_eat.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_chevron_right.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\ic_chevron_right.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\mipmap-xhdpi_ic_launcher.webp.flat",
@@ -132,6 +148,10 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\bg_toggle_active.xml"
     },
     {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\color_selector_month_chip_text.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\color\\selector_month_chip_text.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_bg_toggle_expense.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\bg_toggle_expense.xml"
     },
@@ -146,6 +166,10 @@
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_activity_add_transaction.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_add_transaction.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_chevron_left.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\ic_chevron_left.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_category_edu.xml.flat",
@@ -218,6 +242,10 @@
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\color_bottom_nav_color.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\color\\bottom_nav_color.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/layout_item_transaction_detail.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/layout/item_transaction_detail.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_fragment_analysis.xml.flat",

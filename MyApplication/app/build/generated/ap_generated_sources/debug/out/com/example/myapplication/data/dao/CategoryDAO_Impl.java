@@ -149,6 +149,77 @@ public final class CategoryDAO_Impl implements CategoryDAO {
     });
   }
 
+  @Override
+  public Category getCategoryById(final long categoryId) {
+    final String _sql = "SELECT * FROM categories WHERE id = ? LIMIT 1";
+    return DBUtil.performBlocking(__db, true, false, (_connection) -> {
+      final SQLiteStatement _stmt = _connection.prepare(_sql);
+      try {
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, categoryId);
+        final int _columnIndexOfId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "id");
+        final int _columnIndexOfUserId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "userId");
+        final int _columnIndexOfName = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "name");
+        final int _columnIndexOfIcon = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "icon");
+        final int _columnIndexOfColor = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "color");
+        final int _columnIndexOfSystem = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "system");
+        final int _columnIndexOfCreatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "createdAt");
+        final int _columnIndexOfUpdatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "updatedAt");
+        final Category _result;
+        if (_stmt.step()) {
+          _result = new Category();
+          final int _tmpId;
+          _tmpId = (int) (_stmt.getLong(_columnIndexOfId));
+          _result.setId(_tmpId);
+          final Integer _tmpUserId;
+          if (_stmt.isNull(_columnIndexOfUserId)) {
+            _tmpUserId = null;
+          } else {
+            _tmpUserId = (int) (_stmt.getLong(_columnIndexOfUserId));
+          }
+          _result.setUserId(_tmpUserId);
+          final String _tmpName;
+          if (_stmt.isNull(_columnIndexOfName)) {
+            _tmpName = null;
+          } else {
+            _tmpName = _stmt.getText(_columnIndexOfName);
+          }
+          _result.setName(_tmpName);
+          final String _tmpIcon;
+          if (_stmt.isNull(_columnIndexOfIcon)) {
+            _tmpIcon = null;
+          } else {
+            _tmpIcon = _stmt.getText(_columnIndexOfIcon);
+          }
+          _result.setIcon(_tmpIcon);
+          final String _tmpColor;
+          if (_stmt.isNull(_columnIndexOfColor)) {
+            _tmpColor = null;
+          } else {
+            _tmpColor = _stmt.getText(_columnIndexOfColor);
+          }
+          _result.setColor(_tmpColor);
+          final boolean _tmpSystem;
+          final int _tmp;
+          _tmp = (int) (_stmt.getLong(_columnIndexOfSystem));
+          _tmpSystem = _tmp != 0;
+          _result.setSystem(_tmpSystem);
+          final long _tmpCreatedAt;
+          _tmpCreatedAt = _stmt.getLong(_columnIndexOfCreatedAt);
+          _result.setCreatedAt(_tmpCreatedAt);
+          final long _tmpUpdatedAt;
+          _tmpUpdatedAt = _stmt.getLong(_columnIndexOfUpdatedAt);
+          _result.setUpdatedAt(_tmpUpdatedAt);
+        } else {
+          _result = null;
+        }
+        return _result;
+      } finally {
+        _stmt.close();
+      }
+    });
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

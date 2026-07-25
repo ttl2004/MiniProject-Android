@@ -19,4 +19,7 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM categories")
     LiveData<List<Category>> getALL();
+
+    @Query("SELECT * FROM categories WHERE id = :categoryId LIMIT 1")
+    Category getCategoryById(long categoryId);
 }
