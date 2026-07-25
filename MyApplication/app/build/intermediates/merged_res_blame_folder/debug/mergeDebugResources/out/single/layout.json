@@ -1,0 +1,54 @@
+[
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_home.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_category.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_category.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_register.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_register.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_budget.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_budget.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_category_horizontal.xml",
+        "source": "com.example.myapplication.app-main-39:/layout/item_category_horizontal.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_transaction.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_transaction.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_account.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_account.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_category_horizontal.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_category_horizontal.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_analysis.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_analysis.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_home.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_add_transaction.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_add_transaction.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_category.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_category.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_main.xml"
+    }
+]

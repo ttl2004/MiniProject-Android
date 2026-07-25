@@ -22,8 +22,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.register.RegisterActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.home.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.account.AccountActivity"
+            android:exported="false" />
+        <activity android:name=".activity.addtransaction.AddTransactionActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

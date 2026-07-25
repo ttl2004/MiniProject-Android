@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navTransaction"
+        android:icon="@drawable/ic_transaction"
+        android:title="Transaction"/>
+    <item
+        android:id="@+id/navBudget"
+        android:icon="@drawable/ic_budget"
+        android:title="Budgets"/>
+    <item
+        android:id="@+id/navHome"
+        android:icon="@drawable/ic_home"
+        android:title="Home"/>
+    <item
+        android:id="@+id/navAnalysis"
+        android:icon="@drawable/ic_analysis"
+        android:title="Analysis"/>
+    <item
+        android:id="@+id/navCategory"
+        android:icon="@drawable/ic_category"
+        android:title="Categories"/>
+</menu>
