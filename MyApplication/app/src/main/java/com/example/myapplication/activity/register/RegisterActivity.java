@@ -2,15 +2,12 @@ package com.example.myapplication.activity.register;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.Manager.UserManager;
-import com.example.myapplication.R;
+import com.example.myapplication.manager.UserManager;
 import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityRegisterBinding;
 

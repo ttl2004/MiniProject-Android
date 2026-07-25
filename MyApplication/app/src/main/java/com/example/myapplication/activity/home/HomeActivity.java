@@ -10,8 +10,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.account.AccountActivity;
+import com.example.myapplication.activity.addtransaction.AddTransactionActivity;
 import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityHomeBinding;
 import com.example.myapplication.ui.analysis.AnalysisFragment;
@@ -29,14 +31,11 @@ public class HomeActivity extends AppCompatActivity {
         activityHomeBinding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(activityHomeBinding.getRoot());
 
-        // Find the BottomNavigationView from the layout
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setSelectedItemId(R.id.navHome);
-        // Set the default fragment that should be shown when the app starts
         setCurrentFragment(new HomeFragment());
 
-        // Set a listener to handle item selection on the bottom navigation bar
         bottomNavigationView.setOnItemSelectedListener(menuItem -> {
             int id = menuItem.getItemId();
 
@@ -45,7 +44,6 @@ public class HomeActivity extends AppCompatActivity {
             else if (id == R.id.navBudget) setCurrentFragment(new BudgetFragment());
             else if (id == R.id.navCategory) setCurrentFragment(new CategoryFragment());
             else setCurrentFragment(new TransactionFragment());
-            // Return true to indicate that we handled the item click
             return true;
         });
 
@@ -59,6 +57,15 @@ public class HomeActivity extends AppCompatActivity {
 
         User user = (User) getIntent().getSerializableExtra("EXTRA_USER");
         activityHomeBinding.tvUsername.setText(user.getFullName());
+
+        activityHomeBinding.fabAddTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomeActivity.this, AddTransactionActivity.class);
+                i.putExtra("EXTRA_USER", user);
+                startActivity(i);
+            }
+        });
     }
 
     // This function replaces the current fragment with the one passed as a parameter

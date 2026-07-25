@@ -1,0 +1,3 @@
+- [x] Update `CategoryAdapter.java` to handle hex colors and resource identifiers safely.
+- [x] Update `DatabaseSeeder.java` to use correct icon resource names.
+- [x] Verify the fixes by building the project.

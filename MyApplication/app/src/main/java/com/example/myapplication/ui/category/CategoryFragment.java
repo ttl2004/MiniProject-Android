@@ -3,12 +3,17 @@ package com.example.myapplication.ui.category;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myapplication.R;
+import com.example.myapplication.adapter.CategoryAdapter;
+import com.example.myapplication.databinding.FragmentCategoryBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +21,9 @@ import com.example.myapplication.R;
  * create an instance of this fragment.
  */
 public class CategoryFragment extends Fragment {
+    private FragmentCategoryBinding fragmentCategoryBinding;
+    private CategoryViewModel categoryViewModel;
+    private CategoryAdapter categoryAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,16 +37,6 @@ public class CategoryFragment extends Fragment {
     public CategoryFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CategoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CategoryFragment newInstance(String param1, String param2) {
         CategoryFragment fragment = new CategoryFragment();
         Bundle args = new Bundle();
@@ -60,7 +58,28 @@ public class CategoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        fragmentCategoryBinding = FragmentCategoryBinding.inflate(inflater, container, false);
+        // RecycleView
+        fragmentCategoryBinding.rvCategories.setLayoutManager(new GridLayoutManager(requireContext(), 4));
+
+
+        //ViewModel
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
+        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
+            categoryAdapter = new CategoryAdapter(categories);
+            fragmentCategoryBinding.rvCategories.setAdapter(categoryAdapter);
+        });
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_category, container, false);
+        return fragmentCategoryBinding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fragmentCategoryBinding = null;
     }
 }

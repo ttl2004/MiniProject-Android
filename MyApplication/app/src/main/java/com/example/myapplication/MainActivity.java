@@ -3,14 +3,12 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.Manager.UserManager;
+import com.example.myapplication.manager.UserManager;
 import com.example.myapplication.activity.home.HomeActivity;
 import com.example.myapplication.activity.register.RegisterActivity;
 import com.example.myapplication.data.entity.User;

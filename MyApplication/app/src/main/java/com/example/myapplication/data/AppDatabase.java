@@ -6,6 +6,9 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.myapplication.data.dao.BudgetDAO;
+import com.example.myapplication.data.dao.CategoryDAO;
+import com.example.myapplication.data.dao.TransactionDAO;
 import com.example.myapplication.data.dao.UserDAO;
 import com.example.myapplication.data.entity.Budget;
 import com.example.myapplication.data.entity.Category;
@@ -23,8 +26,12 @@ import com.example.myapplication.data.entity.User;
 )
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "expense_manager.db";
-    public abstract UserDAO userDAO();
 
+    // DAO
+    public abstract UserDAO userDAO();
+    public abstract CategoryDAO categoryDAO();
+    public abstract BudgetDAO budgetDAO();
+    public abstract TransactionDAO transactionDAO();
     private static volatile AppDatabase instanse;
 
     public static AppDatabase getInstance(Context context) {
@@ -35,7 +42,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             DATABASE_NAME
-                    ).allowMainThreadQueries().fallbackToDestructiveMigration().build();
+                    ).allowMainThreadQueries().addCallback(new DatabaseCallBack(context)).fallbackToDestructiveMigration().build();
                 }
             }
         }

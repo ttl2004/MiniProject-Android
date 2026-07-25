@@ -16,6 +16,8 @@ public class Category implements Serializable {
     private Integer userId;
 
     private String name;
+    private String icon;
+    private String color;
 
     private boolean system;
 
@@ -27,20 +29,25 @@ public class Category implements Serializable {
     }
 
     @Ignore
-    public Category(String name) {
+    public Category(String name, String icon, String color) {
         this.userId = null;
         this.name = name;
         this.system = true;
+        this.icon = icon;
+        this.color = color;
         long now = System.currentTimeMillis();
         this.createdAt = now;
         this.updatedAt = now;
     }
 
     @Ignore
-    public Category(int userId, String name, boolean system) {
+    public Category(int userId, String name, boolean system, String icon, String color) {
         this.userId = userId;
         this.name = name;
         this.system = system;
+
+        this.icon = icon;
+        this.color = color;
 
         long now = System.currentTimeMillis();
         this.createdAt = now;
@@ -93,5 +100,21 @@ public class Category implements Serializable {
 
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
