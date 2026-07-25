@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="12dp">
+
+    <!-- Header Ngày & Tổng tiền ngày -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_group_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textColor="#757575"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="Hôm nay, 24 Tháng 5" />
+
+        <TextView
+            android:id="@+id/tv_group_total_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textColor="#1B5E20"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="-450.000đ" />
+    </RelativeLayout>
+
+    <!-- Card trắng bo góc chứa danh sách các giao dịch con -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#EAEAEA"
+        app:strokeWidth="1dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_sub_transactions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="4dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_transaction_detail" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

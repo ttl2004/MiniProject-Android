@@ -23,72 +23,72 @@
 15-->[androidx.core:core:1.13.0] C:\Users\Administrator\.gradle\caches\9.5.0\transforms\f8f93324f9acd5f64434aa60bd3dd786\transformed\core-1.13.0\AndroidManifest.xml:26:22-94
 16
 17    <application
-17-->E:\MyApplication\app\src\main\AndroidManifest.xml:5:5-36:19
+17-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:5:5-36:19
 18        android:allowBackup="true"
-18-->E:\MyApplication\app\src\main\AndroidManifest.xml:6:9-35
+18-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:6:9-35
 19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 19-->[androidx.core:core:1.13.0] C:\Users\Administrator\.gradle\caches\9.5.0\transforms\f8f93324f9acd5f64434aa60bd3dd786\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
 20        android:dataExtractionRules="@xml/data_extraction_rules"
-20-->E:\MyApplication\app\src\main\AndroidManifest.xml:7:9-65
+20-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:7:9-65
 21        android:debuggable="true"
 22        android:extractNativeLibs="false"
 22-->INJECTED
 23        android:fullBackupContent="@xml/backup_rules"
-23-->E:\MyApplication\app\src\main\AndroidManifest.xml:8:9-54
+23-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:8:9-54
 24        android:icon="@mipmap/ic_launcher"
-24-->E:\MyApplication\app\src\main\AndroidManifest.xml:9:9-43
+24-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:9:9-43
 25        android:label="@string/app_name"
-25-->E:\MyApplication\app\src\main\AndroidManifest.xml:10:9-41
+25-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:10:9-41
 26        android:roundIcon="@mipmap/ic_launcher_round"
-26-->E:\MyApplication\app\src\main\AndroidManifest.xml:11:9-54
+26-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:11:9-54
 27        android:supportsRtl="true"
-27-->E:\MyApplication\app\src\main\AndroidManifest.xml:12:9-35
+27-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:12:9-35
 28        android:testOnly="true"
 29        android:theme="@style/Theme.MyApplication" >
-29-->E:\MyApplication\app\src\main\AndroidManifest.xml:13:9-51
+29-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:13:9-51
 30        <activity
-30-->E:\MyApplication\app\src\main\AndroidManifest.xml:14:9-23:20
+30-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:14:9-23:20
 31            android:name="com.example.myapplication.MainActivity"
-31-->E:\MyApplication\app\src\main\AndroidManifest.xml:15:13-41
+31-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:15:13-41
 32            android:exported="true"
-32-->E:\MyApplication\app\src\main\AndroidManifest.xml:16:13-36
+32-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:16:13-36
 33            android:windowSoftInputMode="adjustResize" >
-33-->E:\MyApplication\app\src\main\AndroidManifest.xml:17:13-55
+33-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:17:13-55
 34            <intent-filter>
-34-->E:\MyApplication\app\src\main\AndroidManifest.xml:18:13-22:29
+34-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:18:13-22:29
 35                <action android:name="android.intent.action.MAIN" />
-35-->E:\MyApplication\app\src\main\AndroidManifest.xml:19:17-69
-35-->E:\MyApplication\app\src\main\AndroidManifest.xml:19:25-66
+35-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:19:17-69
+35-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:19:25-66
 36
 37                <category android:name="android.intent.category.LAUNCHER" />
-37-->E:\MyApplication\app\src\main\AndroidManifest.xml:21:17-77
-37-->E:\MyApplication\app\src\main\AndroidManifest.xml:21:27-74
+37-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:21:17-77
+37-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:21:27-74
 38            </intent-filter>
 39        </activity>
 40        <activity
-40-->E:\MyApplication\app\src\main\AndroidManifest.xml:24:9-26:40
+40-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:24:9-26:40
 41            android:name="com.example.myapplication.activity.register.RegisterActivity"
-41-->E:\MyApplication\app\src\main\AndroidManifest.xml:25:13-63
+41-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:25:13-63
 42            android:exported="false" />
-42-->E:\MyApplication\app\src\main\AndroidManifest.xml:26:13-37
+42-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:26:13-37
 43        <activity
-43-->E:\MyApplication\app\src\main\AndroidManifest.xml:27:9-29:40
+43-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:27:9-29:40
 44            android:name="com.example.myapplication.activity.home.HomeActivity"
-44-->E:\MyApplication\app\src\main\AndroidManifest.xml:28:13-55
+44-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:28:13-55
 45            android:exported="false" />
-45-->E:\MyApplication\app\src\main\AndroidManifest.xml:29:13-37
+45-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:29:13-37
 46        <activity
-46-->E:\MyApplication\app\src\main\AndroidManifest.xml:30:9-32:40
+46-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:30:9-32:40
 47            android:name="com.example.myapplication.activity.account.AccountActivity"
-47-->E:\MyApplication\app\src\main\AndroidManifest.xml:31:13-61
+47-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:31:13-61
 48            android:exported="false" />
-48-->E:\MyApplication\app\src\main\AndroidManifest.xml:32:13-37
+48-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:32:13-37
 49        <activity
-49-->E:\MyApplication\app\src\main\AndroidManifest.xml:33:9-34:39
+49-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:33:9-34:39
 50            android:name="com.example.myapplication.activity.addtransaction.AddTransactionActivity"
-50-->E:\MyApplication\app\src\main\AndroidManifest.xml:33:19-81
+50-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:33:19-81
 51            android:exported="false" />
-51-->E:\MyApplication\app\src\main\AndroidManifest.xml:34:13-37
+51-->E:\test\MiniProject-Android\MyApplication\app\src\main\AndroidManifest.xml:34:13-37
 52
 53        <service
 53-->[androidx.room:room-runtime-android:2.8.4] C:\Users\Administrator\.gradle\caches\9.5.0\transforms\7b51354b5694c04cd5d410cac2a7e622\transformed\room-runtime\AndroidManifest.xml:24:9-28:63

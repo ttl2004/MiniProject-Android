@@ -25,58 +25,82 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding activityHomeBinding;
+    private User currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityHomeBinding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(activityHomeBinding.getRoot());
 
+        // 1. Nhận thông tin User truyền từ LoginActivity sang trước tiên
+        currentUser = (User) getIntent().getSerializableExtra("EXTRA_USER");
+
+        if (currentUser != null) {
+            activityHomeBinding.tvUsername.setText(currentUser.getFullName());
+        }
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        // 2. Fragment mặc định khi mở app (kèm thông tin User)
         bottomNavigationView.setSelectedItemId(R.id.navHome);
-        setCurrentFragment(new HomeFragment());
+        setCurrentFragment(createFragmentWithUser(new HomeFragment()));
 
+        // 3. Chuyển Tab BottomNavigation kèm thông tin User
         bottomNavigationView.setOnItemSelectedListener(menuItem -> {
             int id = menuItem.getItemId();
+            Fragment targetFragment;
 
-            if (id == R.id.navHome) setCurrentFragment(new HomeFragment());
-            else if (id == R.id.navAnalysis) setCurrentFragment(new AnalysisFragment());
-            else if (id == R.id.navBudget) setCurrentFragment(new BudgetFragment());
-            else if (id == R.id.navCategory) setCurrentFragment(new CategoryFragment());
-            else setCurrentFragment(new TransactionFragment());
+            if (id == R.id.navHome) {
+                targetFragment = new HomeFragment();
+            } else if (id == R.id.navAnalysis) {
+                targetFragment = new AnalysisFragment();
+            } else if (id == R.id.navBudget) {
+                targetFragment = new BudgetFragment();
+            } else if (id == R.id.navCategory) {
+                targetFragment = new CategoryFragment();
+            } else {
+                targetFragment = new TransactionFragment();
+            }
+
+            setCurrentFragment(createFragmentWithUser(targetFragment));
             return true;
         });
 
-        activityHomeBinding.btnAccountAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, AccountActivity.class);
-                startActivity(i);
-            }
+        // 4. Mở màn hình Account
+        activityHomeBinding.btnAccountAvatar.setOnClickListener(v -> {
+            Intent i = new Intent(HomeActivity.this, AccountActivity.class);
+            i.putExtra("EXTRA_USER", currentUser);
+            startActivity(i);
         });
 
-        User user = (User) getIntent().getSerializableExtra("EXTRA_USER");
-        activityHomeBinding.tvUsername.setText(user.getFullName());
-
-        activityHomeBinding.fabAddTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, AddTransactionActivity.class);
-                i.putExtra("EXTRA_USER", user);
-                startActivity(i);
-            }
+        // 5. Nút FAB Thêm Giao Dịch
+        activityHomeBinding.fabAddTransaction.setOnClickListener(v -> {
+            Intent i = new Intent(HomeActivity.this, AddTransactionActivity.class);
+            i.putExtra("EXTRA_USER", currentUser);
+            startActivity(i);
         });
     }
 
-    // This function replaces the current fragment with the one passed as a parameter
+    /**
+     * Hàm đính kèm User vào Bundle của Fragment
+     */
+    private Fragment createFragmentWithUser(Fragment fragment) {
+        if (currentUser != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("EXTRA_USER", currentUser);
+            fragment.setArguments(bundle);
+        }
+        return fragment;
+    }
+
+    /**
+     * Thay thế Fragment hiện tại
+     */
     private void setCurrentFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                // Replace the fragment inside the container with the new fragment
                 .replace(R.id.fragment_container, fragment)
-                // Commit the transaction to actually perform the change
                 .commit();
     }
-
-
 }
