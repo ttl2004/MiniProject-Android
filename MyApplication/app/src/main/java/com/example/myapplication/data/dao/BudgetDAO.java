@@ -37,9 +37,10 @@ public interface BudgetDAO {
                     "AND strftime('%Y', t.transactionDate / 1000, 'unixepoch') = :year " +
                     "WHERE b.userId = :userId " +
                     "AND b.month = :month " +
+                    "AND b.year = :yearInt " +
                     "GROUP BY b.id"
     )
-    LiveData<List<BudgetItem>>getBudgetItems(int userId, int month, String monthText, String year);
+    LiveData<List<BudgetItem>>getBudgetItems(int userId, int month, int yearInt, String monthText, String year);
 
     @Query("UPDATE budgets SET categoryId = :categoryId, limitAmount = :limitAmount, updatedAt = :updatedAt WHERE id = :budgetId")
     int updateBudget(int budgetId, int categoryId, int limitAmount, long updatedAt);

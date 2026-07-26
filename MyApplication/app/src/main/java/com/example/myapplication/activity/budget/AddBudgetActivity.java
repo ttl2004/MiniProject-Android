@@ -1,5 +1,6 @@
 package com.example.myapplication.activity.budget;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class AddBudgetActivity extends AppCompatActivity {
+    private static final int YEAR_PICKER_RANGE = 10;
+
     private FragmentAddBudgetBinding binding;
     private CategoryAdapter categoryAdapter;
     private CategoryManager categoryManager;
@@ -28,6 +31,8 @@ public class AddBudgetActivity extends AppCompatActivity {
     private final List<Category> categoryList = new ArrayList<>();
     private Category selectedCategory;
     private User user;
+    private int selectedMonth;
+    private int selectedYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +45,26 @@ public class AddBudgetActivity extends AppCompatActivity {
         budgetManager = new BudgetManager(this);
 
         binding.tvTitle.setText("Thiết lập ngân sách mới");
+        setupDefaultPeriod();
         setupRecyclerView();
         setupEvents();
         observeCategories();
+    }
+
+    private void setupDefaultPeriod() {
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        selectedMonth = getIntent().getIntExtra("EXTRA_BUDGET_MONTH", currentMonth);
+        selectedYear = getIntent().getIntExtra("EXTRA_BUDGET_YEAR", currentYear);
+
+        if (isPastPeriod(selectedMonth, selectedYear)) {
+            selectedMonth = currentMonth;
+            selectedYear = currentYear;
+        }
+
+        updatePeriodText();
     }
 
     private void setupRecyclerView() {
@@ -56,7 +78,73 @@ public class AddBudgetActivity extends AppCompatActivity {
     private void setupEvents() {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnSave.setOnClickListener(v -> saveBudget());
+        binding.tvBudgetMonthPicker.setOnClickListener(v -> showMonthPicker());
+        binding.tvBudgetYearPicker.setOnClickListener(v -> showYearPicker());
         binding.tvAmount.addTextChangedListener(new NumberTextWatcher(binding.tvAmount));
+    }
+
+    private void showMonthPicker() {
+        String[] monthItems = buildMonthItems();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Chọn tháng")
+                .setItems(monthItems, (dialog, which) -> {
+                    selectedMonth = getFirstSelectableMonth() + which;
+                    updatePeriodText();
+                })
+                .show();
+    }
+
+    private String[] buildMonthItems() {
+        int firstMonth = getFirstSelectableMonth();
+        int count = 12 - firstMonth + 1;
+        String[] items = new String[count];
+
+        for (int i = 0; i < count; i++) {
+            items[i] = "Tháng " + (firstMonth + i);
+        }
+
+        return items;
+    }
+
+    private int getFirstSelectableMonth() {
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentYear = calendar.get(Calendar.YEAR);
+        return selectedYear == currentYear ? currentMonth : 1;
+    }
+
+    private void showYearPicker() {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        String[] yearItems = new String[YEAR_PICKER_RANGE + 1];
+
+        for (int i = 0; i < yearItems.length; i++) {
+            yearItems[i] = String.valueOf(currentYear + i);
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Chọn năm")
+                .setItems(yearItems, (dialog, which) -> {
+                    selectedYear = currentYear + which;
+                    if (isPastPeriod(selectedMonth, selectedYear)) {
+                        selectedMonth = getFirstSelectableMonth();
+                    }
+                    updatePeriodText();
+                })
+                .show();
+    }
+
+    private void updatePeriodText() {
+        binding.tvBudgetMonthPicker.setText("Tháng " + selectedMonth);
+        binding.tvBudgetYearPicker.setText(String.valueOf(selectedYear));
+    }
+
+    private boolean isPastPeriod(int month, int year) {
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentYear = calendar.get(Calendar.YEAR);
+        return year < currentYear || (year == currentYear && month < currentMonth);
     }
 
     private void observeCategories() {
@@ -96,9 +184,19 @@ public class AddBudgetActivity extends AppCompatActivity {
             return;
         }
 
+        if (isPastPeriod(selectedMonth, selectedYear)) {
+            Toast.makeText(this, "Không thể đặt hạn mức cho tháng đã qua!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         int amount = (int) amountValue;
-        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        Budget budget = new Budget(user.getUserId(), selectedCategory.getId(), amount, month);
+        Budget budget = new Budget(
+                user.getUserId(),
+                selectedCategory.getId(),
+                amount,
+                selectedMonth,
+                selectedYear
+        );
 
         Executors.newSingleThreadExecutor().execute(() -> {
             long result = budgetManager.insert(budget);

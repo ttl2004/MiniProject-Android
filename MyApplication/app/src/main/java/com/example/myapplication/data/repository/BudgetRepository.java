@@ -24,6 +24,7 @@ public class BudgetRepository {
         return budgetDao.getBudgetItems(
                 userId,
                 month,
+                year,
                 String.format("%02d", month),
                 String.valueOf(year)
         );

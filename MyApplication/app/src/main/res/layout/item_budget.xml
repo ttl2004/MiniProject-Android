@@ -21,7 +21,7 @@
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_circle_category">
+            android:background="@drawable/bg_budget_icon_box">
 
             <ImageView
                 android:id="@+id/img_budget_icon"

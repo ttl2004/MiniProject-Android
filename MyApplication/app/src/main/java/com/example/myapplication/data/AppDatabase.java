@@ -22,7 +22,7 @@ import com.example.myapplication.data.entity.User;
                 Budget.class,
                 Transaction.class
         },
-        version = 2
+        version = 3
 )
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "expense_manager.db";
