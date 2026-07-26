@@ -1,6 +1,8 @@
 package com.example.myapplication.activity.account;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -43,13 +45,26 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
+        // --- XỬ LÝ ĐĂNG XUẤT (LOGOUT) ---
         activityAccountBinding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 1. Xóa trạng thái đăng nhập trong SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear(); // Xóa sạch dữ liệu đã lưu
+                editor.apply();
+
                 Toast.makeText(AccountActivity.this, "Dang xuat thanh cong!", Toast.LENGTH_LONG).show();
 
+                // 2. Chuyển về màn hình MainActivity (Login)
                 Intent i = new Intent(AccountActivity.this, MainActivity.class);
+
+                // Xóa toàn bộ các Activity cũ (Home, Account...) khỏi bộ nhớ Back-stack
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
                 startActivity(i);
+                finish();
             }
         });
     }

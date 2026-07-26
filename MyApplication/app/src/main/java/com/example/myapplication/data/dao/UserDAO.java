@@ -18,4 +18,9 @@ public interface UserDAO {
     @Update
     int update(User user);
 
+    @Query("SELECT * FROM users WHERE userName = :userName LIMIT 1")
+    User getUserByUsername(String userName);
+    @Query("SELECT EXISTS(SELECT 1 FROM users WHERE userName = :userName LIMIT 1)")
+    boolean isUsernameExists(String userName);
+
 }

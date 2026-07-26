@@ -21,4 +21,15 @@ public class UserRepository {
     public int update(User user) {
         return userDAO.update(user);
     }
+
+    public User getUserByUsername(String userName) {
+        if (userName == null || userName.trim().isEmpty()) {
+            return null;
+        }
+        return userDAO.getUserByUsername(userName);
+    }
+
+    public boolean isUsernameExists(String userName) {
+        return userDAO.isUsernameExists(userName);
+    }
 }

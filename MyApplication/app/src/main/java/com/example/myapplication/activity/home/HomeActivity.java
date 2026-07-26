@@ -1,16 +1,15 @@
 package com.example.myapplication.activity.home;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.account.AccountActivity;
 import com.example.myapplication.activity.addtransaction.AddTransactionActivity;
@@ -34,7 +33,15 @@ public class HomeActivity extends AppCompatActivity {
         activityHomeBinding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(activityHomeBinding.getRoot());
 
-        // 1. Nhận thông tin User truyền từ LoginActivity sang trước tiên
+        // 1. Xử lý nút Back (Hiện dialog xác nhận)
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitConfirmationDialog();
+            }
+        });
+
+        // 2. Nhận thông tin User truyền từ LoginActivity sang
         currentUser = (User) getIntent().getSerializableExtra("EXTRA_USER");
 
         if (currentUser != null) {
@@ -43,11 +50,11 @@ public class HomeActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // 2. Fragment mặc định khi mở app (kèm thông tin User)
+        // 3. Fragment mặc định khi mở app
         bottomNavigationView.setSelectedItemId(R.id.navHome);
         setCurrentFragment(createFragmentWithUser(new HomeFragment()));
 
-        // 3. Chuyển Tab BottomNavigation kèm thông tin User
+        // 4. Chuyển Tab BottomNavigation
         bottomNavigationView.setOnItemSelectedListener(menuItem -> {
             int id = menuItem.getItemId();
             Fragment targetFragment;
@@ -68,14 +75,14 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
 
-        // 4. Mở màn hình Account
+        // 5. Mở màn hình Account
         activityHomeBinding.btnAccountAvatar.setOnClickListener(v -> {
             Intent i = new Intent(HomeActivity.this, AccountActivity.class);
             i.putExtra("EXTRA_USER", currentUser);
             startActivityForResult(i, REQUEST_ACCOUNT);
         });
 
-        // 5. Nút FAB Thêm Giao Dịch
+        // 6. Nút FAB Thêm Giao Dịch
         activityHomeBinding.fabAddTransaction.setOnClickListener(v -> {
             Intent i = new Intent(HomeActivity.this, AddTransactionActivity.class);
             i.putExtra("EXTRA_USER", currentUser);
@@ -84,8 +91,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * Hàm đính kèm User vào Bundle của Fragment
+     * Dialog xác nhận thoát
      */
+    private void showExitConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Thoát ứng dụng")
+                .setMessage("Bạn có chắc chắn muốn thoát khỏi ứng dụng không?")
+                .setPositiveButton("Thoát", (dialog, which) -> finishAffinity()) // Đóng tất cả activity
+                .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
+                .setCancelable(true)
+                .show();
+    }
+
     private Fragment createFragmentWithUser(Fragment fragment) {
         if (currentUser != null) {
             Bundle bundle = new Bundle();
@@ -95,9 +112,6 @@ public class HomeActivity extends AppCompatActivity {
         return fragment;
     }
 
-    /**
-     * Thay thế Fragment hiện tại
-     */
     private void setCurrentFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
