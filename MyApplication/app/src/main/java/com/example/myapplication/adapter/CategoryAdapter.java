@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
@@ -57,6 +56,29 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             return null;
         }
         return categoryList.get(selectedPosition);
+    }
+
+    // --- BỔ SUNG: Hàm chọn danh mục từ bên ngoài (Dùng cho Edit Mode) ---
+    public void setSelectedCategory(Category category) {
+        if (categoryList == null || category == null) return;
+
+        for (int i = 0; i < categoryList.size(); i++) {
+            if (categoryList.get(i).getId() == category.getId()) {
+                setSelectedPosition(i);
+                break;
+            }
+        }
+    }
+
+    // --- BỔ SUNG: Hàm đổi vị trí chọn và làm mới UI ---
+    public void setSelectedPosition(int position) {
+        if (position >= 0 && categoryList != null && position < categoryList.size()) {
+            int oldPosition = selectedPosition;
+            selectedPosition = position;
+
+            notifyItemChanged(oldPosition);
+            notifyItemChanged(selectedPosition);
+        }
     }
 
     @NonNull
@@ -128,12 +150,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.itemView.setOnClickListener(v -> {
 
             if (selectable) {
-
-                int old = selectedPosition;
-                selectedPosition = holder.getAdapterPosition();
-
-                notifyItemChanged(old);
-                notifyItemChanged(selectedPosition);
+                setSelectedPosition(holder.getAdapterPosition());
             }
 
             if (listener != null) {

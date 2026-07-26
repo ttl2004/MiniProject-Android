@@ -35,6 +35,8 @@ drawable ic_category_tag
 drawable ic_chevron_left
 drawable ic_chevron_right
 drawable ic_close
+drawable ic_delete
+drawable ic_edit
 drawable ic_emerald_logo
 drawable ic_home
 drawable ic_launcher_background
@@ -50,6 +52,8 @@ id btnRegister
 id btn_account_avatar
 id btn_back
 id btn_close
+id btn_delete
+id btn_edit
 id btn_logout
 id btn_next_year
 id btn_pick_date
@@ -71,6 +75,7 @@ id header_layout
 id imgLogo
 id img_category
 id img_category_icon
+id layout_actions
 id lbl_date
 id navAnalysis
 id navBudget

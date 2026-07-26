@@ -17,10 +17,17 @@ import java.util.List;
 
 public class TransactionDetailAdapter extends RecyclerView.Adapter<TransactionDetailAdapter.ViewHolder> {
 
-    private List<TransactionDTO> dtoList;
+    public interface OnTransactionActionListener {
+        void onEdit(TransactionDTO dto);
+        void onDelete(TransactionDTO dto);
+    }
 
-    public TransactionDetailAdapter(List<TransactionDTO> dtoList) {
+    private List<TransactionDTO> dtoList;
+    private final OnTransactionActionListener actionListener;
+
+    public TransactionDetailAdapter(List<TransactionDTO> dtoList, OnTransactionActionListener actionListener) {
         this.dtoList = dtoList;
+        this.actionListener = actionListener;
     }
 
     public void setDtoList(List<TransactionDTO> dtoList) {
@@ -47,20 +54,18 @@ public class TransactionDetailAdapter extends RecyclerView.Adapter<TransactionDe
                 ? dto.getCategoryName()
                 : "Khác";
 
-        // 1. Luôn hiển thị Tên Category ở dòng trên (tvNote)
+        // Tên Danh mục
         holder.binding.tvNote.setText(categoryName);
 
-        // 2. Kiểm tra Note để hiển thị ở dòng dưới (tvCategoryName)
+        // Ghi chú (nếu có)
         if (note != null && !note.trim().isEmpty()) {
-            // Có Note: Hiển thị Note ở dòng dưới (chữ nhạt)
             holder.binding.tvCategoryName.setText(note);
             holder.binding.tvCategoryName.setVisibility(View.VISIBLE);
         } else {
-            // Không có Note: Ẩn dòng dưới đi
             holder.binding.tvCategoryName.setVisibility(View.GONE);
         }
 
-        // --- Các phần xử lý Icon, Màu nền & Số tiền bên dưới giữ nguyên ---
+        // Icon danh mục
         String iconName = dto.getIconName();
         if (iconName != null && !iconName.isEmpty()) {
             int iconResId = holder.itemView.getContext().getResources().getIdentifier(
@@ -71,6 +76,7 @@ public class TransactionDetailAdapter extends RecyclerView.Adapter<TransactionDe
             }
         }
 
+        // Màu Icon
         String colorHex = dto.getCategoryColor();
         if (colorHex != null && !colorHex.isEmpty()) {
             try {
@@ -86,6 +92,7 @@ public class TransactionDetailAdapter extends RecyclerView.Adapter<TransactionDe
             }
         }
 
+        // Định dạng tiền tệ
         long amount = Math.abs(transaction.getAmount());
         String formattedAmount = CurrencyUtils.formatCurrency(amount);
 
@@ -96,7 +103,21 @@ public class TransactionDetailAdapter extends RecyclerView.Adapter<TransactionDe
             holder.binding.tvAmount.setText("+" + formattedAmount);
             holder.binding.tvAmount.setTextColor(Color.parseColor("#388E3C"));
         }
+
+        // Sự kiện Sửa & Xóa
+        holder.binding.btnEdit.setOnClickListener(v -> {
+            if (actionListener != null) {
+                actionListener.onEdit(dto);
+            }
+        });
+
+        holder.binding.btnDelete.setOnClickListener(v -> {
+            if (actionListener != null) {
+                actionListener.onDelete(dto);
+            }
+        });
     }
+
     @Override
     public int getItemCount() {
         return dtoList != null ? dtoList.size() : 0;

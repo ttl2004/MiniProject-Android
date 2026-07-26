@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.example.myapplication.data.dto.TransactionDTO; // Import DTO
+import com.example.myapplication.data.dto.TransactionDTO;
 import com.example.myapplication.data.entity.Transaction;
 import com.example.myapplication.manager.TransactionManager;
 import com.example.myapplication.ui.month.MonthModel;
@@ -22,12 +22,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 public class TransactionViewModel extends AndroidViewModel {
 
     private  TransactionManager transactionManager;
 
-    // 1. Khai báo MutableLiveData cho userId và selectedMonth
     private final MutableLiveData<Integer> currentUserId = new MutableLiveData<>();
     private final MutableLiveData<MonthModel> selectedMonth = new MutableLiveData<>();
 
@@ -44,7 +44,17 @@ public class TransactionViewModel extends AndroidViewModel {
         selectedMonth.setValue(monthModel);
     }
 
-    // 2. ĐỔI KIỂU TRẢ VỀ THÀNH LiveData<List<TransactionDTO>>
+    // Xóa giao dịch khỏi Database
+    public void deleteTransaction(Transaction transaction) {
+        if (transaction != null && currentUserId.getValue() != null
+                && transaction.getUserId() == currentUserId.getValue()) {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                transactionManager.delete(transaction);
+            });
+        }
+    }
+
+    // LiveData Lấy danh sách DTO theo tháng & user
     public final LiveData<List<TransactionDTO>> rawTransactions = Transformations.switchMap(
             selectedMonth,
             month -> {
@@ -53,7 +63,6 @@ public class TransactionViewModel extends AndroidViewModel {
                     return new MutableLiveData<>(new ArrayList<>());
                 }
 
-                // Tính toán khoảng thời gian từ đầu tháng đến cuối tháng
                 Calendar cal = Calendar.getInstance();
 
                 // Đầu tháng: 00:00:00.000
@@ -69,7 +78,6 @@ public class TransactionViewModel extends AndroidViewModel {
                 cal.set(Calendar.MILLISECOND, 999);
                 long end = cal.getTimeInMillis();
 
-                // Trả về LiveData chứa danh sách DTO từ Manager
                 return transactionManager.getTransactionsByRange(userId, start, end);
             }
     );
@@ -86,23 +94,13 @@ public class TransactionViewModel extends AndroidViewModel {
             if (dto == null || dto.getTransaction() == null) continue;
 
             Transaction t = dto.getTransaction();
-
-            // Kiểm tra xem transaction có phải là Chi tiêu hay không
-            // (Chi tiêu: type bằng EXPENSE hoặc amount < 0)
             boolean isExpense = "EXPENSE".equalsIgnoreCase(t.getType()) || t.getAmount() < 0;
 
             if ("EXPENSE".equalsIgnoreCase(currentTab)) {
-                // Tab Chi tiêu: CHỈ LẤY các khoản Chi tiêu
-                if (isExpense) {
-                    filteredList.add(dto);
-                }
+                if (isExpense) filteredList.add(dto);
             } else if ("INCOME".equalsIgnoreCase(currentTab)) {
-                // Tab Thu nhập: CHỈ LẤY các khoản Thu nhập (KHÔNG PHẢI Chi tiêu)
-                if (!isExpense) {
-                    filteredList.add(dto);
-                }
+                if (!isExpense) filteredList.add(dto);
             } else {
-                // Tab Tất cả: Lấy toàn bộ
                 filteredList.add(dto);
             }
         }
@@ -120,7 +118,7 @@ public class TransactionViewModel extends AndroidViewModel {
             groupedMap.get(dateKey).add(dto);
         }
 
-        // 3. Tính tổng tiền từng ngày (Dựa trên danh sách đã lọc)
+        // 3. Tính tổng tiền từng ngày
         List<TransactionGroup> groupList = new ArrayList<>();
         for (Map.Entry<String, List<TransactionDTO>> entry : groupedMap.entrySet()) {
             String dateHeader = entry.getKey();
