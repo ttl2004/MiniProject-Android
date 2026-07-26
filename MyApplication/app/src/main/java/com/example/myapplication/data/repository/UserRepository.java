@@ -17,4 +17,8 @@ public class UserRepository {
     public User login(String username, String password) {
         return userDAO.login(username, password);
     }
+
+    public int update(User user) {
+        return userDAO.update(user);
+    }
 }

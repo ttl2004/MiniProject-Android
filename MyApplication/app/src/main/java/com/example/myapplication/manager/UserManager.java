@@ -22,4 +22,7 @@ public class UserManager {
         return userRepository.login(username, password);
     }
 
+    public int update(User user) {
+        return userRepository.update(user);
+    }
 }

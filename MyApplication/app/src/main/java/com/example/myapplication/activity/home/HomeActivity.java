@@ -24,6 +24,7 @@ import com.example.myapplication.ui.transaction.TransactionFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
+    private static final int REQUEST_ACCOUNT = 2001;
     private ActivityHomeBinding activityHomeBinding;
     private User currentUser;
 
@@ -71,7 +72,7 @@ public class HomeActivity extends AppCompatActivity {
         activityHomeBinding.btnAccountAvatar.setOnClickListener(v -> {
             Intent i = new Intent(HomeActivity.this, AccountActivity.class);
             i.putExtra("EXTRA_USER", currentUser);
-            startActivity(i);
+            startActivityForResult(i, REQUEST_ACCOUNT);
         });
 
         // 5. Nút FAB Thêm Giao Dịch
@@ -102,5 +103,18 @@ public class HomeActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ACCOUNT && resultCode == RESULT_OK && data != null) {
+            currentUser = (User) data.getSerializableExtra("EXTRA_USER");
+            if (currentUser != null) {
+                getIntent().putExtra("EXTRA_USER", currentUser);
+                activityHomeBinding.tvUsername.setText(currentUser.getFullName());
+            }
+        }
     }
 }

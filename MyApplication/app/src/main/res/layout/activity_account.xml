@@ -4,64 +4,279 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#F8F8F8">
 
-    <!-- Nút Mũi tên quay lại -->
-    <ImageView
-        android:id="@+id/btn_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:contentDescription="Back"
-        android:focusable="true"
-        android:padding="8dp"
-        android:src="@drawable/ic_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/greenApp" />
-
-    <!-- Container chứa 2 nút ở giữa màn hình -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <FrameLayout
+        android:id="@+id/header_profile"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:background="@drawable/bg_account_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Nút Setting -->
-        <com.google.android.material.button.MaterialButton
+        <View
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="-18dp"
+            android:layout_marginEnd="-8dp"
+            android:background="@drawable/bg_account_circle_soft" />
+
+        <View
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_account_circle_stroke" />
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="14dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Quay lại"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_back"
+            app:tint="@android:color/white" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/img_avatar"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:background="@drawable/bg_account_avatar"
+        android:contentDescription="Ảnh đại diện"
+        android:elevation="6dp"
+        android:padding="24dp"
+        android:src="@drawable/ic_person"
+        app:layout_constraintBottom_toBottomOf="@id/header_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_profile"
+        app:tint="#9FB0A0" />
+
+    <TextView
+        android:id="@+id/tv_account_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:text="Nguyễn Văn A"
+        android:textColor="#181C1A"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_profile" />
+
+    <TextView
+        android:id="@+id/tv_account_section"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="20dp"
+        android:letterSpacing="0.22"
+        android:text="QUẢN LÝ TÀI KHOẢN"
+        android:textColor="#505A54"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_account_name" />
+
+    <LinearLayout
+        android:id="@+id/account_action_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/bg_account_card"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:paddingStart="14dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_account_section">
+
+        <LinearLayout
+            android:id="@+id/btn_change_info"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="0dp"
+            android:paddingEnd="4dp">
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_account_icon_box">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/greenApp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Thay đổi thông tin"
+                    android:textColor="#181C1A"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Cập nhật thông tin cá nhân"
+                    android:textColor="#6F7772"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@null"
+                android:padding="4dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="#B7BDB9" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/btn_setting"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="16dp"
-            android:text="Setting"
-            android:textAllCaps="false"
-            android:textColor="@color/greenApp"
-            android:textSize="18sp"
-            app:backgroundTint="@android:color/transparent"
-            app:cornerRadius="16dp"
-            app:strokeColor="@color/greenApp"
-            app:strokeWidth="2dp" />
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="0dp"
+            android:paddingEnd="4dp">
 
-        <!-- Nút Logout -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_logout"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Logout"
-            android:textAllCaps="false"
-            android:textColor="@color/greenApp"
-            android:textSize="18sp"
-            app:backgroundTint="@android:color/transparent"
-            app:cornerRadius="16dp"
-            app:strokeColor="@color/greenApp"
-            app:strokeWidth="2dp" />
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_account_icon_box">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_settings"
+                    app:tint="@color/greenApp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cài đặt"
+                    android:textColor="#181C1A"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Tùy chọn ứng dụng"
+                    android:textColor="#6F7772"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@null"
+                android:padding="4dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="#B7BDB9" />
+        </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_logout"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/bg_account_logout"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/account_action_card">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_logout"
+            app:tint="#B12A2A" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Đăng xuất tài khoản"
+            android:textColor="#B12A2A"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_brand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:letterSpacing="0.14"
+        android:text="EMERALD FINANCE"
+        android:textColor="#6F7772"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
