@@ -18,7 +18,6 @@ import com.example.myapplication.databinding.ActivityAddTransactionBinding;
 import com.example.myapplication.manager.TransactionManager;
 import com.example.myapplication.utils.NumberTextWatcher;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,6 +37,9 @@ public class AddTransactionActivity extends AppCompatActivity {
     private Category selectedCategory = null;
     private User user;
 
+    private Transaction currentTransaction = null;
+    private boolean isEditMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,16 +52,29 @@ public class AddTransactionActivity extends AppCompatActivity {
         transactionManager = new TransactionManager(this);
 
         // Lấy thông tin user hiện tại
-        user= (User) getIntent().getSerializableExtra("EXTRA_USER");
+        user = (User) getIntent().getSerializableExtra("EXTRA_USER");
+
+        // KIỂM TRA XEM CÓ TRUYỀN TRANSACTION CŨ SANG KHÔNG
+        if (getIntent().hasExtra("EXTRA_TRANSACTION")) {
+            currentTransaction = (Transaction) getIntent().getSerializableExtra("EXTRA_TRANSACTION");
+            if (currentTransaction != null) {
+                isEditMode = true;
+            }
+        }
 
         setupRecyclerView();
         setupEvents();
-        updateDateDisplay();
         observeCategories();
+
+        // Cấu hình giao diện ban đầu
+        if (isEditMode) {
+            setupEditModeUI();
+        } else {
+            updateDateDisplay();
+        }
     }
 
     private void setupRecyclerView() {
-        // Dùng đúng CategoryAdapter của bạn
         categoryAdapter = new CategoryAdapter(
                 categoryList,
                 category -> selectedCategory = category
@@ -89,21 +104,55 @@ public class AddTransactionActivity extends AppCompatActivity {
         binding.btnPickDate.setOnClickListener(dateClickListener);
         binding.tvDate.setOnClickListener(dateClickListener);
 
-        // Nút Lưu Giao Dịch
+        // Nút Lưu / Cập nhật Giao Dịch
         binding.btnSaveTransaction.setOnClickListener(v -> saveTransaction());
 
-        // Đăng ký tự động thêm dấu chấm khi gõ
+        // Đăng ký tự động thêm dấu chấm khi gõ số tiền
         binding.edtAmount.addTextChangedListener(new NumberTextWatcher(binding.edtAmount));
     }
 
+    private void setupEditModeUI() {
+        if (currentTransaction == null) return;
+
+        // 1. Đổi tiêu đề và chữ trên nút bấm
+        binding.tvTitle.setText("Chỉnh sửa giao dịch");
+        binding.btnSaveTransaction.setText("CẬP NHẬT GIAO DỊCH");
+
+        // 2. Load loại giao dịch (EXPENSE/INCOME)
+        switchType(currentTransaction.getType() != null ? currentTransaction.getType() : "EXPENSE");
+
+        // 3. Load số tiền cũ
+        int absAmount = Math.abs(currentTransaction.getAmount());
+        binding.edtAmount.setText(String.valueOf(absAmount));
+
+        // 4. Load ghi chú
+        if (currentTransaction.getNote() != null) {
+            binding.edtNote.setText(currentTransaction.getNote());
+        }
+
+        // 5. Load ngày thực hiện
+        selectedCalendar.setTimeInMillis(currentTransaction.getTransactionDate());
+        updateDateDisplay();
+    }
+
     private void observeCategories() {
-        // Lấy danh sách Category qua LiveData của TransactionManager
         transactionManager.getALLCategories().observe(this, dbCategories -> {
             if (dbCategories != null && !dbCategories.isEmpty()) {
                 categoryList = dbCategories;
                 categoryAdapter.setCategoryList(categoryList);
 
-                // Mặc định chọn item đầu tiên nếu chưa chọn
+                // Nếu ở chế độ EDIT: Chọn đúng Category cũ trong danh sách
+                if (isEditMode && currentTransaction != null) {
+                    for (Category cat : categoryList) {
+                        if (cat.getId() == currentTransaction.getCategoryId()) {
+                            selectedCategory = cat;
+                            categoryAdapter.setSelectedCategory(cat);
+                            break;
+                        }
+                    }
+                }
+
+                // Nếu vẫn chưa chọn category nào thì chọn mặc định item đầu
                 if (selectedCategory == null) {
                     selectedCategory = categoryAdapter.getSelectedCategory();
                 }
@@ -146,9 +195,28 @@ public class AddTransactionActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    // --- ĐÃ SỬA: Hàm hiển thị ngày thông minh (Không bị dính cố định "Hôm nay") ---
     private void updateDateDisplay() {
-        SimpleDateFormat sdf = new SimpleDateFormat("'Hôm nay, 'dd' tháng 'MM", new Locale("vi", "VN"));
-        binding.tvDate.setText(sdf.format(selectedCalendar.getTime()));
+        Calendar today = Calendar.getInstance();
+        Calendar yesterday = Calendar.getInstance();
+        yesterday.add(Calendar.DAY_OF_YEAR, -1);
+
+        SimpleDateFormat sdfBase = new SimpleDateFormat("dd 'tháng' MM", new Locale("vi", "VN"));
+
+        if (isSameDay(selectedCalendar, today)) {
+            binding.tvDate.setText("Hôm nay, " + sdfBase.format(selectedCalendar.getTime()));
+        } else if (isSameDay(selectedCalendar, yesterday)) {
+            binding.tvDate.setText("Hôm qua, " + sdfBase.format(selectedCalendar.getTime()));
+        } else {
+            // Nếu là ngày khác -> Chỉ hiện Ngày tháng năm (Ví dụ: 25 tháng 07, 2026)
+            SimpleDateFormat sdfFull = new SimpleDateFormat("dd 'tháng' MM, yyyy", new Locale("vi", "VN"));
+            binding.tvDate.setText(sdfFull.format(selectedCalendar.getTime()));
+        }
+    }
+
+    private boolean isSameDay(Calendar cal1, Calendar cal2) {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
     private void saveTransaction() {
@@ -168,28 +236,46 @@ public class AddTransactionActivity extends AppCompatActivity {
         int amount = Integer.parseInt(amountStr);
         long transactionDate = selectedCalendar.getTimeInMillis();
 
-        // Tạo Entity Transaction
-        Transaction transaction = new Transaction(
-                user.getUserId(),
-                selectedCategory.getId(),
-                amount,
-                note,
-                transactionDate,
-                selectedType
-        );
+        if (isEditMode && currentTransaction != null) {
+            // 1. CHẾ ĐỘ SỬA
+            currentTransaction.setCategoryId(selectedCategory.getId());
+            currentTransaction.setAmount(amount);
+            currentTransaction.setNote(note);
+            currentTransaction.setTransactionDate(transactionDate);
+            currentTransaction.setType(selectedType);
 
-        // Lưu CSDL thông qua TransactionManager trên Background Thread
-        Executors.newSingleThreadExecutor().execute(() -> {
-            long result = transactionManager.insert(transaction);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                transactionManager.update(currentTransaction);
 
-            runOnUiThread(() -> {
-                if (result > 0) {
-                    Toast.makeText(this, "Lưu giao dịch thành công!", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Cập nhật giao dịch thành công!", Toast.LENGTH_SHORT).show();
                     finish();
-                } else {
-                    Toast.makeText(this, "Lưu giao dịch thất bại!", Toast.LENGTH_SHORT).show();
-                }
+                });
             });
-        });
+
+        } else {
+            // 2. CHẾ ĐỘ THÊM MỚI
+            Transaction transaction = new Transaction(
+                    user != null ? user.getUserId() : 0,
+                    selectedCategory.getId(),
+                    amount,
+                    note,
+                    transactionDate,
+                    selectedType
+            );
+
+            Executors.newSingleThreadExecutor().execute(() -> {
+                long result = transactionManager.insert(transaction);
+
+                runOnUiThread(() -> {
+                    if (result > 0) {
+                        Toast.makeText(this, "Lưu giao dịch thành công!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Lưu giao dịch thất bại!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }
     }
 }

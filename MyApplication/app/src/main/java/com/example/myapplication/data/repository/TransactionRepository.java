@@ -21,4 +21,13 @@ public class TransactionRepository {
     public LiveData<List<Transaction>> getTransactionsByUserIdAndRange(int userId, long startDate, long endDate) {
         return transactionDAO.getTransactionsByUserIdAndRange(userId, startDate, endDate);
     }
+
+    public void delete(Transaction transaction) {
+        transactionDAO.deleteTransaction(transaction);
+    }
+
+    public void update(Transaction transaction) {
+        transactionDAO.updateTransaction(transaction);
+    }
+
 }

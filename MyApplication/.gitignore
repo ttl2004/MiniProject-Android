@@ -1,12 +1,31 @@
 *.iml
-/.gradle
-/local.properties
-/.idea
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+Thumbs.db
+
+# Gradle
+/.gradle/
+/build/
+**/build/
+
+# Android Studio / IntelliJ
+/.idea/
+
+# Local config
+/local.properties
 local.properties
-gradlew
-gradlew.bat
+
+# Android build outputs
+/captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# VS Code
+.vscode/
+
+# Logs
+*.log

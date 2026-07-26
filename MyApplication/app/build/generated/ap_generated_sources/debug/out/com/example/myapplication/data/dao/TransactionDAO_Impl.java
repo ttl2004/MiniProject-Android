@@ -2,6 +2,7 @@ package com.example.myapplication.data.dao;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.room.EntityDeleteOrUpdateAdapter;
 import androidx.room.EntityInsertAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.util.DBUtil;
@@ -23,6 +24,10 @@ public final class TransactionDAO_Impl implements TransactionDAO {
   private final RoomDatabase __db;
 
   private final EntityInsertAdapter<Transaction> __insertAdapterOfTransaction;
+
+  private final EntityDeleteOrUpdateAdapter<Transaction> __deleteAdapterOfTransaction;
+
+  private final EntityDeleteOrUpdateAdapter<Transaction> __updateAdapterOfTransaction;
 
   public TransactionDAO_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
@@ -54,12 +59,69 @@ public final class TransactionDAO_Impl implements TransactionDAO {
         statement.bindLong(9, entity.getUpdatedAt());
       }
     };
+    this.__deleteAdapterOfTransaction = new EntityDeleteOrUpdateAdapter<Transaction>() {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "DELETE FROM `transactions` WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SQLiteStatement statement, final Transaction entity) {
+        statement.bindLong(1, entity.getId());
+      }
+    };
+    this.__updateAdapterOfTransaction = new EntityDeleteOrUpdateAdapter<Transaction>() {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `transactions` SET `id` = ?,`userId` = ?,`categoryId` = ?,`amount` = ?,`note` = ?,`transactionDate` = ?,`type` = ?,`createdAt` = ?,`updatedAt` = ? WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SQLiteStatement statement, final Transaction entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getUserId());
+        statement.bindLong(3, entity.getCategoryId());
+        statement.bindLong(4, entity.getAmount());
+        if (entity.getNote() == null) {
+          statement.bindNull(5);
+        } else {
+          statement.bindText(5, entity.getNote());
+        }
+        statement.bindLong(6, entity.getTransactionDate());
+        if (entity.getType() == null) {
+          statement.bindNull(7);
+        } else {
+          statement.bindText(7, entity.getType());
+        }
+        statement.bindLong(8, entity.getCreatedAt());
+        statement.bindLong(9, entity.getUpdatedAt());
+        statement.bindLong(10, entity.getId());
+      }
+    };
   }
 
   @Override
   public long insert(final Transaction transaction) {
     return DBUtil.performBlocking(__db, false, true, (_connection) -> {
       return __insertAdapterOfTransaction.insertAndReturnId(_connection, transaction);
+    });
+  }
+
+  @Override
+  public void deleteTransaction(final Transaction transaction) {
+    DBUtil.performBlocking(__db, false, true, (_connection) -> {
+      __deleteAdapterOfTransaction.handle(_connection, transaction);
+      return null;
+    });
+  }
+
+  @Override
+  public void updateTransaction(final Transaction transaction) {
+    DBUtil.performBlocking(__db, false, true, (_connection) -> {
+      __updateAdapterOfTransaction.handle(_connection, transaction);
+      return null;
     });
   }
 

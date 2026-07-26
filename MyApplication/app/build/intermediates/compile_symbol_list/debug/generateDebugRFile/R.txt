@@ -33,6 +33,8 @@ int drawable ic_category_tag 0x0
 int drawable ic_chevron_left 0x0
 int drawable ic_chevron_right 0x0
 int drawable ic_close 0x0
+int drawable ic_delete 0x0
+int drawable ic_edit 0x0
 int drawable ic_emerald_logo 0x0
 int drawable ic_home 0x0
 int drawable ic_launcher_background 0x0
@@ -48,6 +50,8 @@ int id btnRegister 0x0
 int id btn_account_avatar 0x0
 int id btn_back 0x0
 int id btn_close 0x0
+int id btn_delete 0x0
+int id btn_edit 0x0
 int id btn_logout 0x0
 int id btn_next_year 0x0
 int id btn_pick_date 0x0
@@ -69,6 +73,7 @@ int id header_layout 0x0
 int id imgLogo 0x0
 int id img_category 0x0
 int id img_category_icon 0x0
+int id layout_actions 0x0
 int id lbl_date 0x0
 int id navAnalysis 0x0
 int id navBudget 0x0
