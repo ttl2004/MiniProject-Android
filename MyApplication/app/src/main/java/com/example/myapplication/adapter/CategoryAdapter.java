@@ -59,6 +59,43 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return categoryList.get(selectedPosition);
     }
 
+    // --- BỔ SUNG: Hàm chọn danh mục từ bên ngoài (Dùng cho Edit Mode) ---
+    public void setSelectedCategory(Category category) {
+        if (categoryList == null || category == null) return;
+
+        for (int i = 0; i < categoryList.size(); i++) {
+            if (categoryList.get(i).getId() == category.getId()) {
+                setSelectedPosition(i);
+                break;
+            }
+        }
+    }
+
+    // --- BỔ SUNG: Hàm đổi vị trí chọn và làm mới UI ---
+    public void setSelectedPosition(int position) {
+        if (position >= 0 && categoryList != null && position < categoryList.size()) {
+            int oldPosition = selectedPosition;
+            selectedPosition = position;
+
+            notifyItemChanged(oldPosition);
+            notifyItemChanged(selectedPosition);
+        }
+    }
+
+    public void selectCategoryById(int categoryId) {
+        if (categoryList == null) return;
+
+        for (int i = 0; i < categoryList.size(); i++) {
+            if (categoryList.get(i).getId() == categoryId) {
+                int old = selectedPosition;
+                selectedPosition = i;
+                notifyItemChanged(old);
+                notifyItemChanged(selectedPosition);
+                return;
+            }
+        }
+    }
+
     @NonNull
     @Override
     public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

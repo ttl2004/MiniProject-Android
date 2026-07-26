@@ -18,6 +18,7 @@ public class Budget implements Serializable {
 
     private int month;
 
+
     private long createdAt;
 
     private long updatedAt;

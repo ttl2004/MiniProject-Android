@@ -1,0 +1,9 @@
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="64dp"
+    android:layout_columnWeight="1"
+    android:src="@drawable/ic_delete"
+    android:background="@drawable/bg_keypad"
+    android:layout_margin="6dp"
+    android:padding="16dp"/>

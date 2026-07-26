@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,16 @@ public final class ItemTransactionDetailBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final ImageView btnDelete;
+
+  @NonNull
+  public final ImageView btnEdit;
+
+  @NonNull
   public final ImageView imgCategoryIcon;
+
+  @NonNull
+  public final LinearLayout layoutActions;
 
   @NonNull
   public final TextView tvAmount;
@@ -33,10 +43,14 @@ public final class ItemTransactionDetailBinding implements ViewBinding {
   public final TextView tvNote;
 
   private ItemTransactionDetailBinding(@NonNull ConstraintLayout rootView,
-      @NonNull ImageView imgCategoryIcon, @NonNull TextView tvAmount,
+      @NonNull ImageView btnDelete, @NonNull ImageView btnEdit, @NonNull ImageView imgCategoryIcon,
+      @NonNull LinearLayout layoutActions, @NonNull TextView tvAmount,
       @NonNull TextView tvCategoryName, @NonNull TextView tvNote) {
     this.rootView = rootView;
+    this.btnDelete = btnDelete;
+    this.btnEdit = btnEdit;
     this.imgCategoryIcon = imgCategoryIcon;
+    this.layoutActions = layoutActions;
     this.tvAmount = tvAmount;
     this.tvCategoryName = tvCategoryName;
     this.tvNote = tvNote;
@@ -69,9 +83,27 @@ public final class ItemTransactionDetailBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btn_delete;
+      ImageView btnDelete = ViewBindings.findChildViewById(rootView, id);
+      if (btnDelete == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_edit;
+      ImageView btnEdit = ViewBindings.findChildViewById(rootView, id);
+      if (btnEdit == null) {
+        break missingId;
+      }
+
       id = R.id.img_category_icon;
       ImageView imgCategoryIcon = ViewBindings.findChildViewById(rootView, id);
       if (imgCategoryIcon == null) {
+        break missingId;
+      }
+
+      id = R.id.layout_actions;
+      LinearLayout layoutActions = ViewBindings.findChildViewById(rootView, id);
+      if (layoutActions == null) {
         break missingId;
       }
 
@@ -93,8 +125,8 @@ public final class ItemTransactionDetailBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemTransactionDetailBinding((ConstraintLayout) rootView, imgCategoryIcon,
-          tvAmount, tvCategoryName, tvNote);
+      return new ItemTransactionDetailBinding((ConstraintLayout) rootView, btnDelete, btnEdit,
+          imgCategoryIcon, layoutActions, tvAmount, tvCategoryName, tvNote);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

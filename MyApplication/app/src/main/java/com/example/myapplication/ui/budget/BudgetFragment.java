@@ -1,66 +1,153 @@
 package com.example.myapplication.ui.budget;
 
+import android.content.Intent;
+import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.myapplication.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BudgetFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.myapplication.activity.budget.AddBudgetActivity;
+import com.example.myapplication.activity.budget.EditBudgetActivity;
+import com.example.myapplication.adapter.BudgetAdapter;
+import com.example.myapplication.data.dto.BudgetItem;
+import com.example.myapplication.data.entity.User;
+import com.example.myapplication.databinding.FragmentBudgetBinding;
+import com.example.myapplication.manager.BudgetManager;
+
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.concurrent.Executors;
+
 public class BudgetFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentBudgetBinding binding;
+    private BudgetViewModel budgetViewModel;
+    private BudgetAdapter budgetAdapter;
+    private BudgetManager budgetManager;
+    private User user;
 
     public BudgetFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BudgetFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static BudgetFragment newInstance(String param1, String param2) {
-        BudgetFragment fragment = new BudgetFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_budget, container, false);
+        binding = FragmentBudgetBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        user = (User) requireActivity().getIntent().getSerializableExtra("EXTRA_USER");
+        budgetViewModel = new ViewModelProvider(this).get(BudgetViewModel.class);
+        budgetManager = new BudgetManager(requireContext());
+
+        setupRecyclerView();
+        setupEvents();
+        observeBudgets();
+    }
+
+    private void setupRecyclerView() {
+        budgetAdapter = new BudgetAdapter(new ArrayList<>(), new BudgetAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BudgetItem budget) {
+            }
+
+            @Override
+            public void onEditClick(BudgetItem budget) {
+                openEditBudget(budget);
+            }
+
+            @Override
+            public void onDeleteClick(BudgetItem budget) {
+                confirmDeleteBudget(budget);
+            }
+        });
+        binding.rcvBudget.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rcvBudget.setAdapter(budgetAdapter);
+    }
+
+    private void setupEvents() {
+        binding.btnAddBudget.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), AddBudgetActivity.class);
+            intent.putExtra("EXTRA_USER", user);
+            startActivity(intent);
+        });
+    }
+
+    private void observeBudgets() {
+        if (user == null) return;
+
+        budgetViewModel.getBudgetUI(user.getUserId()).observe(getViewLifecycleOwner(), list -> {
+            budgetAdapter.setData(list);
+
+            long totalLeft = 0;
+            long totalLimit = 0;
+            long totalSpent = 0;
+            if (list != null) {
+                for (BudgetItem item : list) {
+                    totalLeft += item.limitAmount - item.spentAmount;
+                    totalLimit += item.limitAmount;
+                    totalSpent += item.spentAmount;
+                }
+            }
+
+            int percent = totalLimit == 0 ? 0 : (int) ((totalSpent * 100) / totalLimit);
+            int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+            binding.tvBudgetLeft.setText(formatter.format(totalLeft));
+            binding.tvBudgetMonth.setText("Tháng " + month);
+            binding.tvBudgetCardMonth.setText("Tháng " + month + " bạn còn lại");
+            binding.tvBudgetSpentPercent.setText("Bạn đã chi tiêu " + percent + "% hạn mức");
+        });
+    }
+
+    private void openEditBudget(BudgetItem budget) {
+        Intent intent = new Intent(requireContext(), EditBudgetActivity.class);
+        intent.putExtra("EXTRA_BUDGET_ID", budget.budgetId);
+        intent.putExtra("EXTRA_CATEGORY_ID", budget.categoryId);
+        intent.putExtra("EXTRA_LIMIT_AMOUNT", budget.limitAmount);
+        startActivity(intent);
+    }
+
+    private void confirmDeleteBudget(BudgetItem budget) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Xóa ngân sách")
+                .setMessage("Bạn có chắc muốn xóa ngân sách " + budget.categoryName + "?")
+                .setNegativeButton("Hủy", null)
+                .setPositiveButton("Xóa", (dialog, which) -> deleteBudget(budget.budgetId))
+                .show();
+    }
+
+    private void deleteBudget(int budgetId) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            int result = budgetManager.deleteById(budgetId);
+            if (!isAdded()) return;
+            requireActivity().runOnUiThread(() -> {
+                if (result <= 0) {
+                    new AlertDialog.Builder(requireContext())
+                            .setMessage("Xóa ngân sách thất bại!")
+                            .setPositiveButton("OK", null)
+                            .show();
+                }
+            });
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

@@ -3,6 +3,7 @@ package com.example.myapplication.data.dao;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.myapplication.data.entity.User;
 
@@ -14,5 +15,12 @@ public interface UserDAO {
     @Query("SELECT * FROM users WHERE userName = :userName AND password = :password LIMIT 1")
     User login(String userName, String password);
 
+    @Update
+    int update(User user);
+
+    @Query("SELECT * FROM users WHERE userName = :userName LIMIT 1")
+    User getUserByUsername(String userName);
+    @Query("SELECT EXISTS(SELECT 1 FROM users WHERE userName = :userName LIMIT 1)")
+    boolean isUsernameExists(String userName);
 
 }

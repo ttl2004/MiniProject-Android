@@ -53,4 +53,12 @@ public class TransactionManager {
             return dtoList;
         });
     }
+
+    public void delete(Transaction transaction) {
+        transactionRepository.delete(transaction);
+    }
+
+    public void update(Transaction transaction) {
+        transactionRepository.update(transaction);
+    }
 }

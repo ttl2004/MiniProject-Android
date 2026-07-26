@@ -17,9 +17,11 @@ import java.util.List;
 public class TransactionGroupAdapter extends RecyclerView.Adapter<TransactionGroupAdapter.ViewHolder> {
 
     private List<TransactionGroup> groupList;
+    private final TransactionDetailAdapter.OnTransactionActionListener actionListener;
 
-    public TransactionGroupAdapter(List<TransactionGroup> groupList) {
+    public TransactionGroupAdapter(List<TransactionGroup> groupList, TransactionDetailAdapter.OnTransactionActionListener actionListener) {
         this.groupList = groupList;
+        this.actionListener = actionListener;
     }
 
     public void setGroupList(List<TransactionGroup> groupList) {
@@ -44,7 +46,6 @@ public class TransactionGroupAdapter extends RecyclerView.Adapter<TransactionGro
 
         long total = group.getTotalAmount();
 
-        // Dùng CurrencyUtils để lấy format dùng dấu chấm '.'
         if (total < 0) {
             String formattedTotal = "-" + CurrencyUtils.formatCurrency(Math.abs(total));
             holder.binding.tvGroupTotalAmount.setText(formattedTotal);
@@ -58,7 +59,7 @@ public class TransactionGroupAdapter extends RecyclerView.Adapter<TransactionGro
             holder.binding.tvGroupTotalAmount.setTextColor(Color.parseColor("#757575"));
         }
 
-        TransactionDetailAdapter detailAdapter = new TransactionDetailAdapter(group.getTransactions());
+        TransactionDetailAdapter detailAdapter = new TransactionDetailAdapter(group.getTransactions(), actionListener);
         holder.binding.rvSubTransactions.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.binding.rvSubTransactions.setAdapter(detailAdapter);
     }
@@ -69,7 +70,7 @@ public class TransactionGroupAdapter extends RecyclerView.Adapter<TransactionGro
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ItemTransactionGroupBinding binding;
+        final ItemTransactionGroupBinding binding;
 
         public ViewHolder(ItemTransactionGroupBinding binding) {
             super(binding.getRoot());

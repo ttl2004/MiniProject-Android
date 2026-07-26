@@ -5,19 +5,55 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
+import androidx.viewbinding.ViewBindings;
 import com.example.myapplication.R;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
+import java.lang.String;
 
 public final class FragmentHomeBinding implements ViewBinding {
   @NonNull
   private final FrameLayout rootView;
 
-  private FragmentHomeBinding(@NonNull FrameLayout rootView) {
+  @NonNull
+  public final TextView btnViewAll;
+
+  @NonNull
+  public final MaterialCardView cvRecentTransactions;
+
+  @NonNull
+  public final RecyclerView rvRecentTransactions;
+
+  @NonNull
+  public final TextView tvEmpty;
+
+  @NonNull
+  public final TextView tvTotalBalance;
+
+  @NonNull
+  public final TextView tvTotalExpense;
+
+  @NonNull
+  public final TextView tvTotalIncome;
+
+  private FragmentHomeBinding(@NonNull FrameLayout rootView, @NonNull TextView btnViewAll,
+      @NonNull MaterialCardView cvRecentTransactions, @NonNull RecyclerView rvRecentTransactions,
+      @NonNull TextView tvEmpty, @NonNull TextView tvTotalBalance, @NonNull TextView tvTotalExpense,
+      @NonNull TextView tvTotalIncome) {
     this.rootView = rootView;
+    this.btnViewAll = btnViewAll;
+    this.cvRecentTransactions = cvRecentTransactions;
+    this.rvRecentTransactions = rvRecentTransactions;
+    this.tvEmpty = tvEmpty;
+    this.tvTotalBalance = tvTotalBalance;
+    this.tvTotalExpense = tvTotalExpense;
+    this.tvTotalIncome = tvTotalIncome;
   }
 
   @Override
@@ -43,10 +79,56 @@ public final class FragmentHomeBinding implements ViewBinding {
 
   @NonNull
   public static FragmentHomeBinding bind(@NonNull View rootView) {
-    if (rootView == null) {
-      throw new NullPointerException("rootView");
-    }
+    // The body of this method is generated in a way you would not otherwise write.
+    // This is done to optimize the compiled bytecode for size and performance.
+    int id;
+    missingId: {
+      id = R.id.btnViewAll;
+      TextView btnViewAll = ViewBindings.findChildViewById(rootView, id);
+      if (btnViewAll == null) {
+        break missingId;
+      }
 
-    return new FragmentHomeBinding((FrameLayout) rootView);
+      id = R.id.cvRecentTransactions;
+      MaterialCardView cvRecentTransactions = ViewBindings.findChildViewById(rootView, id);
+      if (cvRecentTransactions == null) {
+        break missingId;
+      }
+
+      id = R.id.rvRecentTransactions;
+      RecyclerView rvRecentTransactions = ViewBindings.findChildViewById(rootView, id);
+      if (rvRecentTransactions == null) {
+        break missingId;
+      }
+
+      id = R.id.tvEmpty;
+      TextView tvEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (tvEmpty == null) {
+        break missingId;
+      }
+
+      id = R.id.tvTotalBalance;
+      TextView tvTotalBalance = ViewBindings.findChildViewById(rootView, id);
+      if (tvTotalBalance == null) {
+        break missingId;
+      }
+
+      id = R.id.tvTotalExpense;
+      TextView tvTotalExpense = ViewBindings.findChildViewById(rootView, id);
+      if (tvTotalExpense == null) {
+        break missingId;
+      }
+
+      id = R.id.tvTotalIncome;
+      TextView tvTotalIncome = ViewBindings.findChildViewById(rootView, id);
+      if (tvTotalIncome == null) {
+        break missingId;
+      }
+
+      return new FragmentHomeBinding((FrameLayout) rootView, btnViewAll, cvRecentTransactions,
+          rvRecentTransactions, tvEmpty, tvTotalBalance, tvTotalExpense, tvTotalIncome);
+    }
+    String missingId = rootView.getResources().getResourceName(id);
+    throw new NullPointerException("Missing required view with ID: ".concat(missingId));
   }
 }

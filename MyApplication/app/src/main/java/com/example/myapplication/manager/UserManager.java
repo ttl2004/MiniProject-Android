@@ -22,4 +22,19 @@ public class UserManager {
         return userRepository.login(username, password);
     }
 
+    public int update(User user) {
+        return userRepository.update(user);
+    }
+
+    public User getUserByUsername(String userName) {
+        if (userName == null || userName.trim().isEmpty()) {
+            return null;
+        }
+        return userRepository.getUserByUsername(userName);
+    }
+
+    public boolean isUsernameExists(String userName) {
+        if (userName == null || userName.trim().isEmpty()) return false;
+        return userRepository.isUsernameExists(userName);
+    }
 }

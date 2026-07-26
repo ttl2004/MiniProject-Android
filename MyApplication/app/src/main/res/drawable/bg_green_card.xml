@@ -1,0 +1,16 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Màu nền -->
+    <solid android:color="@color/greenApp"/>
+
+    <!-- Bo góc -->
+    <corners android:radius="16dp"/>
+
+<!--    &lt;!&ndash; Padding bên trong (optional) &ndash;&gt;-->
+<!--    <padding-->
+<!--        android:left="8dp"-->
+<!--        android:top="8dp"-->
+<!--        android:right="8dp"-->
+<!--        android:bottom="8dp"/>-->
+
+</shape>

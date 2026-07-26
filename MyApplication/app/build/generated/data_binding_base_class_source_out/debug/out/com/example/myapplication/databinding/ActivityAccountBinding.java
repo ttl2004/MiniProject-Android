@@ -4,14 +4,16 @@ package com.example.myapplication.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.myapplication.R;
-import com.google.android.material.button.MaterialButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -21,20 +23,52 @@ public final class ActivityAccountBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final LinearLayout accountActionCard;
+
+  @NonNull
   public final ImageView btnBack;
 
   @NonNull
-  public final MaterialButton btnLogout;
+  public final LinearLayout btnChangeInfo;
 
   @NonNull
-  public final MaterialButton btnSetting;
+  public final LinearLayout btnLogout;
 
-  private ActivityAccountBinding(@NonNull ConstraintLayout rootView, @NonNull ImageView btnBack,
-      @NonNull MaterialButton btnLogout, @NonNull MaterialButton btnSetting) {
+  @NonNull
+  public final LinearLayout btnSetting;
+
+  @NonNull
+  public final FrameLayout headerProfile;
+
+  @NonNull
+  public final ImageView imgAvatar;
+
+  @NonNull
+  public final TextView tvAccountName;
+
+  @NonNull
+  public final TextView tvAccountSection;
+
+  @NonNull
+  public final TextView tvBrand;
+
+  private ActivityAccountBinding(@NonNull ConstraintLayout rootView,
+      @NonNull LinearLayout accountActionCard, @NonNull ImageView btnBack,
+      @NonNull LinearLayout btnChangeInfo, @NonNull LinearLayout btnLogout,
+      @NonNull LinearLayout btnSetting, @NonNull FrameLayout headerProfile,
+      @NonNull ImageView imgAvatar, @NonNull TextView tvAccountName,
+      @NonNull TextView tvAccountSection, @NonNull TextView tvBrand) {
     this.rootView = rootView;
+    this.accountActionCard = accountActionCard;
     this.btnBack = btnBack;
+    this.btnChangeInfo = btnChangeInfo;
     this.btnLogout = btnLogout;
     this.btnSetting = btnSetting;
+    this.headerProfile = headerProfile;
+    this.imgAvatar = imgAvatar;
+    this.tvAccountName = tvAccountName;
+    this.tvAccountSection = tvAccountSection;
+    this.tvBrand = tvBrand;
   }
 
   @Override
@@ -64,26 +98,69 @@ public final class ActivityAccountBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.account_action_card;
+      LinearLayout accountActionCard = ViewBindings.findChildViewById(rootView, id);
+      if (accountActionCard == null) {
+        break missingId;
+      }
+
       id = R.id.btn_back;
       ImageView btnBack = ViewBindings.findChildViewById(rootView, id);
       if (btnBack == null) {
         break missingId;
       }
 
+      id = R.id.btn_change_info;
+      LinearLayout btnChangeInfo = ViewBindings.findChildViewById(rootView, id);
+      if (btnChangeInfo == null) {
+        break missingId;
+      }
+
       id = R.id.btn_logout;
-      MaterialButton btnLogout = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout btnLogout = ViewBindings.findChildViewById(rootView, id);
       if (btnLogout == null) {
         break missingId;
       }
 
       id = R.id.btn_setting;
-      MaterialButton btnSetting = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout btnSetting = ViewBindings.findChildViewById(rootView, id);
       if (btnSetting == null) {
         break missingId;
       }
 
-      return new ActivityAccountBinding((ConstraintLayout) rootView, btnBack, btnLogout,
-          btnSetting);
+      id = R.id.header_profile;
+      FrameLayout headerProfile = ViewBindings.findChildViewById(rootView, id);
+      if (headerProfile == null) {
+        break missingId;
+      }
+
+      id = R.id.img_avatar;
+      ImageView imgAvatar = ViewBindings.findChildViewById(rootView, id);
+      if (imgAvatar == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_account_name;
+      TextView tvAccountName = ViewBindings.findChildViewById(rootView, id);
+      if (tvAccountName == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_account_section;
+      TextView tvAccountSection = ViewBindings.findChildViewById(rootView, id);
+      if (tvAccountSection == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_brand;
+      TextView tvBrand = ViewBindings.findChildViewById(rootView, id);
+      if (tvBrand == null) {
+        break missingId;
+      }
+
+      return new ActivityAccountBinding((ConstraintLayout) rootView, accountActionCard, btnBack,
+          btnChangeInfo, btnLogout, btnSetting, headerProfile, imgAvatar, tvAccountName,
+          tvAccountSection, tvBrand);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -30,8 +30,21 @@
         <activity
             android:name=".activity.account.AccountActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.account.UpdateAccountActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.addtransaction.AddTransactionActivity"
             android:exported="false"/>
+        <activity
+            android:name=".activity.budget.BudgetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.budget.AddBudgetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.budget.EditBudgetActivity"
+            android:exported="false" />
 
     </application>
 

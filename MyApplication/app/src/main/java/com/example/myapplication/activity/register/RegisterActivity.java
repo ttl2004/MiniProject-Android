@@ -22,42 +22,86 @@ public class RegisterActivity extends AppCompatActivity {
         activityRegisterBinding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(activityRegisterBinding.getRoot());
 
-
-
         userManager = new UserManager(this);
 
-        activityRegisterBinding.tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        activityRegisterBinding.tvLogin.setOnClickListener(v -> finish());
 
         activityRegisterBinding.btnRegister.setOnClickListener(v -> register());
-
     }
 
     private void register() {
         String fullname = activityRegisterBinding.etRegisterFullname.getText().toString().trim();
-        String Username = activityRegisterBinding.etRegisterUsername.getText().toString().trim();
-        String Password = activityRegisterBinding.etRegisterPassword.getText().toString().trim();
+        String username = activityRegisterBinding.etRegisterUsername.getText().toString().trim();
+        String password = activityRegisterBinding.etRegisterPassword.getText().toString().trim();
         String confirmPassword = activityRegisterBinding.etConfirmPassword.getText().toString().trim();
 
-        if (!Password.equals(confirmPassword)) {
-            Toast.makeText(this, "Mat khau khong giong nhau!", Toast.LENGTH_LONG).show();
-        }
-        else {
-            User user = new User(fullname,Username,Password);
+        // 1. Reset các lỗi hiển thị trước đó (nếu dùng TextInputLayout)
+        clearErrors();
 
-            long res = userManager.register(user);
-
-            if (res > 0) {
-                Toast.makeText(this, "Dang ky thanh cong!", Toast.LENGTH_LONG).show();
-                finish();
-            }
-            else {
-                Toast.makeText(this, "Dang ky that bai!!!!!!!", Toast.LENGTH_LONG).show();
-            }
+        // 2. Validate từng trường dữ liệu
+        if (fullname.length() < 4) {
+            showErrorFullname("Tên đầy đủ phải có ít nhất 4 ký tự!");
+            return;
         }
+
+        if (username.length() < 8) {
+            showErrorUsername("Tên đăng nhập phải có ít nhất 8 ký tự!");
+            return;
+        }
+
+        // Kiểm tra trùng username trong Database
+        if (userManager.isUsernameExists(username)) {
+            showErrorUsername("Tên đăng nhập này đã tồn tại!");
+            return;
+        }
+
+        if (password.length() < 8) {
+            showErrorPassword("Mật khẩu phải có ít nhất 8 ký tự!");
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            showErrorConfirmPassword("Mật khẩu xác nhận không trùng khớp!");
+            return;
+        }
+
+        // 3. Nếu tất cả thỏa mãn -> Cho phép đăng ký
+        User user = new User(fullname, username, password);
+        long res = userManager.register(user);
+
+        if (res > 0) {
+            Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(this, "Đăng ký thất bại, vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Các hàm phụ trợ hiển thị lỗi lên giao diện
+    private void clearErrors() {
+        activityRegisterBinding.etRegisterFullname.setError(null);
+        activityRegisterBinding.etRegisterUsername.setError(null);
+        activityRegisterBinding.etRegisterPassword.setError(null);
+        activityRegisterBinding.etConfirmPassword.setError(null);
+    }
+
+    private void showErrorFullname(String message) {
+        activityRegisterBinding.etRegisterFullname.setError(message);
+        activityRegisterBinding.etRegisterFullname.requestFocus();
+    }
+
+    private void showErrorUsername(String message) {
+        activityRegisterBinding.etRegisterUsername.setError(message);
+        activityRegisterBinding.etRegisterUsername.requestFocus();
+    }
+
+    private void showErrorPassword(String message) {
+        activityRegisterBinding.etRegisterPassword.setError(message);
+        activityRegisterBinding.etRegisterPassword.requestFocus();
+    }
+
+    private void showErrorConfirmPassword(String message) {
+        activityRegisterBinding.etConfirmPassword.setError(message);
+        activityRegisterBinding.etConfirmPassword.requestFocus();
     }
 }
