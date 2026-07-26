@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.budget;
 
-import android.content.Intent;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +33,8 @@ public class BudgetFragment extends Fragment {
     private BudgetAdapter budgetAdapter;
     private BudgetManager budgetManager;
     private User user;
+    private int selectedMonth;
+    private int selectedYear;
 
     public BudgetFragment() {
         // Required empty public constructor
@@ -52,9 +54,17 @@ public class BudgetFragment extends Fragment {
         budgetViewModel = new ViewModelProvider(this).get(BudgetViewModel.class);
         budgetManager = new BudgetManager(requireContext());
 
+        setupDefaultPeriod();
         setupRecyclerView();
         setupEvents();
         observeBudgets();
+    }
+
+    private void setupDefaultPeriod() {
+        Calendar calendar = Calendar.getInstance();
+        selectedMonth = calendar.get(Calendar.MONTH) + 1;
+        selectedYear = calendar.get(Calendar.YEAR);
+        updatePeriodText();
     }
 
     private void setupRecyclerView() {
@@ -81,36 +91,60 @@ public class BudgetFragment extends Fragment {
         binding.btnAddBudget.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), AddBudgetActivity.class);
             intent.putExtra("EXTRA_USER", user);
+            intent.putExtra("EXTRA_BUDGET_MONTH", selectedMonth);
+            intent.putExtra("EXTRA_BUDGET_YEAR", selectedYear);
             startActivity(intent);
         });
+        binding.btnBudgetPrevPeriod.setOnClickListener(v -> changePeriod(-1));
+        binding.btnBudgetNextPeriod.setOnClickListener(v -> changePeriod(1));
     }
 
     private void observeBudgets() {
         if (user == null) return;
 
-        budgetViewModel.getBudgetUI(user.getUserId()).observe(getViewLifecycleOwner(), list -> {
-            budgetAdapter.setData(list);
+        budgetViewModel.getBudgetUI(user.getUserId(), selectedMonth, selectedYear)
+                .observe(getViewLifecycleOwner(), list -> {
+                    budgetAdapter.setData(list);
 
-            long totalLeft = 0;
-            long totalLimit = 0;
-            long totalSpent = 0;
-            if (list != null) {
-                for (BudgetItem item : list) {
-                    totalLeft += item.limitAmount - item.spentAmount;
-                    totalLimit += item.limitAmount;
-                    totalSpent += item.spentAmount;
-                }
-            }
+                    long totalLeft = 0;
+                    long totalLimit = 0;
+                    long totalSpent = 0;
+                    if (list != null) {
+                        for (BudgetItem item : list) {
+                            totalLeft += item.limitAmount - item.spentAmount;
+                            totalLimit += item.limitAmount;
+                            totalSpent += item.spentAmount;
+                        }
+                    }
 
-            int percent = totalLimit == 0 ? 0 : (int) ((totalSpent * 100) / totalLimit);
-            int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                    int percent = totalLimit == 0 ? 0 : (int) ((totalSpent * 100) / totalLimit);
+                    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-            binding.tvBudgetLeft.setText(formatter.format(totalLeft));
-            binding.tvBudgetMonth.setText("Tháng " + month);
-            binding.tvBudgetCardMonth.setText("Tháng " + month + " bạn còn lại");
-            binding.tvBudgetSpentPercent.setText("Bạn đã chi tiêu " + percent + "% hạn mức");
-        });
+                    binding.tvBudgetLeft.setText(formatter.format(totalLeft));
+                    binding.tvBudgetSpentPercent.setText("Bạn đã chi tiêu " + percent + "% hạn mức");
+                    binding.tvBudgetCardMonth.setText("Tháng " + selectedMonth + "/" + selectedYear + " bạn còn lại");
+                    updatePeriodText();
+                });
+    }
+
+    private void changePeriod(int monthOffset) {
+        selectedMonth += monthOffset;
+        if (selectedMonth < 1) {
+            selectedMonth = 12;
+            selectedYear--;
+        } else if (selectedMonth > 12) {
+            selectedMonth = 1;
+            selectedYear++;
+        }
+
+        updatePeriodText();
+        if (user != null) {
+            budgetViewModel.getBudgetUI(user.getUserId(), selectedMonth, selectedYear);
+        }
+    }
+
+    private void updatePeriodText() {
+        binding.tvBudgetMonth.setText("Tháng " + selectedMonth + "/" + selectedYear);
     }
 
     private void openEditBudget(BudgetItem budget) {

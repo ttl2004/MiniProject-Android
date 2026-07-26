@@ -1,6 +1,7 @@
 package com.example.myapplication.activity.budget;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,7 @@ public class EditBudgetActivity extends AppCompatActivity {
         budgetManager = new BudgetManager(this);
 
         binding.tvTitle.setText("Sửa ngân sách");
+        binding.budgetPeriodCard.setVisibility(View.GONE);
         setupRecyclerView();
         setupEvents();
         observeCategories();

@@ -18,16 +18,19 @@ public class Budget implements Serializable {
 
     private int month;
 
+    private int year;
+
 
     private long createdAt;
 
     private long updatedAt;
 
-    public Budget(int userId, int categoryId, int limitAmount, int month) {
+    public Budget(int userId, int categoryId, int limitAmount, int month, int year) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.limitAmount = limitAmount;
         this.month = month;
+        this.year=year;
 
         long now = System.currentTimeMillis();
         this.createdAt = now;
@@ -72,6 +75,12 @@ public class Budget implements Serializable {
 
     public void setMonth(int month) {
         this.month = month;
+    }
+    public int getYear(){
+        return year;
+    }
+    public void setYear(int year){
+        this.year=year;
     }
 
     public long getCreatedAt() {
