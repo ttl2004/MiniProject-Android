@@ -4,25 +4,125 @@ package com.example.myapplication.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
+import androidx.viewbinding.ViewBindings;
 import com.example.myapplication.R;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import java.lang.NullPointerException;
 import java.lang.Override;
+import java.lang.String;
 
 public final class FragmentAnalysisBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final LinearLayout rootView;
 
-  private FragmentAnalysisBinding(@NonNull FrameLayout rootView) {
+  @NonNull
+  public final BarChart barChart;
+
+  @NonNull
+  public final ImageView btnFilter;
+
+  @NonNull
+  public final ImageView btnNextTime;
+
+  @NonNull
+  public final ImageView btnPrevTime;
+
+  @NonNull
+  public final LineChart lineChart;
+
+  @NonNull
+  public final PieChart pieChart;
+
+  @NonNull
+  public final RecyclerView rvRanking;
+
+  @NonNull
+  public final TextView tabChartAll;
+
+  @NonNull
+  public final TextView tabChartExpense;
+
+  @NonNull
+  public final TextView tabChartIncome;
+
+  @NonNull
+  public final TextView tabCustom;
+
+  @NonNull
+  public final TextView tabMonth;
+
+  @NonNull
+  public final TextView tabWeek;
+
+  @NonNull
+  public final TextView tabYear;
+
+  @NonNull
+  public final TextView tvOverviewBalance;
+
+  @NonNull
+  public final TextView tvOverviewExpense;
+
+  @NonNull
+  public final TextView tvOverviewIncome;
+
+  @NonNull
+  public final TextView tvPieTitle;
+
+  @NonNull
+  public final TextView tvSelectedTime;
+
+  @NonNull
+  public final TextView tvSubtitle;
+
+  @NonNull
+  public final TextView tvTitle;
+
+  private FragmentAnalysisBinding(@NonNull LinearLayout rootView, @NonNull BarChart barChart,
+      @NonNull ImageView btnFilter, @NonNull ImageView btnNextTime, @NonNull ImageView btnPrevTime,
+      @NonNull LineChart lineChart, @NonNull PieChart pieChart, @NonNull RecyclerView rvRanking,
+      @NonNull TextView tabChartAll, @NonNull TextView tabChartExpense,
+      @NonNull TextView tabChartIncome, @NonNull TextView tabCustom, @NonNull TextView tabMonth,
+      @NonNull TextView tabWeek, @NonNull TextView tabYear, @NonNull TextView tvOverviewBalance,
+      @NonNull TextView tvOverviewExpense, @NonNull TextView tvOverviewIncome,
+      @NonNull TextView tvPieTitle, @NonNull TextView tvSelectedTime, @NonNull TextView tvSubtitle,
+      @NonNull TextView tvTitle) {
     this.rootView = rootView;
+    this.barChart = barChart;
+    this.btnFilter = btnFilter;
+    this.btnNextTime = btnNextTime;
+    this.btnPrevTime = btnPrevTime;
+    this.lineChart = lineChart;
+    this.pieChart = pieChart;
+    this.rvRanking = rvRanking;
+    this.tabChartAll = tabChartAll;
+    this.tabChartExpense = tabChartExpense;
+    this.tabChartIncome = tabChartIncome;
+    this.tabCustom = tabCustom;
+    this.tabMonth = tabMonth;
+    this.tabWeek = tabWeek;
+    this.tabYear = tabYear;
+    this.tvOverviewBalance = tvOverviewBalance;
+    this.tvOverviewExpense = tvOverviewExpense;
+    this.tvOverviewIncome = tvOverviewIncome;
+    this.tvPieTitle = tvPieTitle;
+    this.tvSelectedTime = tvSelectedTime;
+    this.tvSubtitle = tvSubtitle;
+    this.tvTitle = tvTitle;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public LinearLayout getRoot() {
     return rootView;
   }
 
@@ -43,10 +143,142 @@ public final class FragmentAnalysisBinding implements ViewBinding {
 
   @NonNull
   public static FragmentAnalysisBinding bind(@NonNull View rootView) {
-    if (rootView == null) {
-      throw new NullPointerException("rootView");
-    }
+    // The body of this method is generated in a way you would not otherwise write.
+    // This is done to optimize the compiled bytecode for size and performance.
+    int id;
+    missingId: {
+      id = R.id.bar_chart;
+      BarChart barChart = ViewBindings.findChildViewById(rootView, id);
+      if (barChart == null) {
+        break missingId;
+      }
 
-    return new FragmentAnalysisBinding((FrameLayout) rootView);
+      id = R.id.btn_filter;
+      ImageView btnFilter = ViewBindings.findChildViewById(rootView, id);
+      if (btnFilter == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_next_time;
+      ImageView btnNextTime = ViewBindings.findChildViewById(rootView, id);
+      if (btnNextTime == null) {
+        break missingId;
+      }
+
+      id = R.id.btn_prev_time;
+      ImageView btnPrevTime = ViewBindings.findChildViewById(rootView, id);
+      if (btnPrevTime == null) {
+        break missingId;
+      }
+
+      id = R.id.line_chart;
+      LineChart lineChart = ViewBindings.findChildViewById(rootView, id);
+      if (lineChart == null) {
+        break missingId;
+      }
+
+      id = R.id.pie_chart;
+      PieChart pieChart = ViewBindings.findChildViewById(rootView, id);
+      if (pieChart == null) {
+        break missingId;
+      }
+
+      id = R.id.rv_ranking;
+      RecyclerView rvRanking = ViewBindings.findChildViewById(rootView, id);
+      if (rvRanking == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_chart_all;
+      TextView tabChartAll = ViewBindings.findChildViewById(rootView, id);
+      if (tabChartAll == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_chart_expense;
+      TextView tabChartExpense = ViewBindings.findChildViewById(rootView, id);
+      if (tabChartExpense == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_chart_income;
+      TextView tabChartIncome = ViewBindings.findChildViewById(rootView, id);
+      if (tabChartIncome == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_custom;
+      TextView tabCustom = ViewBindings.findChildViewById(rootView, id);
+      if (tabCustom == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_month;
+      TextView tabMonth = ViewBindings.findChildViewById(rootView, id);
+      if (tabMonth == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_week;
+      TextView tabWeek = ViewBindings.findChildViewById(rootView, id);
+      if (tabWeek == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_year;
+      TextView tabYear = ViewBindings.findChildViewById(rootView, id);
+      if (tabYear == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_overview_balance;
+      TextView tvOverviewBalance = ViewBindings.findChildViewById(rootView, id);
+      if (tvOverviewBalance == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_overview_expense;
+      TextView tvOverviewExpense = ViewBindings.findChildViewById(rootView, id);
+      if (tvOverviewExpense == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_overview_income;
+      TextView tvOverviewIncome = ViewBindings.findChildViewById(rootView, id);
+      if (tvOverviewIncome == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_pie_title;
+      TextView tvPieTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvPieTitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_selected_time;
+      TextView tvSelectedTime = ViewBindings.findChildViewById(rootView, id);
+      if (tvSelectedTime == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_subtitle;
+      TextView tvSubtitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvSubtitle == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_title;
+      TextView tvTitle = ViewBindings.findChildViewById(rootView, id);
+      if (tvTitle == null) {
+        break missingId;
+      }
+
+      return new FragmentAnalysisBinding((LinearLayout) rootView, barChart, btnFilter, btnNextTime,
+          btnPrevTime, lineChart, pieChart, rvRanking, tabChartAll, tabChartExpense, tabChartIncome,
+          tabCustom, tabMonth, tabWeek, tabYear, tvOverviewBalance, tvOverviewExpense,
+          tvOverviewIncome, tvPieTitle, tvSelectedTime, tvSubtitle, tvTitle);
+    }
+    String missingId = rootView.getResources().getResourceName(id);
+    throw new NullPointerException("Missing required view with ID: ".concat(missingId));
   }
 }
