@@ -42,10 +42,14 @@ public final class ItemTransactionDetailBinding implements ViewBinding {
   @NonNull
   public final TextView tvNote;
 
+  @NonNull
+  public final TextView tvTransactionTime;
+
   private ItemTransactionDetailBinding(@NonNull ConstraintLayout rootView,
       @NonNull ImageView btnDelete, @NonNull ImageView btnEdit, @NonNull ImageView imgCategoryIcon,
       @NonNull LinearLayout layoutActions, @NonNull TextView tvAmount,
-      @NonNull TextView tvCategoryName, @NonNull TextView tvNote) {
+      @NonNull TextView tvCategoryName, @NonNull TextView tvNote,
+      @NonNull TextView tvTransactionTime) {
     this.rootView = rootView;
     this.btnDelete = btnDelete;
     this.btnEdit = btnEdit;
@@ -54,6 +58,7 @@ public final class ItemTransactionDetailBinding implements ViewBinding {
     this.tvAmount = tvAmount;
     this.tvCategoryName = tvCategoryName;
     this.tvNote = tvNote;
+    this.tvTransactionTime = tvTransactionTime;
   }
 
   @Override
@@ -125,8 +130,14 @@ public final class ItemTransactionDetailBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_transaction_time;
+      TextView tvTransactionTime = ViewBindings.findChildViewById(rootView, id);
+      if (tvTransactionTime == null) {
+        break missingId;
+      }
+
       return new ItemTransactionDetailBinding((ConstraintLayout) rootView, btnDelete, btnEdit,
-          imgCategoryIcon, layoutActions, tvAmount, tvCategoryName, tvNote);
+          imgCategoryIcon, layoutActions, tvAmount, tvCategoryName, tvNote, tvTransactionTime);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
