@@ -38,7 +38,7 @@ public final class BudgetDAO_Impl implements BudgetDAO {
     this.__insertionAdapterOfBudget = new EntityInsertionAdapter<Budget>(__db) {
       @Override
       public String createQuery() {
-        return "INSERT OR ABORT INTO `budgets` (`id`,`userId`,`categoryId`,`limitAmount`,`month`,`createdAt`,`updatedAt`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `budgets` (`id`,`userId`,`categoryId`,`limitAmount`,`month`,`year`,`createdAt`,`updatedAt`) VALUES (nullif(?, 0),?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -48,8 +48,9 @@ public final class BudgetDAO_Impl implements BudgetDAO {
         stmt.bindLong(3, value.getCategoryId());
         stmt.bindLong(4, value.getLimitAmount());
         stmt.bindLong(5, value.getMonth());
-        stmt.bindLong(6, value.getCreatedAt());
-        stmt.bindLong(7, value.getUpdatedAt());
+        stmt.bindLong(6, value.getYear());
+        stmt.bindLong(7, value.getCreatedAt());
+        stmt.bindLong(8, value.getUpdatedAt());
       }
     };
     this.__preparedStmtOfUpdateBudget = new SharedSQLiteStatement(__db) {
@@ -136,6 +137,7 @@ public final class BudgetDAO_Impl implements BudgetDAO {
           final int _cursorIndexOfCategoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "categoryId");
           final int _cursorIndexOfLimitAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "limitAmount");
           final int _cursorIndexOfMonth = CursorUtil.getColumnIndexOrThrow(_cursor, "month");
+          final int _cursorIndexOfYear = CursorUtil.getColumnIndexOrThrow(_cursor, "year");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final List<Budget> _result = new ArrayList<Budget>(_cursor.getCount());
@@ -149,7 +151,9 @@ public final class BudgetDAO_Impl implements BudgetDAO {
             _tmpLimitAmount = _cursor.getInt(_cursorIndexOfLimitAmount);
             final int _tmpMonth;
             _tmpMonth = _cursor.getInt(_cursorIndexOfMonth);
-            _item = new Budget(_tmpUserId,_tmpCategoryId,_tmpLimitAmount,_tmpMonth);
+            final int _tmpYear;
+            _tmpYear = _cursor.getInt(_cursorIndexOfYear);
+            _item = new Budget(_tmpUserId,_tmpCategoryId,_tmpLimitAmount,_tmpMonth,_tmpYear);
             final int _tmpId;
             _tmpId = _cursor.getInt(_cursorIndexOfId);
             _item.setId(_tmpId);
@@ -176,9 +180,9 @@ public final class BudgetDAO_Impl implements BudgetDAO {
 
   @Override
   public LiveData<List<BudgetItem>> getBudgetItems(final int userId, final int month,
-      final String monthText, final String year) {
-    final String _sql = "SELECT b.id AS budgetId, c.id AS categoryId, c.name AS categoryName, c.icon AS icon, c.color AS color, b.limitAmount AS limitAmount, IFNULL(SUM(t.amount), 0) AS spentAmount, 0 AS percent FROM budgets b JOIN categories c ON b.categoryId = c.id LEFT JOIN transactions t ON t.categoryId = b.categoryId AND t.type = 'EXPENSE' AND strftime('%m', t.transactionDate / 1000, 'unixepoch') = ? AND strftime('%Y', t.transactionDate / 1000, 'unixepoch') = ? WHERE b.userId = ? AND b.month = ? GROUP BY b.id";
-    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 4);
+      final int yearInt, final String monthText, final String year) {
+    final String _sql = "SELECT b.id AS budgetId, c.id AS categoryId, c.name AS categoryName, c.icon AS icon, c.color AS color, b.limitAmount AS limitAmount, IFNULL(SUM(t.amount), 0) AS spentAmount, 0 AS percent FROM budgets b JOIN categories c ON b.categoryId = c.id LEFT JOIN transactions t ON t.categoryId = b.categoryId AND t.type = 'EXPENSE' AND strftime('%m', t.transactionDate / 1000, 'unixepoch') = ? AND strftime('%Y', t.transactionDate / 1000, 'unixepoch') = ? WHERE b.userId = ? AND b.month = ? AND b.year = ? GROUP BY b.id";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 5);
     int _argIndex = 1;
     if (monthText == null) {
       _statement.bindNull(_argIndex);
@@ -195,6 +199,8 @@ public final class BudgetDAO_Impl implements BudgetDAO {
     _statement.bindLong(_argIndex, userId);
     _argIndex = 4;
     _statement.bindLong(_argIndex, month);
+    _argIndex = 5;
+    _statement.bindLong(_argIndex, yearInt);
     return __db.getInvalidationTracker().createLiveData(new String[]{"budgets","categories","transactions"}, false, new Callable<List<BudgetItem>>() {
       @Override
       public List<BudgetItem> call() throws Exception {

@@ -25,10 +25,16 @@ public class AnalysisCategoryAdapter extends RecyclerView.Adapter<AnalysisCatego
     private List<AnalysisCategoryDTO> list;
     private Context context;
     private DecimalFormat currencyFormat = new DecimalFormat("#,### đ");
+    private OnItemClickListener listener;
 
-    public AnalysisCategoryAdapter(Context context, List<AnalysisCategoryDTO> list) {
+    public interface OnItemClickListener {
+        void onItemClick(AnalysisCategoryDTO item);
+    }
+
+    public AnalysisCategoryAdapter(Context context, List<AnalysisCategoryDTO> list, OnItemClickListener listener) {
         this.context = context;
         this.list = list;
+        this.listener = listener;
     }
 
     public void setList(List<AnalysisCategoryDTO> list) {
@@ -73,6 +79,12 @@ public class AnalysisCategoryAdapter extends RecyclerView.Adapter<AnalysisCatego
                 e.printStackTrace();
             }
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item);
+            }
+        });
     }
 
     @Override

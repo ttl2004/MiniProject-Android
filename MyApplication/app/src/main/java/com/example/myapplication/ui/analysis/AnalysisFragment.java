@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.analysis;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -110,7 +111,7 @@ public class AnalysisFragment extends Fragment {
         
         // Initial load
         updateTimeSelectorUI();
-        loadData();
+        switchChartType("ALL");
     }
 
     private void initViews(View v) {
@@ -160,7 +161,19 @@ public class AnalysisFragment extends Fragment {
     }
     
     private void setupRecyclerView() {
-        adapter = new AnalysisCategoryAdapter(requireContext(), new ArrayList<>());
+        adapter = new AnalysisCategoryAdapter(requireContext(), new ArrayList<>(), item -> {
+            long[] dates = getStartAndEndDates();
+            Intent intent = new Intent(requireContext(), CategoryDetailActivity.class);
+            intent.putExtra("categoryId", item.getCategoryId());
+            intent.putExtra("categoryName", item.getCategoryName());
+            intent.putExtra("categoryColor", item.getCategoryColor());
+            intent.putExtra("userId", currentUser.getUserId());
+            intent.putExtra("startDate", dates[0]);
+            intent.putExtra("endDate", dates[1]);
+            intent.putExtra("timeMode", currentTimeMode);
+            intent.putExtra("chartType", currentChartType);
+            startActivity(intent);
+        });
         rvRanking.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvRanking.setAdapter(adapter);
     }

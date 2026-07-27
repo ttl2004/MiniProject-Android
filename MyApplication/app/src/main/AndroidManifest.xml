@@ -45,6 +45,9 @@
         <activity
             android:name=".activity.budget.EditBudgetActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.analysis.CategoryDetailActivity"
+            android:exported="false" />
 
     </application>
 

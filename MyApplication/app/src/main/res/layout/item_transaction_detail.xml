@@ -51,6 +51,19 @@
             app:tint="#D32F2F" />
     </LinearLayout>
 
+    <!-- Thời gian giao dịch (Chỉ hiện khi ẩn Sửa/Xóa) -->
+    <TextView
+        android:id="@+id/tv_transaction_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#757575"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_amount"
+        tools:text="12/08/2026" />
+
     <!-- 3. Số tiền ở DÒNG DƯỚI (Nằm dưới cụm Icon) -->
     <TextView
         android:id="@+id/tv_amount"
