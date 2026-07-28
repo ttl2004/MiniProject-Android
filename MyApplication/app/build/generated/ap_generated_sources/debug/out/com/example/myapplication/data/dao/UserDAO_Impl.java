@@ -253,6 +253,70 @@ public final class UserDAO_Impl implements UserDAO {
     });
   }
 
+  @Override
+  public User findByUsernameAndFullName(final String username, final String fullName) {
+    final String _sql = "SELECT * FROM users WHERE username = ? AND fullName = ? LIMIT 1";
+    return DBUtil.performBlocking(__db, true, false, (_connection) -> {
+      final SQLiteStatement _stmt = _connection.prepare(_sql);
+      try {
+        int _argIndex = 1;
+        if (username == null) {
+          _stmt.bindNull(_argIndex);
+        } else {
+          _stmt.bindText(_argIndex, username);
+        }
+        _argIndex = 2;
+        if (fullName == null) {
+          _stmt.bindNull(_argIndex);
+        } else {
+          _stmt.bindText(_argIndex, fullName);
+        }
+        final int _columnIndexOfUserId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "userId");
+        final int _columnIndexOfFullName = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "fullName");
+        final int _columnIndexOfUserName = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "userName");
+        final int _columnIndexOfPassword = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "password");
+        final int _columnIndexOfCreatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "createdAt");
+        final int _columnIndexOfUpdatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "updatedAt");
+        final User _result;
+        if (_stmt.step()) {
+          final String _tmpFullName;
+          if (_stmt.isNull(_columnIndexOfFullName)) {
+            _tmpFullName = null;
+          } else {
+            _tmpFullName = _stmt.getText(_columnIndexOfFullName);
+          }
+          final String _tmpUserName;
+          if (_stmt.isNull(_columnIndexOfUserName)) {
+            _tmpUserName = null;
+          } else {
+            _tmpUserName = _stmt.getText(_columnIndexOfUserName);
+          }
+          final String _tmpPassword;
+          if (_stmt.isNull(_columnIndexOfPassword)) {
+            _tmpPassword = null;
+          } else {
+            _tmpPassword = _stmt.getText(_columnIndexOfPassword);
+          }
+          _result = new User(_tmpFullName,_tmpUserName,_tmpPassword);
+          final int _tmpUserId;
+          _tmpUserId = (int) (_stmt.getLong(_columnIndexOfUserId));
+          _result.setUserId(_tmpUserId);
+          final long _tmpCreatedAt;
+          _tmpCreatedAt = _stmt.getLong(_columnIndexOfCreatedAt);
+          _result.setCreatedAt(_tmpCreatedAt);
+          final long _tmpUpdatedAt;
+          _tmpUpdatedAt = _stmt.getLong(_columnIndexOfUpdatedAt);
+          _result.setUpdatedAt(_tmpUpdatedAt);
+        } else {
+          _result = null;
+        }
+        return _result;
+      } finally {
+        _stmt.close();
+      }
+    });
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

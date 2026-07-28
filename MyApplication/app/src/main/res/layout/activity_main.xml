@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="#F9FAFB">
+    android:background="#F9FAFB"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
+        android:padding="24dp">
 
         <!-- Logo App -->
         <ImageView
@@ -19,8 +19,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="32dp"
-            android:src="@drawable/ic_emerald_logo"
-            android:contentDescription="Emerald Finance Logo" />
+            android:contentDescription="Emerald Finance Logo"
+            android:src="@drawable/ic_emerald_logo" />
 
         <!-- Tên App & Lời chào -->
         <TextView
@@ -92,13 +92,25 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Nút Quên mật khẩu? (Căn phải) -->
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="12dp"
+                android:padding="4dp"
+                android:text="Quên mật khẩu?"
+                android:textColor="#059669"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <!-- Nút Đăng nhập -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="Đăng nhập"
                 android:textSize="16sp"
                 app:backgroundTint="#059669"

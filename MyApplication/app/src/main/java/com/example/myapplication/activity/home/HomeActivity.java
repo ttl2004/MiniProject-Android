@@ -3,6 +3,7 @@ package com.example.myapplication.activity.home;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
@@ -11,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
+import com.example.myapplication.activity.notification.NotificationActivity;
 import com.example.myapplication.activity.account.AccountActivity;
 import com.example.myapplication.activity.addtransaction.AddTransactionActivity;
 import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityHomeBinding;
+import com.example.myapplication.manager.NotificationManager;
 import com.example.myapplication.ui.analysis.AnalysisFragment;
 import com.example.myapplication.ui.budget.BudgetFragment;
 import com.example.myapplication.ui.category.CategoryFragment;
@@ -26,12 +29,16 @@ public class HomeActivity extends AppCompatActivity {
     private static final int REQUEST_ACCOUNT = 2001;
     private ActivityHomeBinding activityHomeBinding;
     private User currentUser;
+    private NotificationManager notificationManager; // Declared NotificationManager
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityHomeBinding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(activityHomeBinding.getRoot());
+
+        // Khởi tạo NotificationManager
+        notificationManager = new NotificationManager(this);
 
         // 1. Xử lý nút Back (Hiện dialog xác nhận)
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -87,6 +94,27 @@ public class HomeActivity extends AppCompatActivity {
             Intent i = new Intent(HomeActivity.this, AddTransactionActivity.class);
             i.putExtra("EXTRA_USER", currentUser);
             startActivity(i);
+        });
+
+        // 7. Xử lý sự kiện mở màn hình Thông Báo
+        activityHomeBinding.btnNotification.setOnClickListener(v -> {
+            Intent i = new Intent(HomeActivity.this, NotificationActivity.class);
+            startActivity(i);
+        });
+
+        // 8. Lắng nghe số lượng thông báo chưa đọc để cập nhật badge
+        setupNotificationBadge();
+    }
+
+
+    private void setupNotificationBadge() {
+        notificationManager.getUnreadCount().observe(this, unreadCount -> {
+            if (unreadCount != null && unreadCount > 0) {
+                activityHomeBinding.tvNotificationBadge.setVisibility(View.VISIBLE);
+                activityHomeBinding.tvNotificationBadge.setText(unreadCount > 99 ? "99+" : String.valueOf(unreadCount));
+            } else {
+                activityHomeBinding.tvNotificationBadge.setVisibility(View.GONE);
+            }
         });
     }
 

@@ -32,4 +32,8 @@ public class UserRepository {
     public boolean isUsernameExists(String userName) {
         return userDAO.isUsernameExists(userName);
     }
+
+    public User findByUsernameAndFullName(String username, String fullName) {
+        return userDAO.findByUsernameAndFullName(username, fullName);
+    }
 }

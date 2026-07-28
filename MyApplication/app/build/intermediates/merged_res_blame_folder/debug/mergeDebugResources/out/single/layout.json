@@ -1,114 +1,134 @@
 [
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_category.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_category.xml"
-    },
-    {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_add_transaction.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/activity_add_transaction.xml"
-    },
-    {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_transaction_group.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_transaction_group.xml"
-    },
-    {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_budget.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/activity_budget.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_key_delete.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_key_delete.xml"
     },
     {
         "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_main.xml",
         "source": "com.example.myapplication.app-main-39:/layout/activity_main.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_category_horizontal.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_category_horizontal.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_category_detail.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_category_detail.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_budget_summary.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_budget_summary.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_analysis_category.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_analysis_category.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_transaction_detail.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_transaction_detail.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_budget_summary.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_budget_summary.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_register.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/activity_register.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_category_budget.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_category_budget.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_category_detail.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/activity_category_detail.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_transaction.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_transaction.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_key_delete.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_key_delete.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_account.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_account.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_add_budget.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_add_budget.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_key.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_key.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_category_budget.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_category_budget.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_update_account.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_update_account.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_account.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/activity_account.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_analysis.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_analysis.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_analysis.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_analysis.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_add_budget.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_add_budget.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_transaction.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_transaction.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_add_transaction.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_add_transaction.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/layout_marker_view.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/layout_marker_view.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_category.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_category.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_analysis_category.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_analysis_category.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_main.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_home.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/activity_home.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_home.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_home.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_key.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_key.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_register.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_register.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_budget.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_budget.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_category.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_category.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_category.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_category.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_transaction_home.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_transaction_home.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_budget.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_budget.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_budget.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_budget.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_update_account.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/activity_update_account.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_notification.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_notification.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_transaction_home.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_transaction_home.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_notification.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_notification.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_home.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_home.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_month_chip.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_month_chip.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_edit_budget.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_edit_budget.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_budget.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_budget.xml"
     },
     {
-        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_month_chip.xml",
-        "source": "com.example.myapplication.app-main-39:/layout/item_month_chip.xml"
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_transaction_group.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_transaction_group.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_budget.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_budget.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_transaction_detail.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_transaction_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\item_category_horizontal.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_category_horizontal.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_home.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\activity_settings.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\activity_settings.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_forgot_password.xml",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_forgot_password.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\layout_marker_view.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\layout_marker_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-mergeDebugResources-36:\\layout\\fragment_edit_budget.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\fragment_edit_budget.xml"
     }
 ]

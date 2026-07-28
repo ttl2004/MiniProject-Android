@@ -35,16 +35,21 @@ public final class ActivityMainBinding implements ViewBinding {
   public final ImageView imgLogo;
 
   @NonNull
+  public final TextView tvForgotPassword;
+
+  @NonNull
   public final TextView tvRegister;
 
   private ActivityMainBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnLogin,
       @NonNull TextInputEditText etPassword, @NonNull TextInputEditText etUsername,
-      @NonNull ImageView imgLogo, @NonNull TextView tvRegister) {
+      @NonNull ImageView imgLogo, @NonNull TextView tvForgotPassword,
+      @NonNull TextView tvRegister) {
     this.rootView = rootView;
     this.btnLogin = btnLogin;
     this.etPassword = etPassword;
     this.etUsername = etUsername;
     this.imgLogo = imgLogo;
+    this.tvForgotPassword = tvForgotPassword;
     this.tvRegister = tvRegister;
   }
 
@@ -99,6 +104,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvForgotPassword;
+      TextView tvForgotPassword = ViewBindings.findChildViewById(rootView, id);
+      if (tvForgotPassword == null) {
+        break missingId;
+      }
+
       id = R.id.tvRegister;
       TextView tvRegister = ViewBindings.findChildViewById(rootView, id);
       if (tvRegister == null) {
@@ -106,7 +117,7 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((ScrollView) rootView, btnLogin, etPassword, etUsername,
-          imgLogo, tvRegister);
+          imgLogo, tvForgotPassword, tvRegister);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
