@@ -236,6 +236,7 @@ id tv_amount
 id tv_brand
 id tv_budget_amount
 id tv_budget_card_month
+id tv_budget_empty
 id tv_budget_left
 id tv_budget_month
 id tv_budget_month_picker

@@ -43,6 +43,9 @@ public final class FragmentBudgetBinding implements ViewBinding {
   public final TextView tvBudgetCardMonth;
 
   @NonNull
+  public final TextView tvBudgetEmpty;
+
+  @NonNull
   public final TextView tvBudgetLeft;
 
   @NonNull
@@ -55,8 +58,8 @@ public final class FragmentBudgetBinding implements ViewBinding {
       @NonNull TextView btnBudgetNextPeriod, @NonNull TextView btnBudgetPrevPeriod,
       @NonNull LinearLayout llBudgetHeader, @NonNull LinearLayout llBudgetList,
       @NonNull RecyclerView rcvBudget, @NonNull TextView tvBudgetCardMonth,
-      @NonNull TextView tvBudgetLeft, @NonNull TextView tvBudgetMonth,
-      @NonNull TextView tvBudgetSpentPercent) {
+      @NonNull TextView tvBudgetEmpty, @NonNull TextView tvBudgetLeft,
+      @NonNull TextView tvBudgetMonth, @NonNull TextView tvBudgetSpentPercent) {
     this.rootView = rootView;
     this.btnAddBudget = btnAddBudget;
     this.btnBudgetNextPeriod = btnBudgetNextPeriod;
@@ -65,6 +68,7 @@ public final class FragmentBudgetBinding implements ViewBinding {
     this.llBudgetList = llBudgetList;
     this.rcvBudget = rcvBudget;
     this.tvBudgetCardMonth = tvBudgetCardMonth;
+    this.tvBudgetEmpty = tvBudgetEmpty;
     this.tvBudgetLeft = tvBudgetLeft;
     this.tvBudgetMonth = tvBudgetMonth;
     this.tvBudgetSpentPercent = tvBudgetSpentPercent;
@@ -139,6 +143,12 @@ public final class FragmentBudgetBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_budget_empty;
+      TextView tvBudgetEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (tvBudgetEmpty == null) {
+        break missingId;
+      }
+
       id = R.id.tv_budget_left;
       TextView tvBudgetLeft = ViewBindings.findChildViewById(rootView, id);
       if (tvBudgetLeft == null) {
@@ -159,7 +169,7 @@ public final class FragmentBudgetBinding implements ViewBinding {
 
       return new FragmentBudgetBinding((LinearLayout) rootView, btnAddBudget, btnBudgetNextPeriod,
           btnBudgetPrevPeriod, llBudgetHeader, llBudgetList, rcvBudget, tvBudgetCardMonth,
-          tvBudgetLeft, tvBudgetMonth, tvBudgetSpentPercent);
+          tvBudgetEmpty, tvBudgetLeft, tvBudgetMonth, tvBudgetSpentPercent);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

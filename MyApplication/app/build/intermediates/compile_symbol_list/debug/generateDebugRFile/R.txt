@@ -234,6 +234,7 @@ int id tv_amount 0x0
 int id tv_brand 0x0
 int id tv_budget_amount 0x0
 int id tv_budget_card_month 0x0
+int id tv_budget_empty 0x0
 int id tv_budget_left 0x0
 int id tv_budget_month 0x0
 int id tv_budget_month_picker 0x0
