@@ -24,4 +24,9 @@ public class CategoryViewModel extends AndroidViewModel {
     public LiveData<List<Category>> getAllCategories() {
         return allCategories;
     }
+
+
+    public LiveData<List<Category>> getCategoriesByType(String type) {
+        return categoryManager.getCategoriesByType(type);
+    }
 }

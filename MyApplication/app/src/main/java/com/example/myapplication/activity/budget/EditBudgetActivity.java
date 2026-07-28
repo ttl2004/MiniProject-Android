@@ -47,7 +47,7 @@ public class EditBudgetActivity extends AppCompatActivity {
         binding.budgetPeriodCard.setVisibility(View.GONE);
         setupRecyclerView();
         setupEvents();
-        observeCategories();
+        observeCategories(); // Đã sửa để chỉ lấy danh mục Chi tiêu
 
         binding.tvAmount.addTextChangedListener(new NumberTextWatcher(binding.tvAmount));
         binding.tvAmount.setText(String.valueOf(limitAmount));
@@ -67,16 +67,24 @@ public class EditBudgetActivity extends AppCompatActivity {
         binding.btnSave.setOnClickListener(v -> updateBudget());
     }
 
+    /**
+     * Chỉ nạp các danh mục thuộc loại CHI TIÊU ("EXPENSE")
+     */
     private void observeCategories() {
-        categoryManager.getALL().observe(this, categories -> {
+        categoryManager.getCategoriesByType("EXPENSE").observe(this, categories -> {
             if (categories == null || categories.isEmpty()) {
-                Toast.makeText(this, "Chưa có danh mục nào!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Chưa có danh mục chi tiêu nào!", Toast.LENGTH_SHORT).show();
+                categoryList.clear();
+                categoryAdapter.setCategoryList(new ArrayList<>());
+                selectedCategory = null;
                 return;
             }
 
             categoryList.clear();
             categoryList.addAll(categories);
             categoryAdapter.setCategoryList(categoryList);
+
+            // Highlight lại đúng danh mục cũ của Ngân sách đang sửa
             categoryAdapter.selectCategoryById(selectedCategoryId);
             selectedCategory = categoryAdapter.getSelectedCategory();
         });

@@ -48,7 +48,7 @@ public class AddBudgetActivity extends AppCompatActivity {
         setupDefaultPeriod();
         setupRecyclerView();
         setupEvents();
-        observeCategories();
+        observeCategories(); // Nạp duy nhất các danh mục Chi tiêu
     }
 
     private void setupDefaultPeriod() {
@@ -147,17 +147,28 @@ public class AddBudgetActivity extends AppCompatActivity {
         return year < currentYear || (year == currentYear && month < currentMonth);
     }
 
+    /**
+     * Chỉ nạp các danh mục CHI TIÊU ("EXPENSE")
+     */
     private void observeCategories() {
-        categoryManager.getALL().observe(this, categories -> {
+        categoryManager.getCategoriesByType("EXPENSE").observe(this, categories -> {
             if (categories == null || categories.isEmpty()) {
-                Toast.makeText(this, "Chưa có danh mục nào!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Chưa có danh mục Chi tiêu nào!", Toast.LENGTH_SHORT).show();
+                categoryList.clear();
+                categoryAdapter.setCategoryList(new ArrayList<>());
+                selectedCategory = null;
                 return;
             }
 
             categoryList.clear();
             categoryList.addAll(categories);
             categoryAdapter.setCategoryList(categoryList);
-            selectedCategory = categoryAdapter.getSelectedCategory();
+
+            // Mặc định chọn danh mục Chi tiêu đầu tiên
+            if (!categoryList.isEmpty()) {
+                selectedCategory = categoryList.get(0);
+                categoryAdapter.setSelectedCategory(selectedCategory);
+            }
         });
     }
 
@@ -168,7 +179,7 @@ public class AddBudgetActivity extends AppCompatActivity {
         }
 
         if (selectedCategory == null) {
-            Toast.makeText(this, "Vui lòng chọn danh mục!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng chọn danh mục chi tiêu!", Toast.LENGTH_SHORT).show();
             return;
         }
 
