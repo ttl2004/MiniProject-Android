@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="#F7F8F7"
     android:orientation="vertical"
     android:padding="16dp">
@@ -18,9 +18,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="132dp"
+            android:background="@drawable/bg_green_card"
             android:orientation="vertical"
-            android:padding="18dp"
-            android:background="@drawable/bg_green_card">
+            android:padding="18dp">
 
             <TextView
                 android:id="@+id/tv_budget_card_month"
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tháng này bạn còn lại"
                 android:textColor="#DDEFE0"
-                android:textSize="13sp"/>
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tv_budget_left"
@@ -36,9 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="0đ"
+                android:textColor="@color/whiteApp"
                 android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/whiteApp"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_budget_spent_percent"
@@ -50,7 +50,7 @@
                 android:paddingHorizontal="14dp"
                 android:text="Bạn đã chi tiêu 0% hạn mức"
                 android:textColor="#EAF7EC"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -64,18 +64,17 @@
             android:text="+  Thiết lập ngân sách mới"
             android:textAllCaps="false"
             android:textColor="@color/greenApp"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
-
 
     <!-- ================= ll2 ================= -->
     <LinearLayout
         android:id="@+id/ll_budget_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginTop="16dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <LinearLayout
@@ -91,16 +90,38 @@
                 android:layout_weight="1"
                 android:text="Theo dõi ngân sách"
                 android:textColor="#1E1E1E"
-                android:textStyle="bold"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btn_budget_prev_period"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="&lt;"
+                android:textColor="@color/greenApp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_budget_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="96dp"
                 android:text="Tháng 10"
                 android:textColor="@color/greenApp"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/btn_budget_next_period"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="&gt;"
+                android:textColor="@color/greenApp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- RecyclerView -->

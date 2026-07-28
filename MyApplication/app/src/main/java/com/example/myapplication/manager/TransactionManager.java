@@ -61,4 +61,8 @@ public class TransactionManager {
     public void update(Transaction transaction) {
         transactionRepository.update(transaction);
     }
+
+    public LiveData<List<Category>> getCategoriesByType(String type) {
+        return categoryRepository.getCategoriesByType(type);
+    }
 }

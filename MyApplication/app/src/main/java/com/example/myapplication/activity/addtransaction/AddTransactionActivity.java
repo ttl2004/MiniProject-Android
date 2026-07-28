@@ -54,7 +54,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         // Lấy thông tin user hiện tại
         user = (User) getIntent().getSerializableExtra("EXTRA_USER");
 
-        // KIỂM TRA XEM CÓ TRUYỀN TRANSACTION CŨ SANG KHÔNG
+        // KIỂM TRA XEM CÓ TRUYỀN TRANSACTION CŨ SANG KHÔNG (Chế độ Edit)
         if (getIntent().hasExtra("EXTRA_TRANSACTION")) {
             currentTransaction = (Transaction) getIntent().getSerializableExtra("EXTRA_TRANSACTION");
             if (currentTransaction != null) {
@@ -64,13 +64,14 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         setupRecyclerView();
         setupEvents();
-        observeCategories();
 
         // Cấu hình giao diện ban đầu
         if (isEditMode) {
             setupEditModeUI();
         } else {
             updateDateDisplay();
+            // Mặc định chọn tab EXPENSE và load danh mục tương ứng
+            switchType("EXPENSE");
         }
     }
 
@@ -107,7 +108,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         // Nút Lưu / Cập nhật Giao Dịch
         binding.btnSaveTransaction.setOnClickListener(v -> saveTransaction());
 
-        // Đăng ký tự động thêm dấu chấm khi gõ số tiền
+        // Tự động định dạng dấu chấm phân cách số tiền khi gõ
         binding.edtAmount.addTextChangedListener(new NumberTextWatcher(binding.edtAmount));
     }
 
@@ -118,52 +119,30 @@ public class AddTransactionActivity extends AppCompatActivity {
         binding.tvTitle.setText("Chỉnh sửa giao dịch");
         binding.btnSaveTransaction.setText("CẬP NHẬT GIAO DỊCH");
 
-        // 2. Load loại giao dịch (EXPENSE/INCOME)
-        switchType(currentTransaction.getType() != null ? currentTransaction.getType() : "EXPENSE");
-
-        // 3. Load số tiền cũ
+        // 2. Load số tiền cũ
         int absAmount = Math.abs(currentTransaction.getAmount());
         binding.edtAmount.setText(String.valueOf(absAmount));
 
-        // 4. Load ghi chú
+        // 3. Load ghi chú
         if (currentTransaction.getNote() != null) {
             binding.edtNote.setText(currentTransaction.getNote());
         }
 
-        // 5. Load ngày thực hiện
+        // 4. Load ngày thực hiện
         selectedCalendar.setTimeInMillis(currentTransaction.getTransactionDate());
         updateDateDisplay();
+
+        // 5. Chuyển đúng tab (EXPENSE/INCOME) -> Tự động load danh mục tương ứng
+        switchType(currentTransaction.getType() != null ? currentTransaction.getType() : "EXPENSE");
     }
 
-    private void observeCategories() {
-        transactionManager.getALLCategories().observe(this, dbCategories -> {
-            if (dbCategories != null && !dbCategories.isEmpty()) {
-                categoryList = dbCategories;
-                categoryAdapter.setCategoryList(categoryList);
-
-                // Nếu ở chế độ EDIT: Chọn đúng Category cũ trong danh sách
-                if (isEditMode && currentTransaction != null) {
-                    for (Category cat : categoryList) {
-                        if (cat.getId() == currentTransaction.getCategoryId()) {
-                            selectedCategory = cat;
-                            categoryAdapter.setSelectedCategory(cat);
-                            break;
-                        }
-                    }
-                }
-
-                // Nếu vẫn chưa chọn category nào thì chọn mặc định item đầu
-                if (selectedCategory == null) {
-                    selectedCategory = categoryAdapter.getSelectedCategory();
-                }
-            } else {
-                Toast.makeText(this, "Chưa có danh mục nào trong CSDL!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
+    /**
+     * Chuyển đổi tab Chi tiêu / Thu nhập & Gọi load lại danh mục
+     */
     private void switchType(String type) {
         selectedType = type;
+        selectedCategory = null; // Reset danh mục đã chọn trước đó
+
         if ("EXPENSE".equals(type)) {
             binding.tabExpense.setBackgroundResource(R.drawable.bg_toggle_active);
             binding.tabExpense.setTextColor(ContextCompat.getColor(this, android.R.color.white));
@@ -177,6 +156,43 @@ public class AddTransactionActivity extends AppCompatActivity {
             binding.tabExpense.setBackgroundResource(android.R.color.transparent);
             binding.tabExpense.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
         }
+
+        // Tải danh mục theo loại (EXPENSE / INCOME)
+        loadCategoriesByType(type);
+    }
+
+    /**
+     * Lọc và nạp danh sách danh mục từ CSDL theo type
+     */
+    private void loadCategoriesByType(String type) {
+        transactionManager.getCategoriesByType(type).observe(this, dbCategories -> {
+            if (dbCategories != null && !dbCategories.isEmpty()) {
+                categoryList = dbCategories;
+                categoryAdapter.setCategoryList(categoryList);
+
+                // Nếu ở chế độ EDIT & cùng type với giao dịch cũ: Highlight đúng Category cũ
+                if (isEditMode && currentTransaction != null && type.equals(currentTransaction.getType())) {
+                    for (Category cat : categoryList) {
+                        if (cat.getId() == currentTransaction.getCategoryId()) {
+                            selectedCategory = cat;
+                            categoryAdapter.setSelectedCategory(cat);
+                            break;
+                        }
+                    }
+                }
+
+                // Nếu chưa chọn được category nào (hoặc vừa đổi tab): Tự động chọn item đầu tiên
+                if (selectedCategory == null && !categoryList.isEmpty()) {
+                    selectedCategory = categoryList.get(0);
+                    categoryAdapter.setSelectedCategory(selectedCategory);
+                }
+            } else {
+                categoryList.clear();
+                categoryAdapter.setCategoryList(new ArrayList<>());
+                selectedCategory = null;
+                Toast.makeText(this, "Chưa có danh mục nào cho loại này!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showDatePicker() {
@@ -195,7 +211,6 @@ public class AddTransactionActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    // --- ĐÃ SỬA: Hàm hiển thị ngày thông minh (Không bị dính cố định "Hôm nay") ---
     private void updateDateDisplay() {
         Calendar today = Calendar.getInstance();
         Calendar yesterday = Calendar.getInstance();
@@ -208,7 +223,6 @@ public class AddTransactionActivity extends AppCompatActivity {
         } else if (isSameDay(selectedCalendar, yesterday)) {
             binding.tvDate.setText("Hôm qua, " + sdfBase.format(selectedCalendar.getTime()));
         } else {
-            // Nếu là ngày khác -> Chỉ hiện Ngày tháng năm (Ví dụ: 25 tháng 07, 2026)
             SimpleDateFormat sdfFull = new SimpleDateFormat("dd 'tháng' MM, yyyy", new Locale("vi", "VN"));
             binding.tvDate.setText(sdfFull.format(selectedCalendar.getTime()));
         }
@@ -237,7 +251,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         long transactionDate = selectedCalendar.getTimeInMillis();
 
         if (isEditMode && currentTransaction != null) {
-            // 1. CHẾ ĐỘ SỬA
+            // 1. CẬP NHẬT GIAO DỊCH CŨ
             currentTransaction.setCategoryId(selectedCategory.getId());
             currentTransaction.setAmount(amount);
             currentTransaction.setNote(note);
@@ -254,7 +268,7 @@ public class AddTransactionActivity extends AppCompatActivity {
             });
 
         } else {
-            // 2. CHẾ ĐỘ THÊM MỚI
+            // 2. THÊM GIAO DỊCH MỚI
             Transaction transaction = new Transaction(
                     user != null ? user.getUserId() : 0,
                     selectedCategory.getId(),

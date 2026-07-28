@@ -11,6 +11,8 @@ import com.example.myapplication.data.repository.CategoryRepository;
 import java.util.List;
 
 public class CategoryManager {
+    public static final String TYPE_EXPENSE = "EXPENSE";
+    public static final String TYPE_INCOME = "INCOME";
     private CategoryRepository categoryRepository;
 
     public CategoryManager(Context context) {
@@ -21,11 +23,20 @@ public class CategoryManager {
     public long insert(Category category) {
         return categoryRepository.insert(category);
     }
+
     public void insertALL(List<Category> categoryList) {
-       categoryRepository.insertALL(categoryList);
+        categoryRepository.insertALL(categoryList);
     }
 
     public LiveData<List<Category>> getALL() {
         return categoryRepository.getALL();
+    }
+
+    public LiveData<List<Category>> getCategoriesByType(String type) {
+        return categoryRepository.getCategoriesByType(type);
+    }
+
+    public Category getCategoryById(long categoryId) {
+        return categoryRepository.getCategoryById(categoryId);
     }
 }

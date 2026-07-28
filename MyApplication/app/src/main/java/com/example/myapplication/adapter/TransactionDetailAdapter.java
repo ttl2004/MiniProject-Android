@@ -13,7 +13,10 @@ import com.example.myapplication.data.entity.Transaction;
 import com.example.myapplication.databinding.ItemTransactionDetailBinding;
 import com.example.myapplication.utils.CurrencyUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TransactionDetailAdapter extends RecyclerView.Adapter<TransactionDetailAdapter.ViewHolder> {
 
@@ -105,17 +108,24 @@ public class TransactionDetailAdapter extends RecyclerView.Adapter<TransactionDe
         }
 
         // Sự kiện Sửa & Xóa
-        holder.binding.btnEdit.setOnClickListener(v -> {
-            if (actionListener != null) {
+        if (actionListener != null) {
+            holder.binding.layoutActions.setVisibility(View.VISIBLE);
+            holder.binding.tvTransactionTime.setVisibility(View.GONE);
+            
+            holder.binding.btnEdit.setOnClickListener(v -> {
                 actionListener.onEdit(dto);
-            }
-        });
+            });
 
-        holder.binding.btnDelete.setOnClickListener(v -> {
-            if (actionListener != null) {
+            holder.binding.btnDelete.setOnClickListener(v -> {
                 actionListener.onDelete(dto);
-            }
-        });
+            });
+        } else {
+            holder.binding.layoutActions.setVisibility(View.GONE);
+            holder.binding.tvTransactionTime.setVisibility(View.VISIBLE);
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            holder.binding.tvTransactionTime.setText(sdf.format(new Date(transaction.getTransactionDate())));
+        }
     }
 
     @Override

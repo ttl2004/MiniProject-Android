@@ -95,6 +95,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             }
         }
     }
+    public void updateData(List<Category> newCategories) {
+        this.categoryList = newCategories;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

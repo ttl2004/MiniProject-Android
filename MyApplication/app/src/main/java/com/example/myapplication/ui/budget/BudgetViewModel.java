@@ -22,6 +22,7 @@ public class BudgetViewModel extends AndroidViewModel {
 
     private BudgetManager budgetManager;
     private final MediatorLiveData<List<BudgetItem>> budgetUI = new MediatorLiveData<>();
+    private LiveData<List<BudgetItem>> budgetSource;
 
     public BudgetViewModel(@NonNull Application application) {
         super(application);
@@ -34,10 +35,17 @@ public class BudgetViewModel extends AndroidViewModel {
         int month = cal.get(Calendar.MONTH) + 1;
         int year = cal.get(Calendar.YEAR);
 
-        LiveData<List<BudgetItem>> source =
-                budgetManager.getBudgetItems(userId, month, year);
+        return getBudgetUI(userId, month, year);
+    }
 
-        budgetUI.addSource(source, list -> {
+    public LiveData<List<BudgetItem>> getBudgetUI(int userId, int month, int year) {
+        if (budgetSource != null) {
+            budgetUI.removeSource(budgetSource);
+        }
+
+        budgetSource = budgetManager.getBudgetItems(userId, month, year);
+
+        budgetUI.addSource(budgetSource, list -> {
             if (list == null) return;
 
             for (BudgetItem item : list) {
