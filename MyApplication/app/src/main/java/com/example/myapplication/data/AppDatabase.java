@@ -2,9 +2,12 @@ package com.example.myapplication.data;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.myapplication.data.dao.BudgetDAO;
 import com.example.myapplication.data.dao.CategoryDAO;
@@ -22,10 +25,25 @@ import com.example.myapplication.data.entity.User;
                 Budget.class,
                 Transaction.class
         },
-        version = 4
+        version = 5
 )
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "expense_manager.db";
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL(
+                    "DELETE FROM budgets " +
+                            "WHERE id NOT IN (" +
+                            "SELECT MAX(id) FROM budgets GROUP BY userId, categoryId, month, year" +
+                            ")"
+            );
+            database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS index_budgets_userId_categoryId_month_year " +
+                            "ON budgets(userId, categoryId, month, year)"
+            );
+        }
+    };
 
     // DAO
     public abstract UserDAO userDAO();
@@ -42,7 +60,11 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             DATABASE_NAME
-                    ).allowMainThreadQueries().addCallback(new DatabaseCallBack(context)).fallbackToDestructiveMigration().build();
+                    ).allowMainThreadQueries()
+                            .addCallback(new DatabaseCallBack(context))
+                            .addMigrations(MIGRATION_4_5)
+                            .fallbackToDestructiveMigration()
+                            .build();
                 }
             }
         }

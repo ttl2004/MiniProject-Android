@@ -1,5 +1,6 @@
 package com.example.myapplication.activity.budget;
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -115,11 +116,17 @@ public class EditBudgetActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            int result = budgetManager.updateBudget(
-                    budgetId,
-                    selectedCategory.getId(),
-                    (int) amountValue
-            );
+            int result;
+            try {
+                result = budgetManager.updateBudget(
+                        budgetId,
+                        selectedCategory.getId(),
+                        (int) amountValue
+                );
+            } catch (SQLiteConstraintException e) {
+                runOnUiThread(() -> Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại trong tháng đã chọn!", Toast.LENGTH_SHORT).show());
+                return;
+            }
 
             runOnUiThread(() -> {
                 if (result > 0) {

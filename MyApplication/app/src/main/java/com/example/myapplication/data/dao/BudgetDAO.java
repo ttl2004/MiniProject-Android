@@ -15,6 +15,9 @@ public interface BudgetDAO {
     @Insert
     long insert(Budget budget);
 
+    @Query("SELECT * FROM budgets WHERE userId = :userId AND categoryId = :categoryId AND month = :month AND year = :year LIMIT 1")
+    Budget getBudgetByCategoryPeriod(int userId, int categoryId, int month, int year);
+
     @Query("SELECT * FROM budgets")
     LiveData<List<Budget>> getAll();
 
