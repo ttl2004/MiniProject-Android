@@ -57,6 +57,61 @@ public final class BudgetDAO_Impl implements BudgetDAO {
   }
 
   @Override
+  public Budget getBudgetByCategoryPeriod(final int userId, final int categoryId, final int month,
+      final int year) {
+    final String _sql = "SELECT * FROM budgets WHERE userId = ? AND categoryId = ? AND month = ? AND year = ? LIMIT 1";
+    return DBUtil.performBlocking(__db, true, false, (_connection) -> {
+      final SQLiteStatement _stmt = _connection.prepare(_sql);
+      try {
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        _argIndex = 2;
+        _stmt.bindLong(_argIndex, categoryId);
+        _argIndex = 3;
+        _stmt.bindLong(_argIndex, month);
+        _argIndex = 4;
+        _stmt.bindLong(_argIndex, year);
+        final int _columnIndexOfId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "id");
+        final int _columnIndexOfUserId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "userId");
+        final int _columnIndexOfCategoryId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "categoryId");
+        final int _columnIndexOfLimitAmount = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "limitAmount");
+        final int _columnIndexOfMonth = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "month");
+        final int _columnIndexOfYear = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "year");
+        final int _columnIndexOfCreatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "createdAt");
+        final int _columnIndexOfUpdatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "updatedAt");
+        final Budget _result;
+        if (_stmt.step()) {
+          final int _tmpUserId;
+          _tmpUserId = (int) (_stmt.getLong(_columnIndexOfUserId));
+          final int _tmpCategoryId;
+          _tmpCategoryId = (int) (_stmt.getLong(_columnIndexOfCategoryId));
+          final int _tmpLimitAmount;
+          _tmpLimitAmount = (int) (_stmt.getLong(_columnIndexOfLimitAmount));
+          final int _tmpMonth;
+          _tmpMonth = (int) (_stmt.getLong(_columnIndexOfMonth));
+          final int _tmpYear;
+          _tmpYear = (int) (_stmt.getLong(_columnIndexOfYear));
+          _result = new Budget(_tmpUserId,_tmpCategoryId,_tmpLimitAmount,_tmpMonth,_tmpYear);
+          final int _tmpId;
+          _tmpId = (int) (_stmt.getLong(_columnIndexOfId));
+          _result.setId(_tmpId);
+          final long _tmpCreatedAt;
+          _tmpCreatedAt = _stmt.getLong(_columnIndexOfCreatedAt);
+          _result.setCreatedAt(_tmpCreatedAt);
+          final long _tmpUpdatedAt;
+          _tmpUpdatedAt = _stmt.getLong(_columnIndexOfUpdatedAt);
+          _result.setUpdatedAt(_tmpUpdatedAt);
+        } else {
+          _result = null;
+        }
+        return _result;
+      } finally {
+        _stmt.close();
+      }
+    });
+  }
+
+  @Override
   public LiveData<List<Budget>> getAll() {
     final String _sql = "SELECT * FROM budgets";
     return __db.getInvalidationTracker().createLiveData(new String[] {"budgets"}, false, (_connection) -> {

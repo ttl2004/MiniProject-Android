@@ -4,21 +4,21 @@
     <item
         android:id="@+id/navTransaction"
         android:icon="@drawable/ic_transaction"
-        android:title="Transaction"/>
+        android:title="Giao dịch"/>
     <item
         android:id="@+id/navBudget"
         android:icon="@drawable/ic_budget"
-        android:title="Budgets"/>
+        android:title="Ngân sách"/>
     <item
         android:id="@+id/navHome"
         android:icon="@drawable/ic_home"
-        android:title="Home"/>
+        android:title="Trang chủ"/>
     <item
         android:id="@+id/navAnalysis"
         android:icon="@drawable/ic_analysis"
-        android:title="Analysis"/>
+        android:title="Thống kê"/>
     <item
         android:id="@+id/navCategory"
         android:icon="@drawable/ic_category"
-        android:title="Categories"/>
+        android:title="Danh mục"/>
 </menu>

@@ -33,7 +33,7 @@
 
         <TextView
             android:id="@+id/tv_username"
-             android:layout_width="0dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
@@ -42,8 +42,46 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/layout_notification_icon"
             app:layout_constraintStart_toEndOf="@+id/btn_account_avatar"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- CỤM ICON CHUÔNG THÔNG BÁO + BADGE -->
+        <FrameLayout
+            android:id="@+id/layout_notification_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/btn_notification"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:contentDescription="Xem thông báo"
+                android:src="@drawable/ic_notifications"
+                app:tint="@color/greenApp" />
+
+            <!-- Badge hình tròn đỏ (Đã cập nhật mặc định ẩn gone) -->
+            <TextView
+                android:id="@+id/tv_notification_badge"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="top|end"
+                android:background="@drawable/bg_notification_badge"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="3"
+                tools:visibility="visible" />
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,7 +93,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_bar"></FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/header_bar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_transaction"
@@ -86,4 +124,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="labeled"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

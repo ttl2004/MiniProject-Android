@@ -1,5 +1,13 @@
 [
     {
+        "merged": "com.example.myapplication.app-debug-37:/layout_activity_forgot_password.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_forgot_password.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_ic_notifications.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/ic_notifications.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-debug-37:/color_bottom_nav_color.xml.flat",
         "source": "com.example.myapplication.app-main-39:/color/bottom_nav_color.xml"
     },
@@ -34,6 +42,10 @@
     {
         "merged": "com.example.myapplication.app-debug-37:/drawable_bg_account_circle_stroke.xml.flat",
         "source": "com.example.myapplication.app-main-39:/drawable/bg_account_circle_stroke.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_bg_notification_badge.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/bg_notification_badge.xml"
     },
     {
         "merged": "com.example.myapplication.app-debug-37:/mipmap-mdpi_ic_launcher_round.webp.flat",
@@ -72,6 +84,10 @@
         "source": "com.example.myapplication.app-main-39:/drawable/bg_account_icon_box.xml"
     },
     {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_ic_check_all.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/ic_check_all.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-debug-37:/drawable_ic_person.xml.flat",
         "source": "com.example.myapplication.app-main-39:/drawable/ic_person.xml"
     },
@@ -100,6 +116,10 @@
         "source": "com.example.myapplication.app-main-39:/drawable/bg_progress_bar_custom.xml"
     },
     {
+        "merged": "com.example.myapplication.app-debug-37:/layout_activity_notification.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_notification.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-debug-37:/layout_fragment_home.xml.flat",
         "source": "com.example.myapplication.app-main-39:/layout/fragment_home.xml"
     },
@@ -112,8 +132,16 @@
         "source": "com.example.myapplication.app-main-39:/layout/activity_register.xml"
     },
     {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_bg_circle_green.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/bg_circle_green.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-debug-37:/drawable_bg_selected_ring.xml.flat",
         "source": "com.example.myapplication.app-main-39:/drawable/bg_selected_ring.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_ic_clock.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/ic_clock.xml"
     },
     {
         "merged": "com.example.myapplication.app-debug-37:/drawable_ic_chevron_right.xml.flat",
@@ -138,6 +166,10 @@
     {
         "merged": "com.example.myapplication.app-debug-37:/layout_fragment_edit_budget.xml.flat",
         "source": "com.example.myapplication.app-main-39:/layout/fragment_edit_budget.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/layout_activity_settings.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_settings.xml"
     },
     {
         "merged": "com.example.myapplication.app-debug-37:/drawable_ic_account_circle.xml.flat",
@@ -276,6 +308,14 @@
         "source": "com.example.myapplication.app-main-39:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_ic_lightbulb.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/ic_lightbulb.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_bg_circle_green_icon.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/bg_circle_green_icon.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-debug-37:/drawable_bg_account_card.xml.flat",
         "source": "com.example.myapplication.app-main-39:/drawable/bg_account_card.xml"
     },
@@ -290,6 +330,10 @@
     {
         "merged": "com.example.myapplication.app-debug-37:/layout_activity_account.xml.flat",
         "source": "com.example.myapplication.app-main-39:/layout/activity_account.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_ic_calendar_clock.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/ic_calendar_clock.xml"
     },
     {
         "merged": "com.example.myapplication.app-debug-37:/layout_fragment_add_budget.xml.flat",
@@ -348,6 +392,10 @@
         "source": "com.example.myapplication.app-main-39:/drawable/ic_add.xml"
     },
     {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_bg_rounded_gray_light.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/bg_rounded_gray_light.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-debug-37:/drawable_icon_category_money.xml.flat",
         "source": "com.example.myapplication.app-main-39:/drawable/icon_category_money.xml"
     },
@@ -380,12 +428,16 @@
         "source": "com.example.myapplication.app-main-39:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-37:/drawable_bg_toggle_container.xml.flat",
-        "source": "com.example.myapplication.app-main-39:/drawable/bg_toggle_container.xml"
+        "merged": "com.example.myapplication.app-debug-37:/drawable_ic_dark_mode.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/ic_dark_mode.xml"
     },
     {
         "merged": "com.example.myapplication.app-debug-37:/layout_fragment_category.xml.flat",
         "source": "com.example.myapplication.app-main-39:/layout/fragment_category.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/drawable_bg_toggle_container.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/drawable/bg_toggle_container.xml"
     },
     {
         "merged": "com.example.myapplication.app-debug-37:/drawable_bg_green_card.xml.flat",
@@ -442,6 +494,10 @@
     {
         "merged": "com.example.myapplication.app-debug-37:/drawable_ic_chevron_left.xml.flat",
         "source": "com.example.myapplication.app-main-39:/drawable/ic_chevron_left.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-37:/layout_item_notification.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/layout/item_notification.xml"
     },
     {
         "merged": "com.example.myapplication.app-debug-37:/drawable_ic_emerald_logo.xml.flat",

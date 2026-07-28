@@ -64,12 +64,20 @@
         "source": "com.example.myapplication.app-main-39:/layout/fragment_transaction.xml"
     },
     {
+        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_notification.xml",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_notification.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/layout_marker_view.xml",
         "source": "com.example.myapplication.app-main-39:/layout/layout_marker_view.xml"
     },
     {
         "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_analysis_category.xml",
         "source": "com.example.myapplication.app-main-39:/layout/item_analysis_category.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_notification.xml",
+        "source": "com.example.myapplication.app-main-39:/layout/item_notification.xml"
     },
     {
         "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_home.xml",
@@ -104,8 +112,16 @@
         "source": "com.example.myapplication.app-main-39:/layout/fragment_home.xml"
     },
     {
+        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_settings.xml",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_settings.xml"
+    },
+    {
         "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/fragment_edit_budget.xml",
         "source": "com.example.myapplication.app-main-39:/layout/fragment_edit_budget.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/activity_forgot_password.xml",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_forgot_password.xml"
     },
     {
         "merged": "com.example.myapplication.app-mergeDebugResources-36:/layout/item_month_chip.xml",

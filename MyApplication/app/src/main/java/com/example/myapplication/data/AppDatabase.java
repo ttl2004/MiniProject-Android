@@ -11,21 +11,27 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.myapplication.data.dao.BudgetDAO;
 import com.example.myapplication.data.dao.CategoryDAO;
+import com.example.myapplication.data.dao.NotificationDAO;
 import com.example.myapplication.data.dao.TransactionDAO;
 import com.example.myapplication.data.dao.UserDAO;
+import com.example.myapplication.data.dao.UserSettingsDAO;
 import com.example.myapplication.data.entity.Budget;
 import com.example.myapplication.data.entity.Category;
+import com.example.myapplication.data.entity.Notification;
 import com.example.myapplication.data.entity.Transaction;
 import com.example.myapplication.data.entity.User;
+import com.example.myapplication.data.entity.UserSettings;
 
 @Database(
         entities = {
                 User.class,
                 Category.class,
                 Budget.class,
-                Transaction.class
+                Transaction.class,
+                UserSettings.class,
+                Notification.class
         },
-        version = 5
+        version = 6
 )
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "expense_manager.db";
@@ -50,6 +56,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CategoryDAO categoryDAO();
     public abstract BudgetDAO budgetDAO();
     public abstract TransactionDAO transactionDAO();
+    public abstract UserSettingsDAO userSettingsDAO();
+    public abstract NotificationDAO notificationDAO();
     private static volatile AppDatabase instanse;
 
     public static AppDatabase getInstance(Context context) {

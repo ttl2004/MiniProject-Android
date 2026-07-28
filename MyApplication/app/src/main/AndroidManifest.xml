@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Quyền gửi thông báo (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Quyền nhận sự kiện khi điện thoại khởi động lại -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,16 +17,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.register.RegisterActivity"
             android:exported="false" />
@@ -34,8 +41,9 @@
             android:name=".activity.account.UpdateAccountActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activity.addtransaction.AddTransactionActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".activity.addtransaction.AddTransactionActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.budget.BudgetActivity"
             android:exported="false" />
@@ -48,6 +56,28 @@
         <activity
             android:name=".ui.analysis.CategoryDetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.setting.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.notification.NotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.forgotpassword.ForgotPasswordActivity"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.MainActivity;
+import com.example.myapplication.activity.setting.SettingsActivity;
 import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityAccountBinding;
 
@@ -45,7 +46,6 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        // --- XỬ LÝ ĐĂNG XUẤT (LOGOUT) ---
         activityAccountBinding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +65,15 @@ public class AccountActivity extends AppCompatActivity {
 
                 startActivity(i);
                 finish();
+            }
+        });
+
+        activityAccountBinding.btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AccountActivity.this, SettingsActivity.class);
+                intent.putExtra("EXTRA_USER", currentUser);
+                startActivity(intent);
             }
         });
     }
@@ -99,6 +108,7 @@ public class AccountActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finishWithUpdatedUser();
     }
 }

@@ -37,4 +37,8 @@ public class UserManager {
         if (userName == null || userName.trim().isEmpty()) return false;
         return userRepository.isUsernameExists(userName);
     }
+
+    public User getUserByUsernameAndFullName(String username, String fullName) {
+        return userRepository.findByUsernameAndFullName(username, fullName);
+    }
 }
