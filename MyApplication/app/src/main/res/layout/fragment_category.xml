@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.category.CategoryFragment">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,10 +28,52 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="20dp"
-            android:text="Quản lý danh mục chi tiêu và thu nhập của bạn"
+            android:text="Quản lý các nhóm chi tiêu và thu nhập của bạn"
             android:textColor="#757575"
             android:textSize="14sp" />
 
+        <!-- Thanh chuyển đổi CHI TIÊU / THU NHẬP dạng Pill chuẩn thiết kế -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_category_toggle_container"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <!-- Nút Chi tiêu -->
+            <TextView
+                android:id="@+id/btnExpense"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_category_toggle_selected"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="CHI TIÊU"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Nút Thu nhập -->
+            <TextView
+                android:id="@+id/btnIncome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="THU NHẬP"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Danh sách danh mục dạng Lưới -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_categories"
             android:layout_width="match_parent"
@@ -40,7 +81,7 @@
             android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="4"
-            tools:listitem="@layout/item_category"/>
+            tools:listitem="@layout/item_category" />
 
     </LinearLayout>
 

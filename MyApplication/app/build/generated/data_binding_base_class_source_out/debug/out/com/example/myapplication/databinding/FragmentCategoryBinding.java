@@ -21,6 +21,12 @@ public final class FragmentCategoryBinding implements ViewBinding {
   private final FrameLayout rootView;
 
   @NonNull
+  public final TextView btnExpense;
+
+  @NonNull
+  public final TextView btnIncome;
+
+  @NonNull
   public final RecyclerView rvCategories;
 
   @NonNull
@@ -29,9 +35,12 @@ public final class FragmentCategoryBinding implements ViewBinding {
   @NonNull
   public final TextView tvTitle;
 
-  private FragmentCategoryBinding(@NonNull FrameLayout rootView, @NonNull RecyclerView rvCategories,
-      @NonNull TextView tvSubtitle, @NonNull TextView tvTitle) {
+  private FragmentCategoryBinding(@NonNull FrameLayout rootView, @NonNull TextView btnExpense,
+      @NonNull TextView btnIncome, @NonNull RecyclerView rvCategories, @NonNull TextView tvSubtitle,
+      @NonNull TextView tvTitle) {
     this.rootView = rootView;
+    this.btnExpense = btnExpense;
+    this.btnIncome = btnIncome;
     this.rvCategories = rvCategories;
     this.tvSubtitle = tvSubtitle;
     this.tvTitle = tvTitle;
@@ -64,6 +73,18 @@ public final class FragmentCategoryBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnExpense;
+      TextView btnExpense = ViewBindings.findChildViewById(rootView, id);
+      if (btnExpense == null) {
+        break missingId;
+      }
+
+      id = R.id.btnIncome;
+      TextView btnIncome = ViewBindings.findChildViewById(rootView, id);
+      if (btnIncome == null) {
+        break missingId;
+      }
+
       id = R.id.rv_categories;
       RecyclerView rvCategories = ViewBindings.findChildViewById(rootView, id);
       if (rvCategories == null) {
@@ -82,7 +103,8 @@ public final class FragmentCategoryBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentCategoryBinding((FrameLayout) rootView, rvCategories, tvSubtitle, tvTitle);
+      return new FragmentCategoryBinding((FrameLayout) rootView, btnExpense, btnIncome,
+          rvCategories, tvSubtitle, tvTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

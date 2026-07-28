@@ -22,4 +22,7 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM categories WHERE id = :categoryId LIMIT 1")
     Category getCategoryById(long categoryId);
+
+    @Query("SELECT * FROM categories WHERE type = :type")
+    LiveData<List<Category>> getCategoriesByType(String type);
 }
