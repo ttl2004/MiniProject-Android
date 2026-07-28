@@ -1,11 +1,17 @@
 package com.example.myapplication.data.entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "budgets")
+@Entity(
+        tableName = "budgets",
+        indices = {
+                @Index(value = {"userId", "categoryId", "month", "year"}, unique = true)
+        }
+)
 public class Budget implements Serializable {
 
     @PrimaryKey(autoGenerate = true)

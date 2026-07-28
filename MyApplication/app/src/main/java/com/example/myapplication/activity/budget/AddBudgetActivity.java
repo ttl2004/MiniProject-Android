@@ -1,6 +1,8 @@
 package com.example.myapplication.activity.budget;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -210,7 +212,38 @@ public class AddBudgetActivity extends AppCompatActivity {
         );
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            long result = budgetManager.insert(budget);
+            Budget existingBudget = budgetManager.getBudgetByCategoryPeriod(
+                    user.getUserId(),
+                    selectedCategory.getId(),
+                    selectedMonth,
+                    selectedYear
+            );
+
+            if (existingBudget != null) {
+                runOnUiThread(() -> showExistingBudgetDialog(existingBudget));
+                return;
+            }
+
+            long result;
+            try {
+                result = budgetManager.insert(budget);
+            } catch (SQLiteConstraintException e) {
+                Budget conflictedBudget = budgetManager.getBudgetByCategoryPeriod(
+                        user.getUserId(),
+                        selectedCategory.getId(),
+                        selectedMonth,
+                        selectedYear
+                );
+                runOnUiThread(() -> {
+                    if (conflictedBudget != null) {
+                        showExistingBudgetDialog(conflictedBudget);
+                    } else {
+                        Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return;
+            }
+
             runOnUiThread(() -> {
                 if (result > 0) {
                     Toast.makeText(this, "Lưu ngân sách thành công!", Toast.LENGTH_SHORT).show();
@@ -220,5 +253,25 @@ public class AddBudgetActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    private void showExistingBudgetDialog(Budget existingBudget) {
+        String categoryName = selectedCategory == null ? "danh mục này" : selectedCategory.getName();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Ngân sách đã tồn tại")
+                .setMessage("Ngân sách cho " + categoryName + " tháng " + selectedMonth + "/" + selectedYear + " đã tồn tại. Bạn có muốn sửa hạn mức này không?")
+                .setNegativeButton("Không", null)
+                .setPositiveButton("Sửa", (dialog, which) -> openEditBudget(existingBudget))
+                .show();
+    }
+
+    private void openEditBudget(Budget budget) {
+        Intent intent = new Intent(this, EditBudgetActivity.class);
+        intent.putExtra("EXTRA_BUDGET_ID", budget.getId());
+        intent.putExtra("EXTRA_CATEGORY_ID", budget.getCategoryId());
+        intent.putExtra("EXTRA_LIMIT_AMOUNT", (long) budget.getLimitAmount());
+        startActivity(intent);
+        finish();
     }
 }

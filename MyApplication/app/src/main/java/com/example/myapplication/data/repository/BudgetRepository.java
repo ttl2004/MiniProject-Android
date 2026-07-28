@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData;
 import com.example.myapplication.data.dao.BudgetDAO;
 import com.example.myapplication.data.dto.BudgetItem;
 import com.example.myapplication.data.entity.Budget;
-import com.example.myapplication.data.entity.Category;
 
 import java.util.List;
 
@@ -18,6 +17,10 @@ public class BudgetRepository {
     }
     public long insert(Budget budget) {
         return budgetDao.insert(budget);
+    }
+
+    public Budget getBudgetByCategoryPeriod(int userId, int categoryId, int month, int year) {
+        return budgetDao.getBudgetByCategoryPeriod(userId, categoryId, month, year);
     }
 
     public LiveData<List<BudgetItem>> getBudgetItems(int userId, int month, int year) {

@@ -125,6 +125,18 @@
         </LinearLayout>
 
         <!-- RecyclerView -->
+        <TextView
+            android:id="@+id/tv_budget_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingVertical="28dp"
+            android:text="Chưa thiết lập ngân sách nào trong tháng này"
+            android:textColor="#6B6B6B"
+            android:textSize="15sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_budget"
             android:layout_width="match_parent"
