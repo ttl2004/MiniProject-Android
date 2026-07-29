@@ -30,6 +30,9 @@ public final class ActivityHomeBinding implements ViewBinding {
   public final ImageView btnAccountAvatar;
 
   @NonNull
+  public final ImageView btnNotification;
+
+  @NonNull
   public final FloatingActionButton fabAddTransaction;
 
   @NonNull
@@ -39,18 +42,29 @@ public final class ActivityHomeBinding implements ViewBinding {
   public final ConstraintLayout headerBar;
 
   @NonNull
+  public final FrameLayout layoutNotificationIcon;
+
+  @NonNull
+  public final TextView tvNotificationBadge;
+
+  @NonNull
   public final TextView tvUsername;
 
   private ActivityHomeBinding(@NonNull ConstraintLayout rootView,
       @NonNull BottomNavigationView bottomNavigation, @NonNull ImageView btnAccountAvatar,
-      @NonNull FloatingActionButton fabAddTransaction, @NonNull FrameLayout fragmentContainer,
-      @NonNull ConstraintLayout headerBar, @NonNull TextView tvUsername) {
+      @NonNull ImageView btnNotification, @NonNull FloatingActionButton fabAddTransaction,
+      @NonNull FrameLayout fragmentContainer, @NonNull ConstraintLayout headerBar,
+      @NonNull FrameLayout layoutNotificationIcon, @NonNull TextView tvNotificationBadge,
+      @NonNull TextView tvUsername) {
     this.rootView = rootView;
     this.bottomNavigation = bottomNavigation;
     this.btnAccountAvatar = btnAccountAvatar;
+    this.btnNotification = btnNotification;
     this.fabAddTransaction = fabAddTransaction;
     this.fragmentContainer = fragmentContainer;
     this.headerBar = headerBar;
+    this.layoutNotificationIcon = layoutNotificationIcon;
+    this.tvNotificationBadge = tvNotificationBadge;
     this.tvUsername = tvUsername;
   }
 
@@ -93,6 +107,12 @@ public final class ActivityHomeBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btn_notification;
+      ImageView btnNotification = ViewBindings.findChildViewById(rootView, id);
+      if (btnNotification == null) {
+        break missingId;
+      }
+
       id = R.id.fab_add_transaction;
       FloatingActionButton fabAddTransaction = ViewBindings.findChildViewById(rootView, id);
       if (fabAddTransaction == null) {
@@ -111,6 +131,18 @@ public final class ActivityHomeBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.layout_notification_icon;
+      FrameLayout layoutNotificationIcon = ViewBindings.findChildViewById(rootView, id);
+      if (layoutNotificationIcon == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_notification_badge;
+      TextView tvNotificationBadge = ViewBindings.findChildViewById(rootView, id);
+      if (tvNotificationBadge == null) {
+        break missingId;
+      }
+
       id = R.id.tv_username;
       TextView tvUsername = ViewBindings.findChildViewById(rootView, id);
       if (tvUsername == null) {
@@ -118,7 +150,8 @@ public final class ActivityHomeBinding implements ViewBinding {
       }
 
       return new ActivityHomeBinding((ConstraintLayout) rootView, bottomNavigation,
-          btnAccountAvatar, fabAddTransaction, fragmentContainer, headerBar, tvUsername);
+          btnAccountAvatar, btnNotification, fabAddTransaction, fragmentContainer, headerBar,
+          layoutNotificationIcon, tvNotificationBadge, tvUsername);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

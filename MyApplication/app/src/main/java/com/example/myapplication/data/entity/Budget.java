@@ -1,11 +1,17 @@
 package com.example.myapplication.data.entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "budgets")
+@Entity(
+        tableName = "budgets",
+        indices = {
+                @Index(value = {"userId", "categoryId", "month", "year"}, unique = true)
+        }
+)
 public class Budget implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -14,7 +20,7 @@ public class Budget implements Serializable {
 
     private int categoryId;
 
-    private int limitAmount;
+    private long limitAmount;
 
     private int month;
 
@@ -25,7 +31,7 @@ public class Budget implements Serializable {
 
     private long updatedAt;
 
-    public Budget(int userId, int categoryId, int limitAmount, int month, int year) {
+    public Budget(int userId, int categoryId, long limitAmount, int month, int year) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.limitAmount = limitAmount;
@@ -61,11 +67,11 @@ public class Budget implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public int getLimitAmount() {
+    public long getLimitAmount() {
         return limitAmount;
     }
 
-    public void setLimitAmount(int limitAmount) {
+    public void setLimitAmount(long limitAmount) {
         this.limitAmount = limitAmount;
     }
 

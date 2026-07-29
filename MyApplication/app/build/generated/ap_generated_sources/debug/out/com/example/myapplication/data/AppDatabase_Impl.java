@@ -13,15 +13,20 @@ import com.example.myapplication.data.dao.BudgetDAO;
 import com.example.myapplication.data.dao.BudgetDAO_Impl;
 import com.example.myapplication.data.dao.CategoryDAO;
 import com.example.myapplication.data.dao.CategoryDAO_Impl;
+import com.example.myapplication.data.dao.NotificationDAO;
+import com.example.myapplication.data.dao.NotificationDAO_Impl;
 import com.example.myapplication.data.dao.TransactionDAO;
 import com.example.myapplication.data.dao.TransactionDAO_Impl;
 import com.example.myapplication.data.dao.UserDAO;
 import com.example.myapplication.data.dao.UserDAO_Impl;
+import com.example.myapplication.data.dao.UserSettingsDAO;
+import com.example.myapplication.data.dao.UserSettingsDAO_Impl;
 import java.lang.Class;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.SuppressWarnings;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,18 +45,25 @@ public final class AppDatabase_Impl extends AppDatabase {
 
   private volatile TransactionDAO _transactionDAO;
 
+  private volatile UserSettingsDAO _userSettingsDAO;
+
+  private volatile NotificationDAO _notificationDAO;
+
   @Override
   @NonNull
   protected RoomOpenDelegate createOpenDelegate() {
-    final RoomOpenDelegate _openDelegate = new RoomOpenDelegate(4, "46e2ce5b5011e8e741e92cb87a524deb", "4cc718512671ea4e4fd8a2a02cc06f5b") {
+    final RoomOpenDelegate _openDelegate = new RoomOpenDelegate(6, "5e9aaa6c7ea5253facbb5902f2aa8817", "c5d031bc5203c2539e675c4059433848") {
       @Override
       public void createAllTables(@NonNull final SQLiteConnection connection) {
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `users` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fullName` TEXT, `userName` TEXT, `password` TEXT, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)");
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER, `name` TEXT, `icon` TEXT, `color` TEXT, `type` TEXT, `system` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)");
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `budgets` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `categoryId` INTEGER NOT NULL, `limitAmount` INTEGER NOT NULL, `month` INTEGER NOT NULL, `year` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)");
+        SQLite.execSQL(connection, "CREATE UNIQUE INDEX IF NOT EXISTS `index_budgets_userId_categoryId_month_year` ON `budgets` (`userId`, `categoryId`, `month`, `year`)");
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `transactions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `categoryId` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `note` TEXT, `transactionDate` INTEGER NOT NULL, `type` TEXT, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)");
+        SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `user_settings` (`userId` INTEGER NOT NULL, `isDarkMode` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL, `reminderHour` INTEGER NOT NULL, `reminderMinute` INTEGER NOT NULL, `reminderNote` TEXT, PRIMARY KEY(`userId`))");
+        SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `notifications` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `title` TEXT, `message` TEXT, `createdAt` TEXT, `isRead` INTEGER NOT NULL)");
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        SQLite.execSQL(connection, "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '46e2ce5b5011e8e741e92cb87a524deb')");
+        SQLite.execSQL(connection, "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5e9aaa6c7ea5253facbb5902f2aa8817')");
       }
 
       @Override
@@ -60,6 +72,8 @@ public final class AppDatabase_Impl extends AppDatabase {
         SQLite.execSQL(connection, "DROP TABLE IF EXISTS `categories`");
         SQLite.execSQL(connection, "DROP TABLE IF EXISTS `budgets`");
         SQLite.execSQL(connection, "DROP TABLE IF EXISTS `transactions`");
+        SQLite.execSQL(connection, "DROP TABLE IF EXISTS `user_settings`");
+        SQLite.execSQL(connection, "DROP TABLE IF EXISTS `notifications`");
       }
 
       @Override
@@ -129,7 +143,8 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsBudgets.put("createdAt", new TableInfo.Column("createdAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBudgets.put("updatedAt", new TableInfo.Column("updatedAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final Set<TableInfo.ForeignKey> _foreignKeysBudgets = new HashSet<TableInfo.ForeignKey>(0);
-        final Set<TableInfo.Index> _indicesBudgets = new HashSet<TableInfo.Index>(0);
+        final Set<TableInfo.Index> _indicesBudgets = new HashSet<TableInfo.Index>(1);
+        _indicesBudgets.add(new TableInfo.Index("index_budgets_userId_categoryId_month_year", true, Arrays.asList("userId", "categoryId", "month", "year"), Arrays.asList("ASC", "ASC", "ASC", "ASC")));
         final TableInfo _infoBudgets = new TableInfo("budgets", _columnsBudgets, _foreignKeysBudgets, _indicesBudgets);
         final TableInfo _existingBudgets = TableInfo.read(connection, "budgets");
         if (!_infoBudgets.equals(_existingBudgets)) {
@@ -156,6 +171,38 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoTransactions + "\n"
                   + " Found:\n" + _existingTransactions);
         }
+        final Map<String, TableInfo.Column> _columnsUserSettings = new HashMap<String, TableInfo.Column>(6);
+        _columnsUserSettings.put("userId", new TableInfo.Column("userId", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUserSettings.put("isDarkMode", new TableInfo.Column("isDarkMode", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUserSettings.put("isReminderEnabled", new TableInfo.Column("isReminderEnabled", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUserSettings.put("reminderHour", new TableInfo.Column("reminderHour", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUserSettings.put("reminderMinute", new TableInfo.Column("reminderMinute", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUserSettings.put("reminderNote", new TableInfo.Column("reminderNote", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final Set<TableInfo.ForeignKey> _foreignKeysUserSettings = new HashSet<TableInfo.ForeignKey>(0);
+        final Set<TableInfo.Index> _indicesUserSettings = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoUserSettings = new TableInfo("user_settings", _columnsUserSettings, _foreignKeysUserSettings, _indicesUserSettings);
+        final TableInfo _existingUserSettings = TableInfo.read(connection, "user_settings");
+        if (!_infoUserSettings.equals(_existingUserSettings)) {
+          return new RoomOpenDelegate.ValidationResult(false, "user_settings(com.example.myapplication.data.entity.UserSettings).\n"
+                  + " Expected:\n" + _infoUserSettings + "\n"
+                  + " Found:\n" + _existingUserSettings);
+        }
+        final Map<String, TableInfo.Column> _columnsNotifications = new HashMap<String, TableInfo.Column>(6);
+        _columnsNotifications.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNotifications.put("userId", new TableInfo.Column("userId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNotifications.put("title", new TableInfo.Column("title", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNotifications.put("message", new TableInfo.Column("message", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNotifications.put("createdAt", new TableInfo.Column("createdAt", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNotifications.put("isRead", new TableInfo.Column("isRead", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final Set<TableInfo.ForeignKey> _foreignKeysNotifications = new HashSet<TableInfo.ForeignKey>(0);
+        final Set<TableInfo.Index> _indicesNotifications = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoNotifications = new TableInfo("notifications", _columnsNotifications, _foreignKeysNotifications, _indicesNotifications);
+        final TableInfo _existingNotifications = TableInfo.read(connection, "notifications");
+        if (!_infoNotifications.equals(_existingNotifications)) {
+          return new RoomOpenDelegate.ValidationResult(false, "notifications(com.example.myapplication.data.entity.Notification).\n"
+                  + " Expected:\n" + _infoNotifications + "\n"
+                  + " Found:\n" + _existingNotifications);
+        }
         return new RoomOpenDelegate.ValidationResult(true, null);
       }
     };
@@ -167,12 +214,12 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final Map<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final Map<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "users", "categories", "budgets", "transactions");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "users", "categories", "budgets", "transactions", "user_settings", "notifications");
   }
 
   @Override
   public void clearAllTables() {
-    super.performClear(false, "users", "categories", "budgets", "transactions");
+    super.performClear(false, "users", "categories", "budgets", "transactions", "user_settings", "notifications");
   }
 
   @Override
@@ -183,6 +230,8 @@ public final class AppDatabase_Impl extends AppDatabase {
     _typeConvertersMap.put(CategoryDAO.class, CategoryDAO_Impl.getRequiredConverters());
     _typeConvertersMap.put(BudgetDAO.class, BudgetDAO_Impl.getRequiredConverters());
     _typeConvertersMap.put(TransactionDAO.class, TransactionDAO_Impl.getRequiredConverters());
+    _typeConvertersMap.put(UserSettingsDAO.class, UserSettingsDAO_Impl.getRequiredConverters());
+    _typeConvertersMap.put(NotificationDAO.class, NotificationDAO_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -253,6 +302,34 @@ public final class AppDatabase_Impl extends AppDatabase {
           _transactionDAO = new TransactionDAO_Impl(this);
         }
         return _transactionDAO;
+      }
+    }
+  }
+
+  @Override
+  public UserSettingsDAO userSettingsDAO() {
+    if (_userSettingsDAO != null) {
+      return _userSettingsDAO;
+    } else {
+      synchronized(this) {
+        if(_userSettingsDAO == null) {
+          _userSettingsDAO = new UserSettingsDAO_Impl(this);
+        }
+        return _userSettingsDAO;
+      }
+    }
+  }
+
+  @Override
+  public NotificationDAO notificationDAO() {
+    if (_notificationDAO != null) {
+      return _notificationDAO;
+    } else {
+      synchronized(this) {
+        if(_notificationDAO == null) {
+          _notificationDAO = new NotificationDAO_Impl(this);
+        }
+        return _notificationDAO;
       }
     }
   }

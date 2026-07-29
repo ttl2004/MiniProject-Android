@@ -14,6 +14,9 @@ import com.example.myapplication.databinding.ActivityUpdateAccountBinding;
 import com.example.myapplication.manager.UserManager;
 
 public class UpdateAccountActivity extends AppCompatActivity {
+    private static final int MIN_FULL_NAME_LENGTH = 4;
+    private static final int MIN_PASSWORD_LENGTH = 8;
+
     private ActivityUpdateAccountBinding binding;
     private UserManager userManager;
     private User currentUser;
@@ -41,6 +44,9 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
         binding.etFullName.setText(currentUser.getFullName());
         binding.etUserName.setText(currentUser.getUserName());
+        binding.tilUserName.setEnabled(false);
+        binding.etUserName.setEnabled(false);
+        binding.etUserName.setFocusable(false);
     }
 
     private void initEvents() {
@@ -63,7 +69,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
         clearInputErrors();
 
         String fullName = binding.etFullName.getText().toString().trim();
-        String userName = binding.etUserName.getText().toString().trim();
         String oldPassword = binding.etOldPassword.getText().toString().trim();
         String password = binding.etPassword.getText().toString().trim();
         String confirmPassword = binding.etConfirmPassword.getText().toString().trim();
@@ -73,35 +78,47 @@ public class UpdateAccountActivity extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(userName)) {
-            binding.tilUserName.setError("Vui lòng nhập tên đăng nhập");
+        if (fullName.length() < MIN_FULL_NAME_LENGTH) {
+            binding.tilFullName.setError("Tên đầy đủ phải có ít nhất 4 ký tự!");
             return;
         }
 
-        boolean wantsToChangePassword = !TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword);
+        boolean wantsToChangePassword = !TextUtils.isEmpty(oldPassword)
+                || !TextUtils.isEmpty(password)
+                || !TextUtils.isEmpty(confirmPassword);
         if (wantsToChangePassword) {
             if (TextUtils.isEmpty(oldPassword)) {
-                binding.tilOldPassword.setError("Vui lòng nhập mật khẩu hiện tại");
+                binding.tilOldPassword.setError("Vui lòng nhập mật khẩu hiện tại!");
                 return;
             }
 
-            if (!oldPassword.equals(currentUser.getPassword())) {
-                binding.tilOldPassword.setError("Mật khẩu hiện tại không đúng");
-                return;
-            }
-            
             if (TextUtils.isEmpty(password)) {
                 binding.tilPassword.setError("Vui lòng nhập mật khẩu mới");
                 return;
             }
 
+            if (password.length() < MIN_PASSWORD_LENGTH) {
+                binding.tilPassword.setError("Mật khẩu phải có ít nhất 8 ký tự!");
+                return;
+            }
+
+            if (TextUtils.isEmpty(confirmPassword)) {
+                binding.tilConfirmPassword.setError("Vui lòng nhập lại mật khẩu!");
+                return;
+            }
+
             if (!password.equals(confirmPassword)) {
-                binding.tilConfirmPassword.setError("Mật khẩu nhập lại không khớp");
+                binding.tilConfirmPassword.setError("Mật khẩu nhập lại không khớp!");
+                return;
+            }
+
+            if (!oldPassword.equals(currentUser.getPassword())) {
+                binding.tilOldPassword.setError("Mật khẩu hiện tại không đúng!");
                 return;
             }
 
             if (password.equals(oldPassword)) {
-                binding.tilPassword.setError("Mật khẩu mới không được trùng với mật khẩu hiện tại");
+                binding.tilPassword.setError("Mật khẩu mới không được trùng với mật khẩu hiện tại!");
                 return;
             }
 
@@ -109,7 +126,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
         }
 
         currentUser.setFullName(fullName);
-        currentUser.setUserName(userName);
         currentUser.setUpdatedAt(System.currentTimeMillis());
 
         int updatedRows = userManager.update(currentUser);

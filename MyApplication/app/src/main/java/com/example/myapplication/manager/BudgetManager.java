@@ -20,11 +20,16 @@ public class BudgetManager {
     public long insert(Budget budget) {
         return budgetRepository.insert(budget);
     }
+
+    public Budget getBudgetByCategoryPeriod(int userId, int categoryId, int month, int year) {
+        return budgetRepository.getBudgetByCategoryPeriod(userId, categoryId, month, year);
+    }
+
     public LiveData<List<BudgetItem>> getBudgetItems(int userId, int month, int year){
         return budgetRepository.getBudgetItems(userId,month,year);
     }
 
-    public int updateBudget(int budgetId, int categoryId, int limitAmount) {
+    public int updateBudget(int budgetId, int categoryId, long limitAmount) {
         return budgetRepository.updateBudget(budgetId, categoryId, limitAmount);
     }
 

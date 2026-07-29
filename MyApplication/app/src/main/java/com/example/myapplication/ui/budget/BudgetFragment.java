@@ -105,6 +105,9 @@ public class BudgetFragment extends Fragment {
         budgetViewModel.getBudgetUI(user.getUserId(), selectedMonth, selectedYear)
                 .observe(getViewLifecycleOwner(), list -> {
                     budgetAdapter.setData(list);
+                    boolean isEmpty = list == null || list.isEmpty();
+                    binding.tvBudgetEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+                    binding.rcvBudget.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
                     long totalLeft = 0;
                     long totalLimit = 0;

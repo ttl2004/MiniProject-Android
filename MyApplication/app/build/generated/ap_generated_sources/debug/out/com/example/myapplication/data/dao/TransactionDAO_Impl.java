@@ -154,8 +154,8 @@ public final class TransactionDAO_Impl implements TransactionDAO {
           _tmpUserId = (int) (_stmt.getLong(_columnIndexOfUserId));
           final int _tmpCategoryId;
           _tmpCategoryId = (int) (_stmt.getLong(_columnIndexOfCategoryId));
-          final int _tmpAmount;
-          _tmpAmount = (int) (_stmt.getLong(_columnIndexOfAmount));
+          final long _tmpAmount;
+          _tmpAmount = _stmt.getLong(_columnIndexOfAmount);
           final String _tmpNote;
           if (_stmt.isNull(_columnIndexOfNote)) {
             _tmpNote = null;

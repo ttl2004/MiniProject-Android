@@ -15,6 +15,9 @@ public interface BudgetDAO {
     @Insert
     long insert(Budget budget);
 
+    @Query("SELECT * FROM budgets WHERE userId = :userId AND categoryId = :categoryId AND month = :month AND year = :year LIMIT 1")
+    Budget getBudgetByCategoryPeriod(int userId, int categoryId, int month, int year);
+
     @Query("SELECT * FROM budgets")
     LiveData<List<Budget>> getAll();
 
@@ -43,7 +46,7 @@ public interface BudgetDAO {
     LiveData<List<BudgetItem>>getBudgetItems(int userId, int month, int yearInt, String monthText, String year);
 
     @Query("UPDATE budgets SET categoryId = :categoryId, limitAmount = :limitAmount, updatedAt = :updatedAt WHERE id = :budgetId")
-    int updateBudget(int budgetId, int categoryId, int limitAmount, long updatedAt);
+    int updateBudget(int budgetId, int categoryId, long limitAmount, long updatedAt);
 
     @Query("DELETE FROM budgets WHERE id = :budgetId")
     int deleteById(int budgetId);
