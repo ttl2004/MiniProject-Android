@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.util.DBUtil;
 import androidx.room.util.SQLiteStatementUtil;
 import androidx.sqlite.SQLiteStatement;
+import com.example.myapplication.data.dto.TransactionDTO;
 import com.example.myapplication.data.entity.Transaction;
 import java.lang.Class;
 import java.lang.Override;
@@ -180,6 +181,98 @@ public final class TransactionDAO_Impl implements TransactionDAO {
           final long _tmpUpdatedAt;
           _tmpUpdatedAt = _stmt.getLong(_columnIndexOfUpdatedAt);
           _item.setUpdatedAt(_tmpUpdatedAt);
+          _result.add(_item);
+        }
+        return _result;
+      } finally {
+        _stmt.close();
+      }
+    });
+  }
+
+  @Override
+  public LiveData<List<TransactionDTO>> getTransactionsWithCategoryByRange(final int userId,
+      final long startDate, final long endDate) {
+    final String _sql = "SELECT t.*, COALESCE(c.name, 'Khác') AS categoryName, COALESCE(c.icon, '') AS iconName, COALESCE(c.color, '#E0E0E0') AS categoryColor FROM transactions t LEFT JOIN categories c ON t.categoryId = c.id WHERE t.userId = ? AND t.transactionDate BETWEEN ? AND ? ORDER BY t.transactionDate DESC";
+    return __db.getInvalidationTracker().createLiveData(new String[] {"transactions",
+        "categories"}, false, (_connection) -> {
+      final SQLiteStatement _stmt = _connection.prepare(_sql);
+      try {
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, userId);
+        _argIndex = 2;
+        _stmt.bindLong(_argIndex, startDate);
+        _argIndex = 3;
+        _stmt.bindLong(_argIndex, endDate);
+        final int _columnIndexOfId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "id");
+        final int _columnIndexOfUserId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "userId");
+        final int _columnIndexOfCategoryId = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "categoryId");
+        final int _columnIndexOfAmount = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "amount");
+        final int _columnIndexOfNote = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "note");
+        final int _columnIndexOfTransactionDate = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "transactionDate");
+        final int _columnIndexOfType = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "type");
+        final int _columnIndexOfCreatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "createdAt");
+        final int _columnIndexOfUpdatedAt = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "updatedAt");
+        final int _columnIndexOfCategoryName = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "categoryName");
+        final int _columnIndexOfIconName = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "iconName");
+        final int _columnIndexOfCategoryColor = SQLiteStatementUtil.getColumnIndexOrThrow(_stmt, "categoryColor");
+        final List<TransactionDTO> _result = new ArrayList<TransactionDTO>();
+        while (_stmt.step()) {
+          final TransactionDTO _item;
+          final String _tmpCategoryName;
+          if (_stmt.isNull(_columnIndexOfCategoryName)) {
+            _tmpCategoryName = null;
+          } else {
+            _tmpCategoryName = _stmt.getText(_columnIndexOfCategoryName);
+          }
+          final String _tmpIconName;
+          if (_stmt.isNull(_columnIndexOfIconName)) {
+            _tmpIconName = null;
+          } else {
+            _tmpIconName = _stmt.getText(_columnIndexOfIconName);
+          }
+          final String _tmpCategoryColor;
+          if (_stmt.isNull(_columnIndexOfCategoryColor)) {
+            _tmpCategoryColor = null;
+          } else {
+            _tmpCategoryColor = _stmt.getText(_columnIndexOfCategoryColor);
+          }
+          final Transaction _tmpTransaction;
+          if (!(_stmt.isNull(_columnIndexOfId) && _stmt.isNull(_columnIndexOfUserId) && _stmt.isNull(_columnIndexOfCategoryId) && _stmt.isNull(_columnIndexOfAmount) && _stmt.isNull(_columnIndexOfNote) && _stmt.isNull(_columnIndexOfTransactionDate) && _stmt.isNull(_columnIndexOfType) && _stmt.isNull(_columnIndexOfCreatedAt) && _stmt.isNull(_columnIndexOfUpdatedAt))) {
+            final int _tmpUserId;
+            _tmpUserId = (int) (_stmt.getLong(_columnIndexOfUserId));
+            final int _tmpCategoryId;
+            _tmpCategoryId = (int) (_stmt.getLong(_columnIndexOfCategoryId));
+            final long _tmpAmount;
+            _tmpAmount = _stmt.getLong(_columnIndexOfAmount);
+            final String _tmpNote;
+            if (_stmt.isNull(_columnIndexOfNote)) {
+              _tmpNote = null;
+            } else {
+              _tmpNote = _stmt.getText(_columnIndexOfNote);
+            }
+            final long _tmpTransactionDate;
+            _tmpTransactionDate = _stmt.getLong(_columnIndexOfTransactionDate);
+            final String _tmpType;
+            if (_stmt.isNull(_columnIndexOfType)) {
+              _tmpType = null;
+            } else {
+              _tmpType = _stmt.getText(_columnIndexOfType);
+            }
+            _tmpTransaction = new Transaction(_tmpUserId,_tmpCategoryId,_tmpAmount,_tmpNote,_tmpTransactionDate,_tmpType);
+            final int _tmpId;
+            _tmpId = (int) (_stmt.getLong(_columnIndexOfId));
+            _tmpTransaction.setId(_tmpId);
+            final long _tmpCreatedAt;
+            _tmpCreatedAt = _stmt.getLong(_columnIndexOfCreatedAt);
+            _tmpTransaction.setCreatedAt(_tmpCreatedAt);
+            final long _tmpUpdatedAt;
+            _tmpUpdatedAt = _stmt.getLong(_columnIndexOfUpdatedAt);
+            _tmpTransaction.setUpdatedAt(_tmpUpdatedAt);
+          } else {
+            _tmpTransaction = null;
+          }
+          _item = new TransactionDTO(_tmpTransaction,_tmpCategoryName,_tmpIconName,_tmpCategoryColor);
           _result.add(_item);
         }
         return _result;

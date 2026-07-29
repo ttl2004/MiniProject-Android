@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,10 +58,10 @@ public class AnalysisFragment extends Fragment {
     private TextView tabWeek, tabMonth, tabYear, tabCustom;
     private ImageView btnPrevTime, btnNextTime;
     private TextView tvSelectedTime;
-    
+
     private TextView tvOverviewBalance, tvOverviewIncome, tvOverviewExpense;
     private TextView tabChartExpense, tabChartIncome, tabChartAll;
-    
+
     private LineChart lineChart;
     private BarChart barChart;
     private PieChart pieChart;
@@ -68,15 +69,17 @@ public class AnalysisFragment extends Fragment {
     private RecyclerView rvRanking;
     private AnalysisCategoryAdapter adapter;
 
+    private LiveData<List<TransactionDTO>> currentTransactionsLiveData;
+
     private String currentTimeMode = "MONTH"; // WEEK, MONTH, YEAR, CUSTOM
     private String currentChartType = "ALL"; // ALL, EXPENSE, INCOME
-    
+
     private Calendar selectedCalendar;
     private long customStartDate = 0;
     private long customEndDate = 0;
-    
+
     private DecimalFormat currencyFormat = new DecimalFormat("#,### đ");
-    
+
     public AnalysisFragment() {
         // Required empty public constructor
     }
@@ -98,7 +101,7 @@ public class AnalysisFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         transactionManager = new TransactionManager(requireContext());
         selectedCalendar = Calendar.getInstance();
 
@@ -106,7 +109,7 @@ public class AnalysisFragment extends Fragment {
         setupListeners();
         setupRecyclerView();
         setupCharts();
-        
+
         // Initial load
         updateTimeSelectorUI();
         switchChartType("ALL");
@@ -117,19 +120,19 @@ public class AnalysisFragment extends Fragment {
         tabMonth = v.findViewById(R.id.tab_month);
         tabYear = v.findViewById(R.id.tab_year);
         tabCustom = v.findViewById(R.id.tab_custom);
-        
+
         btnPrevTime = v.findViewById(R.id.btn_prev_time);
         btnNextTime = v.findViewById(R.id.btn_next_time);
         tvSelectedTime = v.findViewById(R.id.tv_selected_time);
-        
+
         tvOverviewBalance = v.findViewById(R.id.tv_overview_balance);
         tvOverviewIncome = v.findViewById(R.id.tv_overview_income);
         tvOverviewExpense = v.findViewById(R.id.tv_overview_expense);
-        
+
         tabChartExpense = v.findViewById(R.id.tab_chart_expense);
         tabChartIncome = v.findViewById(R.id.tab_chart_income);
         tabChartAll = v.findViewById(R.id.tab_chart_all);
-        
+
         lineChart = v.findViewById(R.id.line_chart);
         barChart = v.findViewById(R.id.bar_chart);
         pieChart = v.findViewById(R.id.pie_chart);
@@ -143,7 +146,7 @@ public class AnalysisFragment extends Fragment {
         tabMonth.setOnClickListener(v -> switchTimeMode("MONTH"));
         tabYear.setOnClickListener(v -> switchTimeMode("YEAR"));
         tabCustom.setOnClickListener(v -> switchTimeMode("CUSTOM"));
-        
+
         // Time Navigation
         btnPrevTime.setOnClickListener(v -> navigateTime(-1));
         btnNextTime.setOnClickListener(v -> navigateTime(1));
@@ -157,9 +160,10 @@ public class AnalysisFragment extends Fragment {
         tabChartIncome.setOnClickListener(v -> switchChartType("INCOME"));
         tabChartAll.setOnClickListener(v -> switchChartType("ALL"));
     }
-    
+
     private void setupRecyclerView() {
         adapter = new AnalysisCategoryAdapter(requireContext(), new ArrayList<>(), item -> {
+            if (currentUser == null) return;
             long[] dates = getStartAndEndDates();
             Intent intent = new Intent(requireContext(), CategoryDetailActivity.class);
             intent.putExtra("categoryId", item.getCategoryId());
@@ -175,7 +179,7 @@ public class AnalysisFragment extends Fragment {
         rvRanking.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvRanking.setAdapter(adapter);
     }
-    
+
     private void setupCharts() {
         lineChart.getDescription().setEnabled(false);
         lineChart.setTouchEnabled(true);
@@ -188,7 +192,7 @@ public class AnalysisFragment extends Fragment {
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getAxisLeft().setAxisMinimum(0f);
-        
+
         // Setup BarChart
         barChart.getDescription().setEnabled(false);
         barChart.setTouchEnabled(true);
@@ -217,15 +221,15 @@ public class AnalysisFragment extends Fragment {
         pieChart.setRotationEnabled(true);
         pieChart.getLegend().setEnabled(false);
         pieChart.setEntryLabelColor(Color.BLACK);
-        
+
         CustomMarkerView mv = new CustomMarkerView(requireContext(), R.layout.layout_marker_view);
         mv.setChartView(lineChart);
         lineChart.setMarker(mv);
-        
+
         CustomMarkerView barMv = new CustomMarkerView(requireContext(), R.layout.layout_marker_view);
         barMv.setChartView(barChart);
         barChart.setMarker(barMv);
-        
+
         CustomMarkerView pieMv = new CustomMarkerView(requireContext(), R.layout.layout_marker_view);
         pieMv.setChartView(pieChart);
         pieChart.setMarker(pieMv);
@@ -233,7 +237,7 @@ public class AnalysisFragment extends Fragment {
 
     private void switchTimeMode(String mode) {
         currentTimeMode = mode;
-        
+
         // Reset styles
         tabWeek.setBackgroundResource(android.R.color.transparent);
         tabWeek.setTextColor(0xFF757575);
@@ -243,7 +247,7 @@ public class AnalysisFragment extends Fragment {
         tabYear.setTextColor(0xFF757575);
         tabCustom.setBackgroundResource(android.R.color.transparent);
         tabCustom.setTextColor(0xFF757575);
-        
+
         TextView activeTab = null;
         switch (mode) {
             case "WEEK": activeTab = tabWeek; break;
@@ -251,14 +255,14 @@ public class AnalysisFragment extends Fragment {
             case "YEAR": activeTab = tabYear; break;
             case "CUSTOM": activeTab = tabCustom; break;
         }
-        
+
         if (activeTab != null) {
             activeTab.setBackgroundResource(R.drawable.bg_toggle_active);
             activeTab.setTextColor(0xFFFFFFFF);
             if (activeTab != tabMonth) activeTab.setTypeface(null, android.graphics.Typeface.NORMAL); // Reset to default
             activeTab.setTypeface(null, android.graphics.Typeface.BOLD);
         }
-        
+
         if (mode.equals("CUSTOM")) {
             btnPrevTime.setVisibility(View.INVISIBLE);
             btnNextTime.setVisibility(View.INVISIBLE);
@@ -275,30 +279,30 @@ public class AnalysisFragment extends Fragment {
             loadData();
         }
     }
-    
+
     private void switchChartType(String type) {
         currentChartType = type;
-        
+
         tabChartExpense.setBackgroundResource(android.R.color.transparent);
         tabChartExpense.setTextColor(0xFF757575);
         tabChartIncome.setBackgroundResource(android.R.color.transparent);
         tabChartIncome.setTextColor(0xFF757575);
         tabChartAll.setBackgroundResource(android.R.color.transparent);
         tabChartAll.setTextColor(0xFF757575);
-        
+
         TextView activeTab = null;
         switch (type) {
             case "EXPENSE": activeTab = tabChartExpense; break;
             case "INCOME": activeTab = tabChartIncome; break;
             case "ALL": activeTab = tabChartAll; break;
         }
-        
+
         if (activeTab != null) {
             activeTab.setBackgroundResource(R.drawable.bg_toggle_active);
             activeTab.setTextColor(0xFFFFFFFF);
             activeTab.setTypeface(null, android.graphics.Typeface.BOLD);
         }
-        
+
         if ("ALL".equals(currentChartType)) {
             lineChart.setVisibility(View.GONE);
             barChart.setVisibility(View.VISIBLE);
@@ -310,7 +314,7 @@ public class AnalysisFragment extends Fragment {
             rvRanking.setVisibility(View.VISIBLE);
             tvPieTitle.setText("Tỷ trọng danh mục");
         }
-        
+
         loadData(); // Reload data with new filter
     }
 
@@ -325,23 +329,29 @@ public class AnalysisFragment extends Fragment {
         updateTimeSelectorUI();
         loadData();
     }
-    
+
     private void pickCustomDateRange() {
         Calendar temp = Calendar.getInstance();
         new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
             Calendar startCal = Calendar.getInstance();
             startCal.set(year, month, dayOfMonth, 0, 0, 0);
             customStartDate = startCal.getTimeInMillis();
-            
+
             new DatePickerDialog(requireContext(), (view2, year2, month2, dayOfMonth2) -> {
                 Calendar endCal = Calendar.getInstance();
                 endCal.set(year2, month2, dayOfMonth2, 23, 59, 59);
                 customEndDate = endCal.getTimeInMillis();
-                
+
+                if (customEndDate < customStartDate) {
+                    long tempTime = customStartDate;
+                    customStartDate = customEndDate;
+                    customEndDate = tempTime;
+                }
+
                 updateTimeSelectorUI();
                 loadData();
             }, year, month, dayOfMonth).show();
-            
+
         }, temp.get(Calendar.YEAR), temp.get(Calendar.MONTH), temp.get(Calendar.DAY_OF_MONTH)).show();
     }
 
@@ -367,11 +377,11 @@ public class AnalysisFragment extends Fragment {
             }
         }
     }
-    
+
     private long[] getStartAndEndDates() {
         long[] dates = new long[2]; // 0: start, 1: end
         Calendar c = (Calendar) selectedCalendar.clone();
-        
+
         if ("WEEK".equals(currentTimeMode)) {
             c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
             c.set(Calendar.HOUR_OF_DAY, 0); c.set(Calendar.MINUTE, 0); c.set(Calendar.SECOND, 0);
@@ -402,34 +412,38 @@ public class AnalysisFragment extends Fragment {
 
     private void loadData() {
         if (currentUser == null) return;
-        
+
         long[] dates = getStartAndEndDates();
         if (dates[0] == 0 || dates[1] == 0) return; // CUSTOM not selected
-        
-        transactionManager.getTransactionsByRange(currentUser.getUserId(), dates[0], dates[1])
-            .observe(getViewLifecycleOwner(), this::processData);
+
+        if (currentTransactionsLiveData != null) {
+            currentTransactionsLiveData.removeObservers(getViewLifecycleOwner());
+        }
+
+        currentTransactionsLiveData = transactionManager.getTransactionsByRange(currentUser.getUserId(), dates[0], dates[1]);
+        currentTransactionsLiveData.observe(getViewLifecycleOwner(), this::processData);
     }
-    
+
     private void processData(List<TransactionDTO> rawList) {
         if (rawList == null) rawList = new ArrayList<>();
-        
+
         long totalIncome = 0;
         long totalExpense = 0;
-        
+
         List<TransactionDTO> filteredList = new ArrayList<>();
-        
+
         for (TransactionDTO dto : rawList) {
             String type = dto.getTransaction().getType();
             long amt = Math.abs(dto.getTransaction().getAmount());
-            
+
             boolean isExpense = "EXPENSE".equalsIgnoreCase(type) || dto.getTransaction().getAmount() < 0;
-            
+
             if (!isExpense) {
                 totalIncome += amt;
             } else {
                 totalExpense += amt;
             }
-            
+
             // Filter by chart tab
             if ("ALL".equals(currentChartType)) {
                 filteredList.add(dto);
@@ -439,9 +453,9 @@ public class AnalysisFragment extends Fragment {
                 filteredList.add(dto);
             }
         }
-        
+
         long balance = totalIncome - totalExpense;
-        
+
         // Update Overview Card (Thu is GREEN, Chi is RED as per user's final clarification)
         tvOverviewIncome.setText("+" + currencyFormat.format(totalIncome));
         tvOverviewIncome.setTextColor(0xFF4CAF50); // Green
@@ -453,17 +467,17 @@ public class AnalysisFragment extends Fragment {
         } else {
             tvOverviewBalance.setTextColor(0xFF212121);
         }
-        
+
         // Process for Charts
         if ("ALL".equals(currentChartType)) {
             processBarChart(rawList);
         } else {
             processLineChart(filteredList);
         }
-        
+
         processCategoryData(rawList, filteredList, totalIncome, totalExpense);
     }
-    
+
     private void processLineChart(List<TransactionDTO> list) {
         if (list.isEmpty()) {
             lineChart.clear();
@@ -472,10 +486,10 @@ public class AnalysisFragment extends Fragment {
 
         // Group by start of day (timestamp) to make X axis proportional
         Map<Long, Long> dayAmountMap = new HashMap<>();
-        
+
         for (TransactionDTO dto : list) {
             long time = dto.getTransaction().getTransactionDate();
-            
+
             // Normalize to start of day
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(time);
@@ -484,31 +498,31 @@ public class AnalysisFragment extends Fragment {
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MILLISECOND, 0);
             long dayStart = cal.getTimeInMillis();
-            
+
             long amt = Math.abs(dto.getTransaction().getAmount());
             dayAmountMap.put(dayStart, dayAmountMap.getOrDefault(dayStart, 0L) + amt);
         }
-        
+
         // Sort keys
         List<Long> sortedDays = new ArrayList<>(dayAmountMap.keySet());
         Collections.sort(sortedDays);
-        
+
         long referenceDay = sortedDays.get(0);
         long DAY_IN_MILLIS = 24 * 60 * 60 * 1000L;
-        
+
         List<Entry> entries = new ArrayList<>();
         for (Long day : sortedDays) {
             float x = (day - referenceDay) / (float) DAY_IN_MILLIS;
             entries.add(new Entry(x, dayAmountMap.get(day)));
         }
-        
+
         LineDataSet dataSet = new LineDataSet(entries, "Biến động");
-        
+
         // Use color based on type
         int color = 0xFF2196F3; // Blue for ALL
         if ("EXPENSE".equals(currentChartType)) color = 0xFFF44336; // Red
         if ("INCOME".equals(currentChartType)) color = 0xFF4CAF50; // Green
-        
+
         dataSet.setColor(color);
         dataSet.setCircleColor(color);
         dataSet.setLineWidth(2f);
@@ -519,10 +533,10 @@ public class AnalysisFragment extends Fragment {
         dataSet.setDrawFilled(true);
         dataSet.setFillColor(color);
         dataSet.setFillAlpha(30);
-        
+
         LineData lineData = new LineData(dataSet);
         lineChart.setData(lineData);
-        
+
         // Format X Axis to show proper dates proportionally and avoid duplicates
         lineChart.getXAxis().setGranularity(1f);
         lineChart.getXAxis().setValueFormatter(new ValueFormatter() {
@@ -533,104 +547,203 @@ public class AnalysisFragment extends Fragment {
                 return sdf.format(new Date(time));
             }
         });
-        
+
         // Auto zoom and scroll to the latest data if there are many points
         lineChart.setVisibleXRangeMaximum(14f); // Show max 14 days at a time
         if (!entries.isEmpty()) {
             lineChart.moveViewToX(entries.get(entries.size() - 1).getX());
         }
-        
+
         lineChart.invalidate();
     }
-    
+
     private void processBarChart(List<TransactionDTO> list) {
         if (list.isEmpty()) {
             barChart.clear();
             return;
         }
 
-        Map<Long, long[]> dayAmountMap = new HashMap<>(); // [0] = Income, [1] = Expense
-        
+        long DAY_IN_MILLIS = 24 * 60 * 60 * 1000L;
+        long[] dates = getStartAndEndDates();
+        long durationMillis = dates[1] - dates[0];
+
+        boolean groupByMonth = false;
+        if ("YEAR".equals(currentTimeMode)) {
+            groupByMonth = true;
+        } else if ("CUSTOM".equals(currentTimeMode) && durationMillis > 32 * DAY_IN_MILLIS) {
+            groupByMonth = true;
+        }
+
+        Map<Long, long[]> amountMap = new HashMap<>(); // [0] = Income, [1] = Expense
+
         for (TransactionDTO dto : list) {
             long time = dto.getTransaction().getTransactionDate();
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(time);
+
+            if (groupByMonth) {
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+            }
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MILLISECOND, 0);
-            long dayStart = cal.getTimeInMillis();
-            
+
+            long key = cal.getTimeInMillis();
             long amt = Math.abs(dto.getTransaction().getAmount());
             boolean isExpense = "EXPENSE".equalsIgnoreCase(dto.getTransaction().getType()) || dto.getTransaction().getAmount() < 0;
-            
-            long[] amounts = dayAmountMap.getOrDefault(dayStart, new long[]{0L, 0L});
+
+            long[] amounts = amountMap.getOrDefault(key, new long[]{0L, 0L});
             if (isExpense) {
                 amounts[1] += amt;
             } else {
                 amounts[0] += amt;
             }
-            dayAmountMap.put(dayStart, amounts);
+            amountMap.put(key, amounts);
         }
-        
-        List<Long> sortedDays = new ArrayList<>(dayAmountMap.keySet());
-        Collections.sort(sortedDays);
-        
-        long minDay = sortedDays.get(0);
-        long maxDay = sortedDays.get(sortedDays.size() - 1);
-        long DAY_IN_MILLIS = 24 * 60 * 60 * 1000L;
-        
+
         List<BarEntry> incomeEntries = new ArrayList<>();
         List<BarEntry> expenseEntries = new ArrayList<>();
-        
+
         int count = 0;
-        for (long d = minDay; d <= maxDay; d += DAY_IN_MILLIS) {
-            long[] amounts = dayAmountMap.getOrDefault(d, new long[]{0L, 0L});
-            incomeEntries.add(new BarEntry(count, amounts[0]));
-            expenseEntries.add(new BarEntry(count, amounts[1]));
-            count++;
+        Calendar iterCal = Calendar.getInstance();
+        iterCal.setTimeInMillis(dates[0]); // startDate
+        iterCal.set(Calendar.HOUR_OF_DAY, 0);
+        iterCal.set(Calendar.MINUTE, 0);
+        iterCal.set(Calendar.SECOND, 0);
+        iterCal.set(Calendar.MILLISECOND, 0);
+
+        if ("YEAR".equals(currentTimeMode)) {
+            iterCal.set(Calendar.DAY_OF_MONTH, 1);
+            iterCal.set(Calendar.MONTH, Calendar.JANUARY);
+            for (int i = 0; i < 12; i++) {
+                long currentKey = iterCal.getTimeInMillis();
+                long[] amounts = amountMap.getOrDefault(currentKey, new long[]{0L, 0L});
+                incomeEntries.add(new BarEntry(count, amounts[0]));
+                expenseEntries.add(new BarEntry(count, amounts[1]));
+                count++;
+                iterCal.add(Calendar.MONTH, 1);
+            }
+        } else if ("WEEK".equals(currentTimeMode)) {
+            for (int i = 0; i < 7; i++) {
+                long currentKey = iterCal.getTimeInMillis();
+                long[] amounts = amountMap.getOrDefault(currentKey, new long[]{0L, 0L});
+                incomeEntries.add(new BarEntry(count, amounts[0]));
+                expenseEntries.add(new BarEntry(count, amounts[1]));
+                count++;
+                iterCal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        } else if ("MONTH".equals(currentTimeMode)) {
+            int maxDays = iterCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            for (int i = 0; i < maxDays; i++) {
+                long currentKey = iterCal.getTimeInMillis();
+                long[] amounts = amountMap.getOrDefault(currentKey, new long[]{0L, 0L});
+                incomeEntries.add(new BarEntry(count, amounts[0]));
+                expenseEntries.add(new BarEntry(count, amounts[1]));
+                count++;
+                iterCal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        } else {
+            // CUSTOM mode
+            List<Long> sortedKeys = new ArrayList<>(amountMap.keySet());
+            if (sortedKeys.isEmpty()) {
+                barChart.clear();
+                return;
+            }
+            long minTime = sortedKeys.get(0);
+            long maxTime = sortedKeys.get(sortedKeys.size() - 1);
+            iterCal.setTimeInMillis(minTime);
+
+            while (iterCal.getTimeInMillis() <= maxTime) {
+                long currentKey = iterCal.getTimeInMillis();
+                long[] amounts = amountMap.getOrDefault(currentKey, new long[]{0L, 0L});
+                incomeEntries.add(new BarEntry(count, amounts[0]));
+                expenseEntries.add(new BarEntry(count, amounts[1]));
+                count++;
+
+                if (groupByMonth) {
+                    iterCal.add(Calendar.MONTH, 1);
+                } else {
+                    iterCal.add(Calendar.DAY_OF_MONTH, 1);
+                }
+            }
         }
-        
+
         BarDataSet incomeSet = new BarDataSet(incomeEntries, "Thu nhập");
         incomeSet.setColor(0xFF4CAF50); // Green
         incomeSet.setDrawValues(false);
-        
+
         BarDataSet expenseSet = new BarDataSet(expenseEntries, "Chi tiêu");
         expenseSet.setColor(0xFFF44336); // Red
         expenseSet.setDrawValues(false);
-        
+
         BarData data = new BarData(incomeSet, expenseSet);
-        
+
         float groupSpace = 0.06f;
         float barSpace = 0.02f;
         float barWidth = 0.45f;
         data.setBarWidth(barWidth);
-        
+
         barChart.setData(data);
         barChart.getXAxis().setAxisMinimum(0f);
         barChart.getXAxis().setAxisMaximum(count);
         barChart.groupBars(0f, groupSpace, barSpace);
         barChart.getXAxis().setCenterAxisLabels(true);
         barChart.getXAxis().setGranularity(1f);
+
+        boolean finalGroupByMonth = groupByMonth;
         final int finalCount = count;
+        final long finalStartDate = dates[0];
+
         barChart.getXAxis().setValueFormatter(new ValueFormatter() {
-            private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+            private final SimpleDateFormat sdfDay = new SimpleDateFormat("dd/MM", Locale.getDefault());
+            private final SimpleDateFormat sdfMonth = new SimpleDateFormat("MM/yyyy", Locale.getDefault());
+            private final SimpleDateFormat sdfDayOfWeek = new SimpleDateFormat("EEE", new Locale("vi", "VN"));
+
             @Override
             public String getFormattedValue(float value) {
                 if (value < 0 || value >= finalCount) return "";
-                long time = minDay + ((long)value * DAY_IN_MILLIS);
-                return sdf.format(new Date(time));
+                Calendar c = Calendar.getInstance();
+
+                if ("YEAR".equals(currentTimeMode)) {
+                    c.setTimeInMillis(finalStartDate);
+                    c.set(Calendar.DAY_OF_MONTH, 1);
+                    c.set(Calendar.MONTH, Calendar.JANUARY);
+                    c.add(Calendar.MONTH, (int) value);
+                    return "T" + (c.get(Calendar.MONTH) + 1);
+                } else if ("WEEK".equals(currentTimeMode)) {
+                    c.setTimeInMillis(finalStartDate);
+                    c.add(Calendar.DAY_OF_MONTH, (int) value);
+                    return sdfDayOfWeek.format(c.getTime());
+                } else if ("MONTH".equals(currentTimeMode)) {
+                    c.setTimeInMillis(finalStartDate);
+                    c.add(Calendar.DAY_OF_MONTH, (int) value);
+                    return String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+                } else {
+                    List<Long> sortedKeys = new ArrayList<>(amountMap.keySet());
+                    if (sortedKeys.isEmpty()) return "";
+                    long minTime = sortedKeys.get(0);
+                    c.setTimeInMillis(minTime);
+
+                    if (finalGroupByMonth) {
+                        c.add(Calendar.MONTH, (int) value);
+                        return sdfMonth.format(c.getTime());
+                    } else {
+                        c.add(Calendar.DAY_OF_MONTH, (int) value);
+                        return sdfDay.format(c.getTime());
+                    }
+                }
             }
         });
-        
+
         barChart.setVisibleXRangeMaximum(7f);
         if (count > 0) {
             barChart.moveViewToX(count - 1);
         }
-        
+
         barChart.invalidate();
     }
-    
+
     private void processCategoryData(List<TransactionDTO> rawList, List<TransactionDTO> filteredList, long totalIncome, long totalExpense) {
         if ("ALL".equals(currentChartType)) {
             rvRanking.setVisibility(View.GONE);
@@ -638,12 +751,12 @@ public class AnalysisFragment extends Fragment {
                 pieChart.clear();
                 return;
             }
-            
+
             List<PieEntry> entries = new ArrayList<>();
             List<Integer> colors = new ArrayList<>();
-            
+
             long total = totalIncome + totalExpense;
-            
+
             if (totalIncome > 0) {
                 AnalysisCategoryDTO incDto = new AnalysisCategoryDTO(0, "Thu nhập", "", "", totalIncome, (float) totalIncome * 100 / total);
                 entries.add(new PieEntry(incDto.getPercentage(), "Thu nhập", incDto));
@@ -654,12 +767,12 @@ public class AnalysisFragment extends Fragment {
                 entries.add(new PieEntry(expDto.getPercentage(), "Chi tiêu", expDto));
                 colors.add(0xFFF44336); // Red
             }
-            
+
             PieDataSet dataSet = new PieDataSet(entries, "");
             dataSet.setColors(colors);
             dataSet.setSliceSpace(3f);
             dataSet.setSelectionShift(0f);
-            
+
             PieData data = new PieData(dataSet);
             data.setValueFormatter(new ValueFormatter() {
                 @Override
@@ -670,52 +783,52 @@ public class AnalysisFragment extends Fragment {
             });
             data.setValueTextSize(12f);
             data.setValueTextColor(Color.BLACK);
-            
+
             pieChart.setHighlightPerTapEnabled(true);
             pieChart.setData(data);
             pieChart.invalidate();
             return;
         }
-        
+
         rvRanking.setVisibility(View.VISIBLE);
         long totalTypeAmount = currentChartType.equals("EXPENSE") ? totalExpense : totalIncome;
-        
+
         if (filteredList.isEmpty() || totalTypeAmount == 0) {
             pieChart.clear();
             adapter.setList(new ArrayList<>());
             return;
         }
-        
+
         Map<Integer, AnalysisCategoryDTO> map = new HashMap<>();
         for (TransactionDTO dto : filteredList) {
             int catId = dto.getTransaction().getCategoryId();
             if (!map.containsKey(catId)) {
                 map.put(catId, new AnalysisCategoryDTO(
-                    catId,
-                    dto.getCategoryName(),
-                    dto.getIconName(),
-                    dto.getCategoryColor(),
-                    0, 0f
+                        catId,
+                        dto.getCategoryName(),
+                        dto.getIconName(),
+                        dto.getCategoryColor(),
+                        0, 0f
                 ));
             }
             AnalysisCategoryDTO catDTO = map.get(catId);
             catDTO.setTotalAmount(catDTO.getTotalAmount() + Math.abs(dto.getTransaction().getAmount()));
         }
-        
+
         List<AnalysisCategoryDTO> resultList = new ArrayList<>(map.values());
         for (AnalysisCategoryDTO dto : resultList) {
             dto.setPercentage((float) dto.getTotalAmount() / totalTypeAmount * 100f);
         }
-        
+
         // Sort by amount DESC
         Collections.sort(resultList, (o1, o2) -> Long.compare(o2.getTotalAmount(), o1.getTotalAmount()));
-        
+
         adapter.setList(resultList);
-        
+
         // Build PieChart
         List<PieEntry> entries = new ArrayList<>();
         List<Integer> colors = new ArrayList<>();
-        
+
         for (AnalysisCategoryDTO dto : resultList) {
             String labelName = dto.getPercentage() < 10f ? "" : dto.getCategoryName();
             entries.add(new PieEntry(dto.getPercentage(), labelName, dto));
@@ -725,12 +838,12 @@ public class AnalysisFragment extends Fragment {
                 colors.add(Color.LTGRAY);
             }
         }
-        
+
         PieDataSet dataSet = new PieDataSet(entries, "Danh mục");
         dataSet.setColors(colors);
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(0f); // Tắt hiệu ứng nẩy lên (highlight) gây bối rối
-        
+
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new ValueFormatter() {
             @Override
@@ -741,7 +854,7 @@ public class AnalysisFragment extends Fragment {
         });
         data.setValueTextSize(12f);
         data.setValueTextColor(Color.BLACK);
-        
+
         pieChart.setHighlightPerTapEnabled(true); // Bật lại tính năng chạm để xem tooltip
         pieChart.setData(data);
         pieChart.invalidate();

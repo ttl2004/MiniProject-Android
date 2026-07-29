@@ -23,6 +23,9 @@ public interface UserDAO {
     @Query("SELECT EXISTS(SELECT 1 FROM users WHERE userName = :userName LIMIT 1)")
     boolean isUsernameExists(String userName);
 
-    @Query("SELECT * FROM users WHERE username = :username AND fullName = :fullName LIMIT 1")
+    @Query("SELECT * FROM users WHERE userName = :username AND fullName = :fullName LIMIT 1")
     User findByUsernameAndFullName(String username, String fullName);
+
+    @Query("SELECT COUNT(*) FROM users")
+    int getUserCount();
 }

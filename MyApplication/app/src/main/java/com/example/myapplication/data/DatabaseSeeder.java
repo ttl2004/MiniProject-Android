@@ -17,6 +17,9 @@ public class DatabaseSeeder {
 
     private static void seedCategory(AppDatabase db) {
         Log.d("Category", "start------------");
+        if (db.categoryDAO().getCategoryCount() > 0) {
+            return;
+        }
         List<Category> categories = new ArrayList<>();
 //        String[] items = {"Ăn uống", "Di chuyển", "Mua sắm", "Nhà cửa", "Giải trí", "Sức khỏe", "Giáo dục", "Hóa đơn"};
 //        String[] icons = {"ic_category_eat", "ic_category_move", "ic_category_shopping", "ic_category_home", "ic_category_entertaiment", "ic_category_medical", "ic_category_edu", "ic_category_invoice"};
@@ -122,6 +125,9 @@ public class DatabaseSeeder {
     }
 
     private static void seedUser(AppDatabase db) {
+        if (db.userDAO().getUserCount() > 0) {
+            return;
+        }
         User user = new User("We are team 5", "02112004", "02112004");
         db.userDAO().insert(user);
     }

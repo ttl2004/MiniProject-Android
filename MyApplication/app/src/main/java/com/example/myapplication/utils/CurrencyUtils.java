@@ -6,11 +6,14 @@ import java.util.Locale;
 
 public class CurrencyUtils {
 
-    public static String formatCurrency(long amount) {
+    private static final ThreadLocal<DecimalFormat> CURRENCY_FORMATTER = ThreadLocal.withInitial(() -> {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
-        symbols.setGroupingSeparator('.'); // Dùng dấu chấm phân cách
+        symbols.setGroupingSeparator('.'); // Dùng dấu chấm phân cách hàng nghìn
+        return new DecimalFormat("#,###", symbols);
+    });
 
-        DecimalFormat formatter = new DecimalFormat("#,###", symbols);
-        return formatter.format(amount) + "đ";
+    public static String formatCurrency(long amount) {
+        // Tái sử dụng instance đã được khởi tạo sẵn
+        return CURRENCY_FORMATTER.get().format(amount) + " đ";
     }
 }

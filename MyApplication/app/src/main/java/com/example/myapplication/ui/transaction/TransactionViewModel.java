@@ -3,8 +3,10 @@ package com.example.myapplication.ui.transaction;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
@@ -22,18 +24,84 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 public class TransactionViewModel extends AndroidViewModel {
 
-    private  TransactionManager transactionManager;
+    private final TransactionManager transactionManager;
 
     private final MutableLiveData<Integer> currentUserId = new MutableLiveData<>();
     private final MutableLiveData<MonthModel> selectedMonth = new MutableLiveData<>();
 
+    // Class helper đệm dữ liệu đầu vào cho MediatorLiveData
+    private static class FilterParams {
+        @Nullable final Integer userId;
+        @Nullable final MonthModel monthModel;
+
+        FilterParams(@Nullable Integer userId, @Nullable MonthModel monthModel) {
+            this.userId = userId;
+            this.monthModel = monthModel;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FilterParams that = (FilterParams) o;
+            return Objects.equals(userId, that.userId) && Objects.equals(monthModel, that.monthModel);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(userId, monthModel);
+        }
+    }
+
+    private final MediatorLiveData<FilterParams> filterParamsLiveData = new MediatorLiveData<>();
+    public final LiveData<List<TransactionDTO>> rawTransactions;
+
     public TransactionViewModel(@NonNull Application application) {
         super(application);
         transactionManager = new TransactionManager(application);
+
+        // 🟢 FIX BUG-16: Reactive với CẢ userId lẫn selectedMonth
+        filterParamsLiveData.addSource(currentUserId, userId ->
+                filterParamsLiveData.setValue(new FilterParams(userId, selectedMonth.getValue()))
+        );
+
+        filterParamsLiveData.addSource(selectedMonth, month ->
+                filterParamsLiveData.setValue(new FilterParams(currentUserId.getValue(), month))
+        );
+
+        // SwitchMap lắng nghe sự thay đổi từ filterParamsLiveData
+        rawTransactions = Transformations.switchMap(filterParamsLiveData, params -> {
+            if (params.userId == null || params.monthModel == null) {
+                return new MutableLiveData<>(new ArrayList<>());
+            }
+
+            MonthModel month = params.monthModel;
+            Calendar cal = Calendar.getInstance();
+
+            // Lưu ý: Nếu monthModel.getMonth() trả về từ 1-12 thì cần (month.getMonth() - 1)
+            // Giả định getMonth() trong MonthModel trả về 0-11 chuẩn Calendar, hoặc 1-12
+            int monthIndex = month.getMonth() > 11 ? month.getMonth() - 1 : month.getMonth();
+
+            // Đầu tháng: 00:00:00.000
+            cal.set(month.getYear(), monthIndex, 1, 0, 0, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            long start = cal.getTimeInMillis();
+
+            // Cuối tháng: 23:59:59.999
+            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MILLISECOND, 999);
+            long end = cal.getTimeInMillis();
+
+            return transactionManager.getTransactionsByRange(params.userId, start, end);
+        });
     }
 
     public void setUserId(int userId) {
@@ -53,34 +121,6 @@ public class TransactionViewModel extends AndroidViewModel {
             });
         }
     }
-
-    // LiveData Lấy danh sách DTO theo tháng & user
-    public final LiveData<List<TransactionDTO>> rawTransactions = Transformations.switchMap(
-            selectedMonth,
-            month -> {
-                Integer userId = currentUserId.getValue();
-                if (userId == null || month == null) {
-                    return new MutableLiveData<>(new ArrayList<>());
-                }
-
-                Calendar cal = Calendar.getInstance();
-
-                // Đầu tháng: 00:00:00.000
-                cal.set(month.getYear(), month.getMonth(), 1, 0, 0, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                long start = cal.getTimeInMillis();
-
-                // Cuối tháng: 23:59:59.999
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-                cal.set(Calendar.HOUR_OF_DAY, 23);
-                cal.set(Calendar.MINUTE, 59);
-                cal.set(Calendar.SECOND, 59);
-                cal.set(Calendar.MILLISECOND, 999);
-                long end = cal.getTimeInMillis();
-
-                return transactionManager.getTransactionsByRange(userId, start, end);
-            }
-    );
 
     public List<TransactionGroup> processAndGroupTransactions(List<TransactionDTO> dtoList, String currentTab) {
         if (dtoList == null || dtoList.isEmpty()) {

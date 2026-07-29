@@ -1,15 +1,16 @@
 package com.example.myapplication.activity.register;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.manager.UserManager;
 import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityRegisterBinding;
+import com.example.myapplication.manager.UserManager;
+
+import java.util.concurrent.Executors;
 
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding activityRegisterBinding;
@@ -35,10 +36,10 @@ public class RegisterActivity extends AppCompatActivity {
         String password = activityRegisterBinding.etRegisterPassword.getText().toString().trim();
         String confirmPassword = activityRegisterBinding.etConfirmPassword.getText().toString().trim();
 
-        // 1. Reset các lỗi hiển thị trước đó (nếu dùng TextInputLayout)
+        // 1. Reset các lỗi hiển thị trước đó (chạy trên UI Thread)
         clearErrors();
 
-        // 2. Validate từng trường dữ liệu
+        // 2. Validate dữ liệu cơ bản (chưa đụng DB)
         if (fullname.length() < 4) {
             showErrorFullname("Tên đầy đủ phải có ít nhất 4 ký tự!");
             return;
@@ -46,12 +47,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (username.length() < 8) {
             showErrorUsername("Tên đăng nhập phải có ít nhất 8 ký tự!");
-            return;
-        }
-
-        // Kiểm tra trùng username trong Database
-        if (userManager.isUsernameExists(username)) {
-            showErrorUsername("Tên đăng nhập này đã tồn tại!");
             return;
         }
 
@@ -65,16 +60,40 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // 3. Nếu tất cả thỏa mãn -> Cho phép đăng ký
-        User user = new User(fullname, username, password);
-        long res = userManager.register(user);
+        // Vô hiệu hóa nút Đăng ký để tránh spam click trong lúc chờ DB xử lý
+        activityRegisterBinding.btnRegister.setEnabled(false);
 
-        if (res > 0) {
-            Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Đăng ký thất bại, vui lòng thử lại!", Toast.LENGTH_SHORT).show();
-        }
+        // 3. Đẩy kiểm tra DB và Insert sang Luồng Ngầm (Background Thread)
+        Executors.newSingleThreadExecutor().execute(() -> {
+
+            // a. Kiểm tra trùng Username dưới DB
+            boolean isExists = userManager.isUsernameExists(username);
+
+            if (isExists) {
+                // Trả lỗi về UI Thread nếu username đã tồn tại
+                runOnUiThread(() -> {
+                    activityRegisterBinding.btnRegister.setEnabled(true);
+                    showErrorUsername("Tên đăng nhập này đã tồn tại!");
+                });
+                return;
+            }
+
+            // b. Thực hiện Insert User mới vào DB
+            User user = new User(fullname, username, password);
+            long res = userManager.register(user);
+
+            // c. Cập nhật UI kết quả
+            runOnUiThread(() -> {
+                activityRegisterBinding.btnRegister.setEnabled(true);
+
+                if (res > 0) {
+                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Đăng ký thất bại, vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     // Các hàm phụ trợ hiển thị lỗi lên giao diện

@@ -34,8 +34,8 @@ public class NotificationRepository {
         return notificationDAO.getUnreadCount(userId);
     }
 
-    public void markAllAsRead() {
-        notificationDAO.markAllAsRead();
+    public void markAllAsRead(int userId) {
+        notificationDAO.markAllAsRead(userId);
     }
 
     public void markAsRead(int notificationId) {

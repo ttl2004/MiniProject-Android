@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
@@ -53,7 +52,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public Category getSelectedCategory() {
-        if (categoryList == null || categoryList.isEmpty()) {
+        if (categoryList == null || categoryList.isEmpty() || selectedPosition < 0 || selectedPosition >= categoryList.size()) {
             return null;
         }
         return categoryList.get(selectedPosition);
@@ -77,7 +76,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             int oldPosition = selectedPosition;
             selectedPosition = position;
 
-            notifyItemChanged(oldPosition);
+            if (oldPosition != RecyclerView.NO_POSITION) {
+                notifyItemChanged(oldPosition);
+            }
             notifyItemChanged(selectedPosition);
         }
     }
@@ -89,12 +90,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             if (categoryList.get(i).getId() == categoryId) {
                 int old = selectedPosition;
                 selectedPosition = i;
-                notifyItemChanged(old);
+                if (old != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(old);
+                }
                 notifyItemChanged(selectedPosition);
                 return;
             }
         }
     }
+
     public void updateData(List<Category> newCategories) {
         this.categoryList = newCategories;
         notifyDataSetChanged();
@@ -103,14 +107,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @NonNull
     @Override
     public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        int layout;
-
-        if (selectable) {
-            layout = R.layout.item_category_horizontal;
-        } else {
-            layout = R.layout.item_category;
-        }
+        int layout = selectable ? R.layout.item_category_horizontal : R.layout.item_category;
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(layout, parent, false);
@@ -120,67 +117,65 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
-
         Category category = categoryList.get(position);
 
-        holder.categoryName.setText(category.getName());
+        if (holder.categoryName != null) {
+            holder.categoryName.setText(category.getName());
+        }
 
         Context context = holder.itemView.getContext();
 
-        // icon
-        int iconRes = context.getResources().getIdentifier(
-                category.getIcon(),
-                "drawable",
-                context.getPackageName());
+        // Icon
+        if (holder.categoryIcon != null) {
+            int iconRes = context.getResources().getIdentifier(
+                    category.getIcon(),
+                    "drawable",
+                    context.getPackageName());
 
-        if (iconRes != 0) {
-            holder.categoryIcon.setImageResource(iconRes);
-        } else {
-            holder.categoryIcon.setImageResource(R.drawable.ic_category_tag);
+            if (iconRes != 0) {
+                holder.categoryIcon.setImageResource(iconRes);
+            } else {
+                holder.categoryIcon.setImageResource(R.drawable.ic_category_tag);
+            }
+
+            // Màu
+            int color;
+            try {
+                color = Color.parseColor(category.getColor());
+            } catch (Exception e) {
+                color = ContextCompat.getColor(context, R.color.blueApp);
+            }
+
+            holder.categoryIcon.setBackgroundTintList(ColorStateList.valueOf(color));
         }
 
-        // màu
-        int color;
-
-        try {
-            color = Color.parseColor(category.getColor());
-        } catch (Exception e) {
-            color = ContextCompat.getColor(context, R.color.blueApp);
-        }
-
-        holder.categoryIcon.setBackgroundTintList(ColorStateList.valueOf(color));
-
-        // Chỉ màn AddTransaction mới có hiệu ứng chọn
-        if (selectable) {
-
-            if (position == selectedPosition) {
+        // 🟢 FIX BUG-18: Kiểm tra null an toàn tuyệt đối cho viewSelected
+        if (holder.viewSelected != null) {
+            if (selectable && position == selectedPosition) {
                 holder.viewSelected.setVisibility(View.VISIBLE);
             } else {
                 holder.viewSelected.setVisibility(View.GONE);
             }
-
-        } else {
-
-            holder.categoryIcon.setBackgroundTintList(
-                    ColorStateList.valueOf(color)
-            );
         }
 
+        // Click listener
         holder.itemView.setOnClickListener(v -> {
-
-            if (selectable) {
-
-                int old = selectedPosition;
-                selectedPosition = holder.getAdapterPosition();
-
-                notifyItemChanged(old);
-                notifyItemChanged(selectedPosition);
+            int pos = holder.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION || categoryList == null || pos >= categoryList.size()) {
+                return; // Guard
             }
+
+            int old = selectedPosition;
+            selectedPosition = pos;
+
+            if (old != RecyclerView.NO_POSITION) {
+                notifyItemChanged(old);
+            }
+            notifyItemChanged(selectedPosition);
 
             if (listener != null) {
-                listener.onItemClick(category);
+                listener.onItemClick(categoryList.get(pos));
             }
-
         });
     }
 
@@ -193,7 +188,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         ImageView categoryIcon;
         TextView categoryName;
-        View viewSelected;
+        View viewSelected; // Có thể null nếu layout không khai báo view_selected
 
         public CategoryHolder(@NonNull View itemView) {
             super(itemView);

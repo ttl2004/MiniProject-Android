@@ -40,21 +40,29 @@
                         android:textColor="#E8F5E9"
                         android:textSize="14sp" />
 
+                    <!-- AUTOSIZE TỔNG SỐ DƯ -->
                     <TextView
                         android:id="@+id/tvTotalBalance"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
                         android:text="0đ"
                         android:textColor="@android:color/white"
                         android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:autoSizeMaxTextSize="28sp"
+                        app:autoSizeMinTextSize="16sp"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeTextType="uniform" />
 
                     <!-- SUB CARDS: THU NHẬP & CHI TIÊU -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:baselineAligned="false"
                         android:orientation="horizontal">
 
                         <!-- Thu nhập -->
@@ -77,9 +85,10 @@
                                 app:tint="#2E7D32" />
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
+                                android:layout_weight="1"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -89,14 +98,21 @@
                                     android:textColor="#E8F5E9"
                                     android:textSize="12sp" />
 
+                                <!-- AUTOSIZE THU NHẬP -->
                                 <TextView
                                     android:id="@+id/tvTotalIncome"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
                                     android:text="0đ"
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    app:autoSizeMaxTextSize="14sp"
+                                    app:autoSizeMinTextSize="9sp"
+                                    app:autoSizeStepGranularity="1sp"
+                                    app:autoSizeTextType="uniform" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -120,9 +136,10 @@
                                 app:tint="#D32F2F" />
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
+                                android:layout_weight="1"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -132,14 +149,21 @@
                                     android:textColor="#E8F5E9"
                                     android:textSize="12sp" />
 
+                                <!-- AUTOSIZE CHI TIÊU -->
                                 <TextView
                                     android:id="@+id/tvTotalExpense"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
                                     android:text="0đ"
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    app:autoSizeMaxTextSize="14sp"
+                                    app:autoSizeMinTextSize="9sp"
+                                    app:autoSizeStepGranularity="1sp"
+                                    app:autoSizeTextType="uniform" />
                             </LinearLayout>
                         </LinearLayout>
 

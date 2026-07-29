@@ -2,6 +2,7 @@ package com.example.myapplication.ui.transaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,24 +61,33 @@ public class TransactionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // 1. Khởi tạo ViewModel
         viewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
 
+        // 🟢 FIX BUG-21: Thiết lập currentUserId TRƯỚC TẤT CẢ các lệnh trigger query
         if (currentUser != null) {
             viewModel.setUserId(currentUser.getUserId());
+        } else {
+            Log.e("TransactionFragment", "currentUser is null in onViewCreated!");
         }
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
 
+        // 2. Setup RecyclerViews & UI Components
         setupYearNavigation();
         setupMonthRecyclerView();
         setupGroupRecyclerView();
         setupTabClickListeners();
+
+        // 3. Lắng nghe LiveData từ ViewModel
         observeData();
 
+        // 4. Kích hoạt chọn tháng và load dữ liệu CUỐI CÙNG
         loadMonthsForYear(selectedYear);
     }
 
     private void setupYearNavigation() {
+        if (binding == null) return;
         binding.tvSelectedYear.setText(String.valueOf(selectedYear));
 
         binding.btnPrevYear.setOnClickListener(v -> changeYear(-1));
@@ -92,7 +102,9 @@ public class TransactionFragment extends Fragment {
 
     private void changeYear(int offset) {
         selectedYear += offset;
-        binding.tvSelectedYear.setText(String.valueOf(selectedYear));
+        if (binding != null) {
+            binding.tvSelectedYear.setText(String.valueOf(selectedYear));
+        }
         loadMonthsForYear(selectedYear);
     }
 
@@ -113,6 +125,7 @@ public class TransactionFragment extends Fragment {
     }
 
     private void loadMonthsForYear(int year) {
+        if (binding == null) return;
         List<MonthModel> monthList = generateMonthListForYear(year);
 
         if (monthAdapter == null) {
@@ -131,22 +144,23 @@ public class TransactionFragment extends Fragment {
     }
 
     private void setupMonthRecyclerView() {
+        if (binding == null) return;
         binding.rvMonths.setLayoutManager(
                 new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         );
     }
 
     private void setupGroupRecyclerView() {
+        if (binding == null) return;
+
         groupAdapter = new TransactionGroupAdapter(new ArrayList<>(), new TransactionDetailAdapter.OnTransactionActionListener() {
             @Override
             public void onEdit(TransactionDTO dto) {
-                // Chuyển sang AddTransactionActivity ở chế độ Sửa
                 openEditTransactionActivity(dto);
             }
 
             @Override
             public void onDelete(TransactionDTO dto) {
-                // Hiển thị Dialog xác nhận xóa
                 showDeleteDialog(dto);
             }
         });
@@ -156,6 +170,8 @@ public class TransactionFragment extends Fragment {
     }
 
     private void showDeleteDialog(TransactionDTO dto) {
+        if (dto == null) return;
+
         String categoryName = (dto.getCategoryName() != null && !dto.getCategoryName().isEmpty())
                 ? dto.getCategoryName() : "giao dịch này";
 
@@ -171,7 +187,6 @@ public class TransactionFragment extends Fragment {
                 .show();
     }
 
-    // --- Mở màn hình AddTransactionActivity ở chế độ Chỉnh sửa ---
     private void openEditTransactionActivity(TransactionDTO dto) {
         if (dto == null || dto.getTransaction() == null) return;
 
@@ -182,12 +197,14 @@ public class TransactionFragment extends Fragment {
     }
 
     private void setupTabClickListeners() {
+        if (binding == null) return;
         binding.tabAll.setOnClickListener(v -> switchTab("ALL"));
         binding.tabExpense.setOnClickListener(v -> switchTab("EXPENSE"));
         binding.tabIncome.setOnClickListener(v -> switchTab("INCOME"));
     }
 
     private void switchTab(String tabType) {
+        if (binding == null) return;
         currentTab = tabType;
 
         binding.tabAll.setBackgroundResource(android.R.color.transparent);
@@ -219,6 +236,8 @@ public class TransactionFragment extends Fragment {
     }
 
     private void renderData() {
+        if (binding == null) return;
+
         List<TransactionGroup> groupedList = viewModel.processAndGroupTransactions(currentRawList, currentTab);
         groupAdapter.setGroupList(groupedList);
 
@@ -234,6 +253,7 @@ public class TransactionFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Tránh Memory Leak View Binding trong Fragment
         binding = null;
     }
 }

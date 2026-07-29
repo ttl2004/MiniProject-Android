@@ -3,6 +3,7 @@ package com.example.myapplication.data.repository;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplication.data.dao.TransactionDAO;
+import com.example.myapplication.data.dto.TransactionDTO;
 import com.example.myapplication.data.entity.Transaction;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public class TransactionRepository {
         transactionDAO.updateTransaction(transaction);
     }
 
-
+    public LiveData<List<TransactionDTO>> getTransactionsWithCategoryByRange(int userId, long startDate, long endDate) {
+        return transactionDAO.getTransactionsWithCategoryByRange(userId, startDate, endDate);
+    }
 
 }

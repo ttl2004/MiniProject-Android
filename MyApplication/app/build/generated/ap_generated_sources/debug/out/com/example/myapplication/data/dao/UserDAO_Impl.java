@@ -255,7 +255,7 @@ public final class UserDAO_Impl implements UserDAO {
 
   @Override
   public User findByUsernameAndFullName(final String username, final String fullName) {
-    final String _sql = "SELECT * FROM users WHERE username = ? AND fullName = ? LIMIT 1";
+    final String _sql = "SELECT * FROM users WHERE userName = ? AND fullName = ? LIMIT 1";
     return DBUtil.performBlocking(__db, true, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);
       try {
@@ -309,6 +309,25 @@ public final class UserDAO_Impl implements UserDAO {
           _result.setUpdatedAt(_tmpUpdatedAt);
         } else {
           _result = null;
+        }
+        return _result;
+      } finally {
+        _stmt.close();
+      }
+    });
+  }
+
+  @Override
+  public int getUserCount() {
+    final String _sql = "SELECT COUNT(*) FROM users";
+    return DBUtil.performBlocking(__db, true, false, (_connection) -> {
+      final SQLiteStatement _stmt = _connection.prepare(_sql);
+      try {
+        final int _result;
+        if (_stmt.step()) {
+          _result = (int) (_stmt.getLong(0));
+        } else {
+          _result = 0;
         }
         return _result;
       } finally {

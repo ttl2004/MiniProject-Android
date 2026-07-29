@@ -69,7 +69,7 @@ public class NotificationActivity extends AppCompatActivity {
         // Nút Đánh dấu tất cả đã đọc
         binding.btnMarkAllRead.setOnClickListener(v -> {
             Executors.newSingleThreadExecutor().execute(() -> {
-                notificationManager.markAllAsRead();
+                notificationManager.markAllAsRead(currentUserId);
             });
             Toast.makeText(this, "Đã đánh dấu tất cả là đã đọc", Toast.LENGTH_SHORT).show();
         });
