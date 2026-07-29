@@ -120,7 +120,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         binding.btnSaveTransaction.setText("CẬP NHẬT GIAO DỊCH");
 
         // 2. Load số tiền cũ
-        int absAmount = Math.abs(currentTransaction.getAmount());
+        long absAmount = Math.abs(currentTransaction.getAmount());
         binding.edtAmount.setText(String.valueOf(absAmount));
 
         // 3. Load ghi chú
@@ -247,7 +247,7 @@ public class AddTransactionActivity extends AppCompatActivity {
             return;
         }
 
-        int amount = Integer.parseInt(amountStr);
+        long amount = Long.parseLong(amountStr);
         long transactionDate = selectedCalendar.getTimeInMillis();
 
         if (isEditMode && currentTransaction != null) {

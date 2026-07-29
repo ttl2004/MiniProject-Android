@@ -99,6 +99,7 @@ public class HomeActivity extends AppCompatActivity {
         // 7. Xử lý sự kiện mở màn hình Thông Báo
         activityHomeBinding.btnNotification.setOnClickListener(v -> {
             Intent i = new Intent(HomeActivity.this, NotificationActivity.class);
+            i.putExtra("EXTRA_USER", currentUser);
             startActivity(i);
         });
 
@@ -108,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void setupNotificationBadge() {
-        notificationManager.getUnreadCount().observe(this, unreadCount -> {
+        notificationManager.getUnreadCount(currentUser.getUserId()).observe(this, unreadCount -> {
             if (unreadCount != null && unreadCount > 0) {
                 activityHomeBinding.tvNotificationBadge.setVisibility(View.VISIBLE);
                 activityHomeBinding.tvNotificationBadge.setText(unreadCount > 99 ? "99+" : String.valueOf(unreadCount));

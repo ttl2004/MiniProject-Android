@@ -30,12 +30,12 @@ public class NotificationManager {
         notificationRepository.update(notification);
     }
 
-    public LiveData<List<Notification>> getAll() {
-        return notificationRepository.getAll();
+    public LiveData<List<Notification>> getAll(int userId) {
+        return notificationRepository.getAll(userId);
     }
 
-    public LiveData<Integer> getUnreadCount() {
-        return notificationRepository.getUnreadCount();
+    public LiveData<Integer> getUnreadCount(int userId) {
+        return notificationRepository.getUnreadCount(userId);
     }
 
     public void markAllAsRead() {

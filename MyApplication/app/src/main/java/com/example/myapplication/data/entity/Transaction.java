@@ -15,7 +15,7 @@ public class Transaction implements Serializable {
 
     private int categoryId;
 
-    private int amount;
+    private long amount;
 
     private String note;
 
@@ -27,7 +27,7 @@ public class Transaction implements Serializable {
 
     private long updatedAt;
 
-    public Transaction(int userId, int categoryId, int amount, String note, long transactionDate, String type) {
+    public Transaction(int userId, int categoryId, long amount, String note, long transactionDate, String type) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.amount = amount;
@@ -64,11 +64,11 @@ public class Transaction implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 

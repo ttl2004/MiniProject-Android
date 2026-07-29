@@ -22,6 +22,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        int userId = intent.getIntExtra("EXTRA_USER_ID", -1);
         String content = intent.getStringExtra("EXTRA_NOTE");
         if (content == null || content.isEmpty()) {
             content = "Đừng quên ghi chép chi tiêu hôm nay nhé!";
@@ -33,6 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         // 1. LƯU VÀO ROOM DATABASE
         NotificationManager appNotificationManager = new NotificationManager(context);
         appNotificationManager.insert(new Notification(
+                userId,
                 title,
                 content,
                 currentTime,
@@ -74,6 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (originalHour != -1 && originalMinute != -1) {
             ReminderScheduler.scheduleDailyReminder(
                     context,
+                    userId,
                     originalHour,
                     originalMinute,
                     content

@@ -116,7 +116,7 @@ public class HomeTransactionAdapter extends RecyclerView.Adapter<HomeTransaction
                 binding.tvAmount.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
             } else {
                 binding.tvAmount.setText("+" + CurrencyUtils.formatCurrency(absAmount));
-                binding.tvAmount.setTextColor(ContextCompat.getColor(context, R.color.blueApp));
+                binding.tvAmount.setTextColor(ContextCompat.getColor(context, R.color.greenApp));
             }
 
             // 5. Ghi chú & Ngày tháng

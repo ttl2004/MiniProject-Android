@@ -3,6 +3,7 @@ package com.example.myapplication.data;
 import android.util.Log;
 
 import com.example.myapplication.data.entity.Category;
+import com.example.myapplication.data.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class DatabaseSeeder {
 
     public static void seed(AppDatabase db) {
+        seedUser(db);
         seedCategory(db);
     }
 
@@ -117,5 +119,10 @@ public class DatabaseSeeder {
         db.categoryDAO().insertALL(categories);
 
         Log.d("Category", "done------------");
+    }
+
+    private static void seedUser(AppDatabase db) {
+        User user = new User("We are team 5", "02112004", "02112004");
+        db.userDAO().insert(user);
     }
 }

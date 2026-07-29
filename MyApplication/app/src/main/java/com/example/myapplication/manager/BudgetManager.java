@@ -29,7 +29,7 @@ public class BudgetManager {
         return budgetRepository.getBudgetItems(userId,month,year);
     }
 
-    public int updateBudget(int budgetId, int categoryId, int limitAmount) {
+    public int updateBudget(int budgetId, int categoryId, long limitAmount) {
         return budgetRepository.updateBudget(budgetId, categoryId, limitAmount);
     }
 

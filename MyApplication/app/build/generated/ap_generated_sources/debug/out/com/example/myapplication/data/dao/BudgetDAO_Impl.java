@@ -85,8 +85,8 @@ public final class BudgetDAO_Impl implements BudgetDAO {
           _tmpUserId = (int) (_stmt.getLong(_columnIndexOfUserId));
           final int _tmpCategoryId;
           _tmpCategoryId = (int) (_stmt.getLong(_columnIndexOfCategoryId));
-          final int _tmpLimitAmount;
-          _tmpLimitAmount = (int) (_stmt.getLong(_columnIndexOfLimitAmount));
+          final long _tmpLimitAmount;
+          _tmpLimitAmount = _stmt.getLong(_columnIndexOfLimitAmount);
           final int _tmpMonth;
           _tmpMonth = (int) (_stmt.getLong(_columnIndexOfMonth));
           final int _tmpYear;
@@ -132,8 +132,8 @@ public final class BudgetDAO_Impl implements BudgetDAO {
           _tmpUserId = (int) (_stmt.getLong(_columnIndexOfUserId));
           final int _tmpCategoryId;
           _tmpCategoryId = (int) (_stmt.getLong(_columnIndexOfCategoryId));
-          final int _tmpLimitAmount;
-          _tmpLimitAmount = (int) (_stmt.getLong(_columnIndexOfLimitAmount));
+          final long _tmpLimitAmount;
+          _tmpLimitAmount = _stmt.getLong(_columnIndexOfLimitAmount);
           final int _tmpMonth;
           _tmpMonth = (int) (_stmt.getLong(_columnIndexOfMonth));
           final int _tmpYear;
@@ -225,7 +225,7 @@ public final class BudgetDAO_Impl implements BudgetDAO {
   }
 
   @Override
-  public int updateBudget(final int budgetId, final int categoryId, final int limitAmount,
+  public int updateBudget(final int budgetId, final int categoryId, final long limitAmount,
       final long updatedAt) {
     final String _sql = "UPDATE budgets SET categoryId = ?, limitAmount = ?, updatedAt = ? WHERE id = ?";
     return DBUtil.performBlocking(__db, false, true, (_connection) -> {

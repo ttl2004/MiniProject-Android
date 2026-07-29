@@ -7,6 +7,7 @@
 
     <!-- Quyền nhận sự kiện khi điện thoại khởi động lại -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +22,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,45 +32,58 @@
 
         <activity
             android:name=".activity.register.RegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.account.AccountActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.account.UpdateAccountActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.addtransaction.AddTransactionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.budget.BudgetActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.budget.AddBudgetActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.budget.EditBudgetActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.analysis.CategoryDetailActivity"
-            android:exported="false" />
+            android:name=".activity.analysis.CategoryDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.setting.SettingsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.notification.NotificationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.forgotpassword.ForgotPasswordActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <receiver
             android:name=".receiver.BootReceiver"

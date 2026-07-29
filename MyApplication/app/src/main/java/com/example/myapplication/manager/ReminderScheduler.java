@@ -12,7 +12,20 @@ import java.util.Calendar;
 
 public class ReminderScheduler {
 
-    public static void scheduleDailyReminder(Context context, int hour, int minute, String note) {
+    /**
+     * Kiểm tra xem app có quyền đặt báo thức chính xác hay không (Yêu cầu cho Android 12+)
+     */
+    public static boolean canScheduleExactAlarms(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) return false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return alarmManager.canScheduleExactAlarms();
+        }
+        return true;
+    }
+
+    public static void scheduleDailyReminder(Context context, int userId, int hour, int minute, String note) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) return;
 
@@ -20,16 +33,22 @@ public class ReminderScheduler {
         cancelDailyReminder(context);
 
         Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra("EXTRA_USER_ID", userId);
         intent.putExtra("EXTRA_NOTE", note);
-        // TRUYỀN GIỜ/PHÚT GỐC VÀO INTENT ĐỂ TỰ HẸN LẠI CHO NGÀY MAI
         intent.putExtra("EXTRA_HOUR", hour);
         intent.putExtra("EXTRA_MINUTE", minute);
+
+        // Ghép Flag an toàn cho PendingIntent
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 100,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+                flags
         );
 
         Calendar calendar = Calendar.getInstance();
@@ -43,8 +62,24 @@ public class ReminderScheduler {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
-        // ĐẶT BÁO THỨC CHÍNH XÁC (Tránh bị trễ do Doze Mode)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        // 🔴 CHỐNG CRASH CHO ANDROID 14+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                // Đã có quyền -> Báo thức chính xác 100%
+                alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),
+                        pendingIntent
+                );
+            } else {
+                // Chưa có quyền -> Dùng setAndAllowWhileIdle() TRÁNH CRASH APP (Android 14)
+                alarmManager.setAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),
+                        pendingIntent
+                );
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
@@ -64,11 +99,17 @@ public class ReminderScheduler {
         if (alarmManager == null) return;
 
         Intent intent = new Intent(context, AlarmReceiver.class);
+
+        int flags = PendingIntent.FLAG_NO_CREATE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 100,
                 intent,
-                PendingIntent.FLAG_NO_CREATE | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+                flags
         );
 
         if (pendingIntent != null) {

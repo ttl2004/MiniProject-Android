@@ -31,6 +31,7 @@ public class BootReceiver extends BroadcastReceiver {
                 if (settings != null && settings.isReminderEnabled()) {
                     ReminderScheduler.scheduleDailyReminder(
                             context,
+                            currentUserId,
                             settings.getReminderHour(),
                             settings.getReminderMinute(),
                             settings.getReminderNote()

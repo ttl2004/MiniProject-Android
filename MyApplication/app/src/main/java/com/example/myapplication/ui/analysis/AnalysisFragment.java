@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.activity.analysis.CategoryDetailActivity;
 import com.example.myapplication.adapter.AnalysisCategoryAdapter;
 import com.example.myapplication.data.dto.AnalysisCategoryDTO;
 import com.example.myapplication.data.dto.TransactionDTO;
@@ -36,8 +36,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.text.DecimalFormat;
@@ -719,7 +717,8 @@ public class AnalysisFragment extends Fragment {
         List<Integer> colors = new ArrayList<>();
         
         for (AnalysisCategoryDTO dto : resultList) {
-            entries.add(new PieEntry(dto.getPercentage(), dto.getCategoryName(), dto));
+            String labelName = dto.getPercentage() < 10f ? "" : dto.getCategoryName();
+            entries.add(new PieEntry(dto.getPercentage(), labelName, dto));
             try {
                 colors.add(Color.parseColor(dto.getCategoryColor()));
             } catch (Exception e) {

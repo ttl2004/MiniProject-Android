@@ -110,7 +110,7 @@ public class EditBudgetActivity extends AppCompatActivity {
             return;
         }
 
-        if (amountValue > Integer.MAX_VALUE) {
+        if (amountValue > Long.MAX_VALUE) {
             Toast.makeText(this, "Hạn mức quá lớn!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -121,7 +121,7 @@ public class EditBudgetActivity extends AppCompatActivity {
                 result = budgetManager.updateBudget(
                         budgetId,
                         selectedCategory.getId(),
-                        (int) amountValue
+                        amountValue
                 );
             } catch (SQLiteConstraintException e) {
                 runOnUiThread(() -> Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại trong tháng đã chọn!", Toast.LENGTH_SHORT).show());

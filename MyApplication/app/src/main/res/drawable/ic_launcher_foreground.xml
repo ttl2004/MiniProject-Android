@@ -3,10 +3,10 @@
     android:height="108dp"
     android:viewportWidth="100"
     android:viewportHeight="100">
-  <group android:scaleX="0.5703704"
-      android:scaleY="0.5703704"
-      android:translateX="19.633059"
-      android:translateY="24.386145">
+  <group android:scaleX="0.4888889"
+      android:scaleY="0.4888889"
+      android:translateX="23.971193"
+      android:translateY="28.045267">
 
       <!-- Nền ví chính (Xanh lục đậm hơn - Nửa trái/Dưới) -->
       <path

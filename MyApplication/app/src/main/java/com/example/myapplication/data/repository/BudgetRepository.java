@@ -33,7 +33,7 @@ public class BudgetRepository {
         );
     }
 
-    public int updateBudget(int budgetId, int categoryId, int limitAmount) {
+    public int updateBudget(int budgetId, int categoryId, long limitAmount) {
         return budgetDao.updateBudget(budgetId, categoryId, limitAmount, System.currentTimeMillis());
     }
 

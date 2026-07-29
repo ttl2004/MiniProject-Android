@@ -52,7 +52,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected RoomOpenDelegate createOpenDelegate() {
-    final RoomOpenDelegate _openDelegate = new RoomOpenDelegate(6, "c186556e69505b2f7834abf5e3b1f221", "da76cebe606f0f1f84b36d3152b6c053") {
+    final RoomOpenDelegate _openDelegate = new RoomOpenDelegate(6, "5e9aaa6c7ea5253facbb5902f2aa8817", "c5d031bc5203c2539e675c4059433848") {
       @Override
       public void createAllTables(@NonNull final SQLiteConnection connection) {
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `users` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fullName` TEXT, `userName` TEXT, `password` TEXT, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)");
@@ -61,9 +61,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         SQLite.execSQL(connection, "CREATE UNIQUE INDEX IF NOT EXISTS `index_budgets_userId_categoryId_month_year` ON `budgets` (`userId`, `categoryId`, `month`, `year`)");
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `transactions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `categoryId` INTEGER NOT NULL, `amount` INTEGER NOT NULL, `note` TEXT, `transactionDate` INTEGER NOT NULL, `type` TEXT, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)");
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `user_settings` (`userId` INTEGER NOT NULL, `isDarkMode` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL, `reminderHour` INTEGER NOT NULL, `reminderMinute` INTEGER NOT NULL, `reminderNote` TEXT, PRIMARY KEY(`userId`))");
-        SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `notifications` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `message` TEXT, `createdAt` TEXT, `isRead` INTEGER NOT NULL)");
+        SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS `notifications` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `title` TEXT, `message` TEXT, `createdAt` TEXT, `isRead` INTEGER NOT NULL)");
         SQLite.execSQL(connection, "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        SQLite.execSQL(connection, "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c186556e69505b2f7834abf5e3b1f221')");
+        SQLite.execSQL(connection, "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5e9aaa6c7ea5253facbb5902f2aa8817')");
       }
 
       @Override
@@ -187,8 +187,9 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoUserSettings + "\n"
                   + " Found:\n" + _existingUserSettings);
         }
-        final Map<String, TableInfo.Column> _columnsNotifications = new HashMap<String, TableInfo.Column>(5);
+        final Map<String, TableInfo.Column> _columnsNotifications = new HashMap<String, TableInfo.Column>(6);
         _columnsNotifications.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNotifications.put("userId", new TableInfo.Column("userId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNotifications.put("title", new TableInfo.Column("title", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNotifications.put("message", new TableInfo.Column("message", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNotifications.put("createdAt", new TableInfo.Column("createdAt", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));

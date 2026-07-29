@@ -24,12 +24,12 @@ public interface NotificationDAO {
     void update(Notification notification);
 
     // Lấy toàn bộ danh sách thông báo (sắp xếp mới nhất lên đầu)
-    @Query("SELECT * FROM notifications ORDER BY id DESC")
-    LiveData<List<Notification>> getAll();
+    @Query("SELECT * FROM notifications WHERE userId = :userId ORDER BY id DESC")
+    LiveData<List<Notification>> getAll(int userId);
 
     // Lấy số lượng thông báo CHƯA ĐỌC để hiển thị trên badge chuông
-    @Query("SELECT COUNT(*) FROM notifications WHERE isRead = 0")
-    LiveData<Integer> getUnreadCount();
+    @Query("SELECT COUNT(*) FROM notifications WHERE isRead = 0 AND userId = :userId")
+    LiveData<Integer> getUnreadCount(int userId);
 
     // Đánh dấu TẤT CẢ thông báo là ĐÃ ĐỌC
     @Query("UPDATE notifications SET isRead = 1 WHERE isRead = 0")

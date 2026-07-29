@@ -122,7 +122,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Đặt hoặc Hủy báo thức
         if (settings.isReminderEnabled()) {
-            ReminderScheduler.scheduleDailyReminder(this, selectedHour, selectedMinute, settings.getReminderNote());
+            ReminderScheduler.scheduleDailyReminder(this, currentUserId,selectedHour, selectedMinute, settings.getReminderNote());
         } else {
             ReminderScheduler.cancelDailyReminder(this);
         }

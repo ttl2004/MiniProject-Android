@@ -9,19 +9,21 @@ public class Notification {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    private int userId;
+
     private String title;
     private String message;
     private String createdAt;
     private boolean isRead;
 
-    public Notification(String title, String message, String createdAt, boolean isRead) {
+    public Notification(int userId,String title, String message, String createdAt, boolean isRead) {
+        this.userId = userId;
         this.title = title;
         this.message = message;
         this.createdAt = createdAt;
         this.isRead = isRead;
     }
 
-    // --- Getter và Setter ---
     public int getId() {
         return id;
     }
@@ -60,5 +62,13 @@ public class Notification {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

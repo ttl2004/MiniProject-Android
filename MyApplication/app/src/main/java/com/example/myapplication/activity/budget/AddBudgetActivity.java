@@ -192,7 +192,7 @@ public class AddBudgetActivity extends AppCompatActivity {
             return;
         }
 
-        if (amountValue > Integer.MAX_VALUE) {
+        if (amountValue > Long.MAX_VALUE) {
             Toast.makeText(this, "Hạn mức quá lớn!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -202,7 +202,7 @@ public class AddBudgetActivity extends AppCompatActivity {
             return;
         }
 
-        int amount = (int) amountValue;
+        long amount = amountValue;
         Budget budget = new Budget(
                 user.getUserId(),
                 selectedCategory.getId(),

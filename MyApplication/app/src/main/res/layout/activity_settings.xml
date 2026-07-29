@@ -312,7 +312,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:lineSpacingExtra="2dp"
-                            android:text="Bật nhắc nhở hằng ngày ssẽ giúp bạn không quên ghi chép chi tiêu."
+                            android:text="Bật nhắc nhở hằng ngày sẽ giúp bạn không quên ghi chép chi tiêu."
                             android:textColor="#335235"
                             android:textSize="13sp" />
                     </LinearLayout>

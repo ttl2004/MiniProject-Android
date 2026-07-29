@@ -1,5 +1,7 @@
 package com.example.myapplication.activity.notification;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.myapplication.adapter.NotificationAdapter;
 import com.example.myapplication.data.entity.Notification;
+import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityNotificationBinding;
 import com.example.myapplication.manager.NotificationManager;
 
@@ -20,11 +23,23 @@ public class NotificationActivity extends AppCompatActivity {
     private NotificationAdapter adapter;
     private NotificationManager notificationManager;
 
+    private int currentUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNotificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        User currentUser = (User) getIntent().getSerializableExtra("EXTRA_USER");
+
+        if (currentUser != null) {
+            currentUserId = currentUser.getUserId();
+        } else {
+            //Lấy từ SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            currentUserId = sharedPreferences.getInt("USER_ID", -1);
+        }
 
         notificationManager = new NotificationManager(this);
 
@@ -62,7 +77,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void observeNotifications() {
         // Lắng nghe dữ liệu LiveData tự động cập nhật từ Room DB
-        notificationManager.getAll().observe(this, notifications -> {
+        notificationManager.getAll(currentUserId).observe(this, notifications -> {
             if (notifications == null || notifications.isEmpty()) {
                 binding.layoutEmptyNotifications.setVisibility(View.VISIBLE);
                 binding.rvNotifications.setVisibility(View.GONE);

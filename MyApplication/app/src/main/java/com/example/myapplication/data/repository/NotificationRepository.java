@@ -26,12 +26,12 @@ public class NotificationRepository {
         notificationDAO.update(notification);
     }
 
-    public LiveData<List<Notification>> getAll() {
-        return notificationDAO.getAll();
+    public LiveData<List<Notification>> getAll(int userId) {
+        return notificationDAO.getAll(userId);
     }
 
-    public LiveData<Integer> getUnreadCount() {
-        return notificationDAO.getUnreadCount();
+    public LiveData<Integer> getUnreadCount(int userId) {
+        return notificationDAO.getUnreadCount(userId);
     }
 
     public void markAllAsRead() {
