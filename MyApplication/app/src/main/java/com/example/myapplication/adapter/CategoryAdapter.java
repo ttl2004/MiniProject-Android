@@ -55,6 +55,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         if (categoryList == null || categoryList.isEmpty() || selectedPosition < 0 || selectedPosition >= categoryList.size()) {
             return null;
         }
+        if (selectedPosition < 0 || selectedPosition >= categoryList.size()) {
+            selectedPosition = 0;
+        }
         return categoryList.get(selectedPosition);
     }
 

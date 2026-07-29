@@ -11,6 +11,7 @@ import com.example.myapplication.data.entity.Budget;
 import com.example.myapplication.data.repository.BudgetRepository;
 import com.example.myapplication.manager.BudgetManager;
 import com.example.myapplication.manager.CategoryManager;
+import com.example.myapplication.utils.BudgetCalculationUtils;
 
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +50,7 @@ public class BudgetViewModel extends AndroidViewModel {
             if (list == null) return;
 
             for (BudgetItem item : list) {
-                if (item.limitAmount == 0) {
-                    item.percent = 0;
-                } else {
-                    item.percent = (int) ((item.spentAmount * 100) / item.limitAmount);
-                }
+                item.percent = BudgetCalculationUtils.calculateDisplayPercent(item.spentAmount, item.limitAmount);
             }
 
             budgetUI.setValue(list);
@@ -61,4 +58,5 @@ public class BudgetViewModel extends AndroidViewModel {
 
         return budgetUI;
     }
+
 }
