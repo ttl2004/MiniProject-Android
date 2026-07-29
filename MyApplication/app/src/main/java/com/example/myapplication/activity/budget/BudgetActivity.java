@@ -103,6 +103,10 @@ public class BudgetActivity extends AppCompatActivity {
                     Executors.newSingleThreadExecutor().execute(() -> {
                         int result = budgetManager.deleteById(budget.budgetId);
                         runOnUiThread(() -> {
+                            if (!canUpdateUi()) {
+                                return;
+                            }
+
                             if (result <= 0) {
                                 new AlertDialog.Builder(this)
                                         .setMessage("Xóa ngân sách thất bại!")
@@ -113,5 +117,8 @@ public class BudgetActivity extends AppCompatActivity {
                     });
                 })
                 .show();
+    }
+    private boolean canUpdateUi() {
+        return !isFinishing() && !isDestroyed();
     }
 }

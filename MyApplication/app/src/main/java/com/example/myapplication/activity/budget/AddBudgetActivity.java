@@ -166,7 +166,6 @@ public class AddBudgetActivity extends AppCompatActivity {
             categoryList.addAll(categories);
             categoryAdapter.setCategoryList(categoryList);
 
-            // Mặc định chọn danh mục Chi tiêu đầu tiên
             if (!categoryList.isEmpty()) {
                 selectedCategory = categoryList.get(0);
                 categoryAdapter.setSelectedCategory(selectedCategory);
@@ -185,15 +184,13 @@ public class AddBudgetActivity extends AppCompatActivity {
             return;
         }
 
-        String amountInput = binding.tvAmount.getText().toString().replace(".", "").trim();
-        long amountValue = amountInput.isEmpty() ? 0 : Long.parseLong(amountInput);
-        if (amountValue <= 0) {
-            Toast.makeText(this, "Vui lòng nhập hạn mức!", Toast.LENGTH_SHORT).show();
+        Long amountValue = parseLimitAmount();
+        if (amountValue == null) {
+            Toast.makeText(this, "Hạn mức quá lớn!", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if (amountValue > Long.MAX_VALUE) {
-            Toast.makeText(this, "Hạn mức quá lớn!", Toast.LENGTH_SHORT).show();
+        if (amountValue <= 0) {
+            Toast.makeText(this, "Vui lòng nhập hạn mức!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -212,6 +209,7 @@ public class AddBudgetActivity extends AppCompatActivity {
         );
 
         Executors.newSingleThreadExecutor().execute(() -> {
+            try {
             Budget existingBudget = budgetManager.getBudgetByCategoryPeriod(
                     user.getUserId(),
                     selectedCategory.getId(),
@@ -220,7 +218,11 @@ public class AddBudgetActivity extends AppCompatActivity {
             );
 
             if (existingBudget != null) {
-                runOnUiThread(() -> showExistingBudgetDialog(existingBudget));
+                runOnUiThread(() -> {
+                    if (canUpdateUi()) {
+                        showExistingBudgetDialog(existingBudget);
+                    }
+                });
                 return;
             }
 
@@ -235,6 +237,10 @@ public class AddBudgetActivity extends AppCompatActivity {
                         selectedYear
                 );
                 runOnUiThread(() -> {
+                    if (!canUpdateUi()) {
+                        return;
+                    }
+
                     if (conflictedBudget != null) {
                         showExistingBudgetDialog(conflictedBudget);
                     } else {
@@ -242,9 +248,22 @@ public class AddBudgetActivity extends AppCompatActivity {
                     }
                 });
                 return;
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    if (!canUpdateUi()) {
+                        return;
+                    }
+
+                    Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
+                });
+                return;
             }
 
             runOnUiThread(() -> {
+                if (!canUpdateUi()) {
+                    return;
+                }
+
                 if (result > 0) {
                     Toast.makeText(this, "Lưu ngân sách thành công!", Toast.LENGTH_SHORT).show();
                     finish();
@@ -252,10 +271,34 @@ public class AddBudgetActivity extends AppCompatActivity {
                     Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
                 }
             });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    if (canUpdateUi()) {
+                        Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         });
     }
 
+    private Long parseLimitAmount() {
+        String amountInput = binding.tvAmount.getText().toString().replaceAll("\\D", "").trim();
+        if (amountInput.isEmpty()) {
+            return 0L;
+        }
+
+        try {
+            return Long.parseLong(amountInput);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     private void showExistingBudgetDialog(Budget existingBudget) {
+        if (!canUpdateUi()) {
+            return;
+        }
+
         String categoryName = selectedCategory == null ? "danh mục này" : selectedCategory.getName();
 
         new AlertDialog.Builder(this)
@@ -264,6 +307,10 @@ public class AddBudgetActivity extends AppCompatActivity {
                 .setNegativeButton("Không", null)
                 .setPositiveButton("Sửa", (dialog, which) -> openEditBudget(existingBudget))
                 .show();
+    }
+
+    private boolean canUpdateUi() {
+        return !isFinishing() && !isDestroyed();
     }
 
     private void openEditBudget(Budget budget) {

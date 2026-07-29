@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -20,6 +21,7 @@ import com.example.myapplication.data.dto.BudgetItem;
 import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.FragmentBudgetBinding;
 import com.example.myapplication.manager.BudgetManager;
+import com.example.myapplication.utils.BudgetCalculationUtils;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -114,13 +116,14 @@ public class BudgetFragment extends Fragment {
                     long totalSpent = 0;
                     if (list != null) {
                         for (BudgetItem item : list) {
-                            totalLeft += item.limitAmount - item.spentAmount;
-                            totalLimit += item.limitAmount;
-                            totalSpent += item.spentAmount;
+                            long left = BudgetCalculationUtils.safeSubtract(item.limitAmount, item.spentAmount);
+                            totalLeft = BudgetCalculationUtils.safeAdd(totalLeft, left);
+                            totalLimit = BudgetCalculationUtils.safeAdd(totalLimit, item.limitAmount);
+                            totalSpent = BudgetCalculationUtils.safeAdd(totalSpent, item.spentAmount);
                         }
                     }
 
-                    int percent = totalLimit == 0 ? 0 : (int) ((totalSpent * 100) / totalLimit);
+                    int percent = BudgetCalculationUtils.calculateDisplayPercent(totalSpent, totalLimit);
                     NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
                     binding.tvBudgetLeft.setText(formatter.format(totalLeft));
@@ -170,8 +173,16 @@ public class BudgetFragment extends Fragment {
     private void deleteBudget(int budgetId) {
         Executors.newSingleThreadExecutor().execute(() -> {
             int result = budgetManager.deleteById(budgetId);
-            if (!isAdded()) return;
-            requireActivity().runOnUiThread(() -> {
+            FragmentActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+
+            activity.runOnUiThread(() -> {
+                if (!isAdded() || binding == null) {
+                    return;
+                }
+
                 if (result <= 0) {
                     new AlertDialog.Builder(requireContext())
                             .setMessage("Xóa ngân sách thất bại!")

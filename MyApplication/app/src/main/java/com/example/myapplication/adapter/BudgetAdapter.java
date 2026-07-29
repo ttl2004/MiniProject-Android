@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.data.dto.BudgetItem;
+import com.example.myapplication.utils.BudgetCalculationUtils;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -55,32 +56,22 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
 
         BudgetItem budget = budgetList.get(position);
 
-        // ===== Format tiền VNĐ =====
+
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-        double spent = budget.spentAmount;
-        double total = budget.limitAmount;
 
-        // ===== Tên =====
         holder.tvName.setText(budget.categoryName);
 
-        // ===== Tiền =====
-        long left = budget.limitAmount - budget.spentAmount;
-        String amountText = "Còn " + formatter.format(left) + " / " + formatter.format(total);
+        long left = BudgetCalculationUtils.safeSubtract(budget.limitAmount, budget.spentAmount);
+        String amountText = "Còn " + formatter.format(left) + " / " + formatter.format(budget.limitAmount);
         holder.tvAmount.setText(amountText);
 
-        // ===== % =====
-        int percent = 0;
-        if (total > 0) {
-            percent = (int) ((spent / total) * 100);
-        }
+        int percent = BudgetCalculationUtils.calculateDisplayPercent(budget.spentAmount, budget.limitAmount);
 
         holder.tvPercent.setText(percent + "%");
 
-        // ===== Progress =====
         holder.progressBar.setProgress(Math.min(percent, 100));
 
-        // ===== Đổi màu nếu vượt budget =====
         int statusColor = getStatusColor(percent);
         holder.tvPercent.setTextColor(statusColor);
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(statusColor));
@@ -138,8 +129,9 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
     }
 
     private void bindCategoryIcon(BudgetViewHolder holder, Context context, BudgetItem budget) {
+        String iconName = budget.icon == null ? "" : budget.icon;
         int iconRes = context.getResources().getIdentifier(
-                budget.icon,
+                iconName,
                 "drawable",
                 context.getPackageName()
         );
@@ -183,4 +175,5 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         if (percent >= 60) return Color.parseColor("#1976D2");
         return Color.parseColor("#2E7D32");
     }
+
 }

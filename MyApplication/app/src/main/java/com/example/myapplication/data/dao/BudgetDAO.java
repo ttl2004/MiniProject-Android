@@ -29,12 +29,13 @@ public interface BudgetDAO {
                     "c.icon AS icon, " +
                     "c.color AS color, " +
                     "b.limitAmount AS limitAmount, " +
-                    "IFNULL(SUM(t.amount), 0) AS spentAmount, " +
+                    "IFNULL(SUM(ABS(t.amount)), 0) AS spentAmount, " +
                     "0 AS percent " +
                     "FROM budgets b " +
                     "JOIN categories c ON b.categoryId = c.id " +
                     "LEFT JOIN transactions t " +
                     "ON t.categoryId = b.categoryId " +
+                    "AND t.userId = b.userId " +
                     "AND t.type = 'EXPENSE' " +
                     "AND strftime('%m', t.transactionDate / 1000, 'unixepoch') = :monthText " +
                     "AND strftime('%Y', t.transactionDate / 1000, 'unixepoch') = :year " +
