@@ -38,8 +38,8 @@ public class NotificationManager {
         return notificationRepository.getUnreadCount(userId);
     }
 
-    public void markAllAsRead() {
-        notificationRepository.markAllAsRead();
+    public void markAllAsRead(int userId) {
+        notificationRepository.markAllAsRead(userId);
     }
 
     public void markAsRead(int notificationId) {

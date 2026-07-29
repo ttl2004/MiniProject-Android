@@ -1,8 +1,11 @@
 package com.example.myapplication.data.dto;
 
+import androidx.room.Embedded;
+
 import com.example.myapplication.data.entity.Transaction;
 
 public class TransactionDTO {
+    @Embedded
     private Transaction transaction;
     private String categoryName;
     private String iconName;

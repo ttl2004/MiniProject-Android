@@ -32,9 +32,8 @@ public interface NotificationDAO {
     LiveData<Integer> getUnreadCount(int userId);
 
     // Đánh dấu TẤT CẢ thông báo là ĐÃ ĐỌC
-    @Query("UPDATE notifications SET isRead = 1 WHERE isRead = 0")
-    void markAllAsRead();
-
+    @Query("UPDATE notifications SET isRead = 1 WHERE isRead = 0 AND userId = :userId")
+    void markAllAsRead(int userId);
     // Đánh dấu 1 thông báo cụ thể là ĐÃ ĐỌC
     @Query("UPDATE notifications SET isRead = 1 WHERE id = :notificationId")
     void markAsRead(int notificationId);

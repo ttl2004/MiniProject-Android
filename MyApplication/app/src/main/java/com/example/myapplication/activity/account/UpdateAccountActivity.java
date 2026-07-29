@@ -13,6 +13,8 @@ import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityUpdateAccountBinding;
 import com.example.myapplication.manager.UserManager;
 
+import java.util.concurrent.Executors;
+
 public class UpdateAccountActivity extends AppCompatActivity {
     private static final int MIN_FULL_NAME_LENGTH = 4;
     private static final int MIN_PASSWORD_LENGTH = 8;
@@ -50,19 +52,8 @@ public class UpdateAccountActivity extends AppCompatActivity {
     }
 
     private void initEvents() {
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        binding.btnSaveInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveUserInfo();
-            }
-        });
+        binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnSaveInfo.setOnClickListener(v -> saveUserInfo());
     }
 
     private void saveUserInfo() {
@@ -73,6 +64,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         String password = binding.etPassword.getText().toString().trim();
         String confirmPassword = binding.etConfirmPassword.getText().toString().trim();
 
+        // 1. Validate dữ liệu cơ bản (chạy trên Main Thread)
         if (TextUtils.isEmpty(fullName)) {
             binding.tilFullName.setError("Vui lòng nhập họ tên");
             return;
@@ -86,6 +78,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         boolean wantsToChangePassword = !TextUtils.isEmpty(oldPassword)
                 || !TextUtils.isEmpty(password)
                 || !TextUtils.isEmpty(confirmPassword);
+
         if (wantsToChangePassword) {
             if (TextUtils.isEmpty(oldPassword)) {
                 binding.tilOldPassword.setError("Vui lòng nhập mật khẩu hiện tại!");
@@ -128,16 +121,28 @@ public class UpdateAccountActivity extends AppCompatActivity {
         currentUser.setFullName(fullName);
         currentUser.setUpdatedAt(System.currentTimeMillis());
 
-        int updatedRows = userManager.update(currentUser);
-        if (updatedRows > 0) {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("EXTRA_USER", currentUser);
-            setResult(RESULT_OK, resultIntent);
-            Toast.makeText(this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();
-        }
+        // Vô hiệu hóa nút Save để tránh spam click
+        binding.btnSaveInfo.setEnabled(false);
+
+        // 2. Đẩy thao tác UPDATE sang Luồng Ngầm (Background Thread)
+        Executors.newSingleThreadExecutor().execute(() -> {
+            int updatedRows = userManager.update(currentUser);
+
+            // Cập nhật lại UI sau khi thực thi DB xong
+            runOnUiThread(() -> {
+                binding.btnSaveInfo.setEnabled(true);
+
+                if (updatedRows > 0) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("EXTRA_USER", currentUser);
+                    setResult(RESULT_OK, resultIntent);
+                    Toast.makeText(UpdateAccountActivity.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(UpdateAccountActivity.this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     private void clearInputErrors() {

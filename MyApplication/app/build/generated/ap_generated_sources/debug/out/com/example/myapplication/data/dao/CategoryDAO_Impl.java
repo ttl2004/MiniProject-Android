@@ -324,6 +324,25 @@ public final class CategoryDAO_Impl implements CategoryDAO {
     });
   }
 
+  @Override
+  public int getCategoryCount() {
+    final String _sql = "SELECT COUNT(*) FROM categories";
+    return DBUtil.performBlocking(__db, true, false, (_connection) -> {
+      final SQLiteStatement _stmt = _connection.prepare(_sql);
+      try {
+        final int _result;
+        if (_stmt.step()) {
+          _result = (int) (_stmt.getLong(0));
+        } else {
+          _result = 0;
+        }
+        return _result;
+      } finally {
+        _stmt.close();
+      }
+    });
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

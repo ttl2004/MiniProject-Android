@@ -25,4 +25,7 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM categories WHERE type = :type")
     LiveData<List<Category>> getCategoriesByType(String type);
+
+    @Query("SELECT COUNT(*) FROM categories")
+    int getCategoryCount();
 }

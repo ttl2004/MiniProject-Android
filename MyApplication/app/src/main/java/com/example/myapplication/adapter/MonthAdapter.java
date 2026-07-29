@@ -66,7 +66,7 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
             notifyItemChanged(selectedPosition);
 
             if (listener != null) {
-                listener.onMonthClick(monthModel, selectedPosition);
+                listener.onMonthClick(monthList.get(currentPos), selectedPosition);
             }
         });
     }

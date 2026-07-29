@@ -247,7 +247,23 @@ public class AddTransactionActivity extends AppCompatActivity {
             return;
         }
 
-        long amount = Long.parseLong(amountStr);
+        long amount;
+        try {
+            amount = Long.parseLong(amountStr);
+
+            // Bắt lỗi nếu người dùng nhập 0 đồng
+            if (amount <= 0) {
+                //Toast.makeText(this, "Số tiền phải lớn hơn 0!", Toast.LENGTH_SHORT).show();
+                binding.edtAmount.setError("Số tiền phải lớn hơn 0!");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            // Bắt lỗi tràn số khi người dùng nhập quá 19 chữ số
+           // Toast.makeText(this, "Số tiền quá lớn, vượt quá giới hạn cho phép!", Toast.LENGTH_SHORT).show();
+            binding.edtAmount.setError("Số tiền quá lớn, vượt quá giới hạn cho phép!");
+            binding.edtAmount.requestFocus();
+            return;
+        }
         long transactionDate = selectedCalendar.getTimeInMillis();
 
         if (isEditMode && currentTransaction != null) {
