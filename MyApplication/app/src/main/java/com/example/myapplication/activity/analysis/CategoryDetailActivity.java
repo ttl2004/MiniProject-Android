@@ -95,14 +95,17 @@ public class CategoryDetailActivity extends AppCompatActivity {
         barChart.getDescription().setEnabled(false);
         barChart.setTouchEnabled(true);
         barChart.setDragEnabled(true);
-        barChart.setScaleEnabled(true);
-        barChart.setPinchZoom(true);
+        barChart.setScaleXEnabled(true);
+        barChart.setScaleYEnabled(false);
+        barChart.setPinchZoom(false);
+        barChart.setAutoScaleMinMaxEnabled(true);
         barChart.setDrawGridBackground(false);
         barChart.getAxisRight().setEnabled(false);
         barChart.getLegend().setEnabled(false);
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getAxisLeft().setAxisMinimum(0f);
+        barChart.getAxisLeft().setSpaceTop(30f);
         
         CustomMarkerView mv = new CustomMarkerView(this, R.layout.layout_marker_view);
         mv.setChartView(barChart);

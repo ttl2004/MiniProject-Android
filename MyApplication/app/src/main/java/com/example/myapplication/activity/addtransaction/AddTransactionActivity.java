@@ -17,6 +17,7 @@ import com.example.myapplication.data.entity.User;
 import com.example.myapplication.databinding.ActivityAddTransactionBinding;
 import com.example.myapplication.manager.TransactionManager;
 import com.example.myapplication.utils.NumberTextWatcher;
+import com.example.myapplication.utils.ViewUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,6 +91,8 @@ public class AddTransactionActivity extends AppCompatActivity {
         );
 
         binding.rvCategories.setAdapter(categoryAdapter);
+
+        ViewUtils.disablePaste(binding.edtAmount);
     }
 
     private void setupEvents() {

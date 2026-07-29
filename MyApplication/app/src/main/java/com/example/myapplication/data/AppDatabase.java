@@ -68,7 +68,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             DATABASE_NAME
-                    )
+                    ).allowMainThreadQueries()
                             .addCallback(new DatabaseCallBack(() -> instanse))
                             .addMigrations(MIGRATION_4_5)
                             .fallbackToDestructiveMigration()

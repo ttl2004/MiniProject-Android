@@ -28,8 +28,16 @@
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\bg_budget_status_chip.xml"
     },
     {
+        "merged": "com.example.myapplication.app-debug-37:/layout_activity_category_detail.xml.flat",
+        "source": "com.example.myapplication.app-main-39:/layout/activity_category_detail.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_emerald_logo.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\drawable\\ic_emerald_logo.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_item_transaction_detail_v2.xml.flat",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_transaction_detail_v2.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_activity_notification.xml.flat",
@@ -102,10 +110,6 @@
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\layout_item_notification.xml.flat",
         "source": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-main-39:\\layout\\item_notification.xml"
-    },
-    {
-        "merged": "com.example.myapplication.app-debug-37:/layout_fragment_home.xml.flat",
-        "source": "com.example.myapplication.app-main-39:/layout/fragment_home.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\9.5.0\\com.example.myapplication.app-debug-37:\\drawable_ic_help.xml.flat",

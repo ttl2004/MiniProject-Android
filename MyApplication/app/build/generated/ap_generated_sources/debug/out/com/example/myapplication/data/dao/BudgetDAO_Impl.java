@@ -160,7 +160,7 @@ public final class BudgetDAO_Impl implements BudgetDAO {
   @Override
   public LiveData<List<BudgetItem>> getBudgetItems(final int userId, final int month,
       final int yearInt, final String monthText, final String year) {
-    final String _sql = "SELECT b.id AS budgetId, c.id AS categoryId, c.name AS categoryName, c.icon AS icon, c.color AS color, b.limitAmount AS limitAmount, IFNULL(SUM(t.amount), 0) AS spentAmount, 0 AS percent FROM budgets b JOIN categories c ON b.categoryId = c.id LEFT JOIN transactions t ON t.categoryId = b.categoryId AND t.type = 'EXPENSE' AND strftime('%m', t.transactionDate / 1000, 'unixepoch') = ? AND strftime('%Y', t.transactionDate / 1000, 'unixepoch') = ? WHERE b.userId = ? AND b.month = ? AND b.year = ? GROUP BY b.id";
+    final String _sql = "SELECT b.id AS budgetId, c.id AS categoryId, c.name AS categoryName, c.icon AS icon, c.color AS color, b.limitAmount AS limitAmount, IFNULL(SUM(ABS(t.amount)), 0) AS spentAmount, 0 AS percent FROM budgets b JOIN categories c ON b.categoryId = c.id LEFT JOIN transactions t ON t.categoryId = b.categoryId AND t.userId = b.userId AND t.type = 'EXPENSE' AND strftime('%m', t.transactionDate / 1000, 'unixepoch') = ? AND strftime('%Y', t.transactionDate / 1000, 'unixepoch') = ? WHERE b.userId = ? AND b.month = ? AND b.year = ? GROUP BY b.id";
     return __db.getInvalidationTracker().createLiveData(new String[] {"budgets", "categories",
         "transactions"}, false, (_connection) -> {
       final SQLiteStatement _stmt = _connection.prepare(_sql);

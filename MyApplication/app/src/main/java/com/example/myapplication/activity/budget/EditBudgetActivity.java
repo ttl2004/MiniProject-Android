@@ -14,6 +14,7 @@ import com.example.myapplication.databinding.FragmentAddBudgetBinding;
 import com.example.myapplication.manager.BudgetManager;
 import com.example.myapplication.manager.CategoryManager;
 import com.example.myapplication.utils.NumberTextWatcher;
+import com.example.myapplication.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class EditBudgetActivity extends AppCompatActivity {
 
         binding.tvAmount.addTextChangedListener(new NumberTextWatcher(binding.tvAmount));
         binding.tvAmount.setText(String.valueOf(limitAmount));
+
+        ViewUtils.disablePaste(binding.tvAmount);
     }
 
     private void setupRecyclerView() {

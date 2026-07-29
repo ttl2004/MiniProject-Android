@@ -736,7 +736,7 @@ public class AnalysisFragment extends Fragment {
             }
         });
 
-        barChart.setVisibleXRangeMaximum(7f);
+        barChart.setVisibleXRangeMaximum(12f);
         if (count > 0) {
             barChart.moveViewToX(count - 1);
         }
