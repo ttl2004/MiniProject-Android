@@ -34,7 +34,6 @@ public class EditBudgetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentAddBudgetBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
 
         budgetId = getIntent().getIntExtra("EXTRA_BUDGET_ID", -1);
@@ -48,7 +47,7 @@ public class EditBudgetActivity extends AppCompatActivity {
         binding.budgetPeriodCard.setVisibility(View.GONE);
         setupRecyclerView();
         setupEvents();
-        observeCategories(); // Đã sửa để chỉ lấy danh mục Chi tiêu
+        observeCategories();
 
         binding.tvAmount.addTextChangedListener(new NumberTextWatcher(binding.tvAmount));
         binding.tvAmount.setText(String.valueOf(limitAmount));
@@ -68,9 +67,6 @@ public class EditBudgetActivity extends AppCompatActivity {
         binding.btnSave.setOnClickListener(v -> updateBudget());
     }
 
-    /**
-     * Chỉ nạp các danh mục thuộc loại CHI TIÊU ("EXPENSE")
-     */
     private void observeCategories() {
         categoryManager.getCategoriesByType("EXPENSE").observe(this, categories -> {
             if (categories == null || categories.isEmpty()) {
@@ -85,7 +81,6 @@ public class EditBudgetActivity extends AppCompatActivity {
             categoryList.addAll(categories);
             categoryAdapter.setCategoryList(categoryList);
 
-            // Highlight lại đúng danh mục cũ của Ngân sách đang sửa
             categoryAdapter.selectCategoryById(selectedCategoryId);
             selectedCategory = categoryAdapter.getSelectedCategory();
         });
@@ -102,16 +97,14 @@ public class EditBudgetActivity extends AppCompatActivity {
             return;
         }
 
-        String amountInput = binding.tvAmount.getText().toString().replace(".", "").trim();
-        long amountValue = amountInput.isEmpty() ? 0 : Long.parseLong(amountInput);
-
-        if (amountValue <= 0) {
-            Toast.makeText(this, "Vui lòng nhập hạn mức!", Toast.LENGTH_SHORT).show();
+        Long amountValue = parseLimitAmount();
+        if (amountValue == null) {
+            Toast.makeText(this, "Hạn mức quá lớn!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (amountValue > Long.MAX_VALUE) {
-            Toast.makeText(this, "Hạn mức quá lớn!", Toast.LENGTH_SHORT).show();
+        if (amountValue <= 0) {
+            Toast.makeText(this, "Vui lòng nhập hạn mức!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -124,11 +117,26 @@ public class EditBudgetActivity extends AppCompatActivity {
                         amountValue
                 );
             } catch (SQLiteConstraintException e) {
-                runOnUiThread(() -> Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại trong tháng đã chọn!", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    if (canUpdateUi()) {
+                        Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại trong tháng đã chọn!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return;
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    if (canUpdateUi()) {
+                        Toast.makeText(this, "Cập nhật ngân sách thất bại!", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return;
             }
 
             runOnUiThread(() -> {
+                if (!canUpdateUi()) {
+                    return;
+                }
+
                 if (result > 0) {
                     Toast.makeText(this, "Cập nhật ngân sách thành công!", Toast.LENGTH_SHORT).show();
                     finish();
@@ -137,5 +145,22 @@ public class EditBudgetActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    private Long parseLimitAmount() {
+        String amountInput = binding.tvAmount.getText().toString().replaceAll("\\D", "").trim();
+        if (amountInput.isEmpty()) {
+            return 0L;
+        }
+
+        try {
+            return Long.parseLong(amountInput);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private boolean canUpdateUi() {
+        return !isFinishing() && !isDestroyed();
     }
 }

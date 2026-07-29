@@ -12,9 +12,15 @@ public class NumberTextWatcher implements TextWatcher {
 
     private final EditText editText;
     private String current = "";
+    private final DecimalFormat formatter;
 
     public NumberTextWatcher(EditText editText) {
         this.editText = editText;
+
+        // Cấu hình cố định định dạng dấu chấm (.) làm phân cách hàng nghìn
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
+        symbols.setGroupingSeparator('.');
+        this.formatter = new DecimalFormat("#,###", symbols);
     }
 
     @Override
@@ -28,23 +34,21 @@ public class NumberTextWatcher implements TextWatcher {
         if (!s.toString().equals(current)) {
             editText.removeTextChangedListener(this);
 
-            // Xóa tất cả dấu chấm cũ để lấy chuỗi số thuần túy
-            String cleanString = s.toString().replaceAll("[.]", "");
+            // Xóa tất cả ký tự không phải số (thay vì chỉ xóa dấu chấm [.] cũ)
+            String cleanString = s.toString().replaceAll("[^\\d]", "");
 
             if (!cleanString.isEmpty()) {
                 try {
-                    double parsed = Double.parseDouble(cleanString);
+                    // Dùng Long.parseLong() thay cho Double.parseDouble()
+                    long parsed = Long.parseLong(cleanString);
 
-                    // Cấu hình định dạng dùng dấu . làm phân cách hàng nghìn
-                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("vi", "VN"));
-                    symbols.setGroupingSeparator('.');
-
-                    DecimalFormat formatter = new DecimalFormat("#,###", symbols);
                     String formatted = formatter.format(parsed);
 
                     current = formatted;
                     editText.setText(formatted);
-                    editText.setSelection(formatted.length()); // Đưa con trỏ về cuối
+
+                    // Đưa con trỏ chuột về cuối chuỗi
+                    editText.setSelection(formatted.length());
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -54,6 +58,10 @@ public class NumberTextWatcher implements TextWatcher {
             }
 
             editText.addTextChangedListener(this);
+
+            // BẮT BUỘC: Ép EditText đo đạc lại kích thước ngay lập tức
+            // Dòng này hỗ trợ AutoSize co chữ lại khi chuỗi dài ra
+            editText.requestLayout();
         }
     }
 }

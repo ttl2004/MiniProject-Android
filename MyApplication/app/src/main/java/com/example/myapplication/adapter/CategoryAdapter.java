@@ -56,6 +56,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         if (categoryList == null || categoryList.isEmpty()) {
             return null;
         }
+        if (selectedPosition < 0 || selectedPosition >= categoryList.size()) {
+            selectedPosition = 0;
+        }
         return categoryList.get(selectedPosition);
     }
 
@@ -128,8 +131,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Context context = holder.itemView.getContext();
 
         // icon
+        String iconName = category.getIcon() == null ? "" : category.getIcon();
         int iconRes = context.getResources().getIdentifier(
-                category.getIcon(),
+                iconName,
                 "drawable",
                 context.getPackageName());
 
@@ -170,10 +174,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
             if (selectable) {
 
-                int old = selectedPosition;
-                selectedPosition = holder.getAdapterPosition();
+                int adapterPosition = holder.getBindingAdapterPosition();
+                if (adapterPosition == RecyclerView.NO_POSITION) {
+                    return;
+                }
 
-                notifyItemChanged(old);
+                int old = selectedPosition;
+                selectedPosition = adapterPosition;
+
+                if (old >= 0 && old < getItemCount()) {
+                    notifyItemChanged(old);
+                }
                 notifyItemChanged(selectedPosition);
             }
 
