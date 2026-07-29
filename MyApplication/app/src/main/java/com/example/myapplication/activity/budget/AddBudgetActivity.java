@@ -37,6 +37,9 @@ public class AddBudgetActivity extends AppCompatActivity {
     private int selectedMonth;
     private int selectedYear;
 
+    // 🟢 Cờ trạng thái chống spam click
+    private boolean isSaving = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,7 +179,18 @@ public class AddBudgetActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 🟢 Bật / Tắt trạng thái nút Lưu để tránh người dùng nhấp đúp
+     */
+    private void setSaveButtonEnabled(boolean enabled) {
+        binding.btnSave.setEnabled(enabled);
+        binding.btnSave.setAlpha(enabled ? 1.0f : 0.5f);
+    }
+
     private void saveBudget() {
+        // Chặn nếu tiến trình lưu đang diễn ra
+        if (isSaving) return;
+
         if (user == null) {
             Toast.makeText(this, "Không tìm thấy thông tin người dùng!", Toast.LENGTH_SHORT).show();
             return;
@@ -202,6 +216,10 @@ public class AddBudgetActivity extends AppCompatActivity {
             return;
         }
 
+        // 🟢 Khóa nút bấm lập tức ngay khi qua hết validate
+        isSaving = true;
+        setSaveButtonEnabled(false);
+
         long amount = amountValue;
         Budget budget = new Budget(
                 user.getUserId(),
@@ -213,69 +231,75 @@ public class AddBudgetActivity extends AppCompatActivity {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-            Budget existingBudget = budgetManager.getBudgetByCategoryPeriod(
-                    user.getUserId(),
-                    selectedCategory.getId(),
-                    selectedMonth,
-                    selectedYear
-            );
-
-            if (existingBudget != null) {
-                runOnUiThread(() -> {
-                    if (canUpdateUi()) {
-                        showExistingBudgetDialog(existingBudget);
-                    }
-                });
-                return;
-            }
-
-            long result;
-            try {
-                result = budgetManager.insert(budget);
-            } catch (SQLiteConstraintException e) {
-                Budget conflictedBudget = budgetManager.getBudgetByCategoryPeriod(
+                Budget existingBudget = budgetManager.getBudgetByCategoryPeriod(
                         user.getUserId(),
                         selectedCategory.getId(),
                         selectedMonth,
                         selectedYear
                 );
-                runOnUiThread(() -> {
-                    if (!canUpdateUi()) {
-                        return;
-                    }
 
-                    if (conflictedBudget != null) {
-                        showExistingBudgetDialog(conflictedBudget);
-                    } else {
-                        Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                return;
-            } catch (Exception e) {
-                runOnUiThread(() -> {
-                    if (!canUpdateUi()) {
-                        return;
-                    }
-
-                    Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
-                });
-                return;
-            }
-
-            runOnUiThread(() -> {
-                if (!canUpdateUi()) {
+                if (existingBudget != null) {
+                    runOnUiThread(() -> {
+                        // 🔴 Ngân sách đã tồn tại -> Mở lại nút bấm rồi hiện Dialog hỏi sửa
+                        isSaving = false;
+                        setSaveButtonEnabled(true);
+                        if (canUpdateUi()) {
+                            showExistingBudgetDialog(existingBudget);
+                        }
+                    });
                     return;
                 }
 
-                if (result > 0) {
-                    Toast.makeText(this, "Lưu ngân sách thành công!", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
+                long result;
+                try {
+                    result = budgetManager.insert(budget);
+                } catch (SQLiteConstraintException e) {
+                    Budget conflictedBudget = budgetManager.getBudgetByCategoryPeriod(
+                            user.getUserId(),
+                            selectedCategory.getId(),
+                            selectedMonth,
+                            selectedYear
+                    );
+                    runOnUiThread(() -> {
+                        isSaving = false;
+                        setSaveButtonEnabled(true);
+                        if (!canUpdateUi()) return;
+
+                        if (conflictedBudget != null) {
+                            showExistingBudgetDialog(conflictedBudget);
+                        } else {
+                            Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return;
+                } catch (Exception e) {
+                    runOnUiThread(() -> {
+                        isSaving = false;
+                        setSaveButtonEnabled(true);
+                        if (!canUpdateUi()) return;
+
+                        Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
+                    });
+                    return;
                 }
-            });
+
+                runOnUiThread(() -> {
+                    if (!canUpdateUi()) return;
+
+                    if (result > 0) {
+                        Toast.makeText(this, "Lưu ngân sách thành công!", Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish(); // Quay lại màn hình ngân sách
+                    } else {
+                        isSaving = false;
+                        setSaveButtonEnabled(true);
+                        Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } catch (Exception e) {
                 runOnUiThread(() -> {
+                    isSaving = false;
+                    setSaveButtonEnabled(true);
                     if (canUpdateUi()) {
                         Toast.makeText(this, "Lưu ngân sách thất bại!", Toast.LENGTH_SHORT).show();
                     }
@@ -298,9 +322,7 @@ public class AddBudgetActivity extends AppCompatActivity {
     }
 
     private void showExistingBudgetDialog(Budget existingBudget) {
-        if (!canUpdateUi()) {
-            return;
-        }
+        if (!canUpdateUi()) return;
 
         String categoryName = selectedCategory == null ? "danh mục này" : selectedCategory.getName();
 

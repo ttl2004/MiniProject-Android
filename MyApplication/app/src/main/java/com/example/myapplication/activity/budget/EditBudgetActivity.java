@@ -31,6 +31,9 @@ public class EditBudgetActivity extends AppCompatActivity {
     private int selectedCategoryId;
     private long limitAmount;
 
+    // Cờ trạng thái chống spam click
+    private boolean isSaving = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +92,18 @@ public class EditBudgetActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Bật / Tắt trạng thái nút Cập nhật để tránh bấm nhiều lần
+     */
+    private void setSaveButtonEnabled(boolean enabled) {
+        binding.btnSave.setEnabled(enabled);
+        binding.btnSave.setAlpha(enabled ? 1.0f : 0.5f);
+    }
+
     private void updateBudget() {
+        // Chặn nếu đang xử lý cập nhật
+        if (isSaving) return;
+
         if (budgetId <= 0) {
             Toast.makeText(this, "Không tìm thấy ngân sách cần sửa!", Toast.LENGTH_SHORT).show();
             return;
@@ -111,6 +125,10 @@ public class EditBudgetActivity extends AppCompatActivity {
             return;
         }
 
+        // Khóa nút bấm lập tức khi bắt đầu chạy luồng lưu
+        isSaving = true;
+        setSaveButtonEnabled(false);
+
         Executors.newSingleThreadExecutor().execute(() -> {
             int result;
             try {
@@ -121,6 +139,8 @@ public class EditBudgetActivity extends AppCompatActivity {
                 );
             } catch (SQLiteConstraintException e) {
                 runOnUiThread(() -> {
+                    isSaving = false;
+                    setSaveButtonEnabled(true);
                     if (canUpdateUi()) {
                         Toast.makeText(this, "Ngân sách cho danh mục này đã tồn tại trong tháng đã chọn!", Toast.LENGTH_SHORT).show();
                     }
@@ -128,6 +148,8 @@ public class EditBudgetActivity extends AppCompatActivity {
                 return;
             } catch (Exception e) {
                 runOnUiThread(() -> {
+                    isSaving = false;
+                    setSaveButtonEnabled(true);
                     if (canUpdateUi()) {
                         Toast.makeText(this, "Cập nhật ngân sách thất bại!", Toast.LENGTH_SHORT).show();
                     }
@@ -136,14 +158,15 @@ public class EditBudgetActivity extends AppCompatActivity {
             }
 
             runOnUiThread(() -> {
-                if (!canUpdateUi()) {
-                    return;
-                }
+                if (!canUpdateUi()) return;
 
                 if (result > 0) {
                     Toast.makeText(this, "Cập nhật ngân sách thành công!", Toast.LENGTH_SHORT).show();
-                    finish();
+                    setResult(RESULT_OK);
+                    finish(); // Quay lại màn hình ngân sách
                 } else {
+                    isSaving = false;
+                    setSaveButtonEnabled(true);
                     Toast.makeText(this, "Cập nhật ngân sách thất bại!", Toast.LENGTH_SHORT).show();
                 }
             });

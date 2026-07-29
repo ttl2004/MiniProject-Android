@@ -41,6 +41,9 @@ public class AddTransactionActivity extends AppCompatActivity {
     private Transaction currentTransaction = null;
     private boolean isEditMode = false;
 
+    // 🟢 Cờ trạng thái chống spam click
+    private boolean isSaving = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +95,7 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         binding.rvCategories.setAdapter(categoryAdapter);
 
+        // Chặn paste ô nhập tiền
         ViewUtils.disablePaste(binding.edtAmount);
     }
 
@@ -139,9 +143,6 @@ public class AddTransactionActivity extends AppCompatActivity {
         switchType(currentTransaction.getType() != null ? currentTransaction.getType() : "EXPENSE");
     }
 
-    /**
-     * Chuyển đổi tab Chi tiêu / Thu nhập & Gọi load lại danh mục
-     */
     private void switchType(String type) {
         selectedType = type;
         selectedCategory = null; // Reset danh mục đã chọn trước đó
@@ -160,20 +161,15 @@ public class AddTransactionActivity extends AppCompatActivity {
             binding.tabExpense.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
         }
 
-        // Tải danh mục theo loại (EXPENSE / INCOME)
         loadCategoriesByType(type);
     }
 
-    /**
-     * Lọc và nạp danh sách danh mục từ CSDL theo type
-     */
     private void loadCategoriesByType(String type) {
         transactionManager.getCategoriesByType(type).observe(this, dbCategories -> {
             if (dbCategories != null && !dbCategories.isEmpty()) {
                 categoryList = dbCategories;
                 categoryAdapter.setCategoryList(categoryList);
 
-                // Nếu ở chế độ EDIT & cùng type với giao dịch cũ: Highlight đúng Category cũ
                 if (isEditMode && currentTransaction != null && type.equals(currentTransaction.getType())) {
                     for (Category cat : categoryList) {
                         if (cat.getId() == currentTransaction.getCategoryId()) {
@@ -184,7 +180,6 @@ public class AddTransactionActivity extends AppCompatActivity {
                     }
                 }
 
-                // Nếu chưa chọn được category nào (hoặc vừa đổi tab): Tự động chọn item đầu tiên
                 if (selectedCategory == null && !categoryList.isEmpty()) {
                     selectedCategory = categoryList.get(0);
                     categoryAdapter.setSelectedCategory(selectedCategory);
@@ -236,7 +231,18 @@ public class AddTransactionActivity extends AppCompatActivity {
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
+    /**
+     * 🟢 Bật / Tắt trạng thái nút Lưu để chống trùng lặp dữ liệu
+     */
+    private void setSaveButtonEnabled(boolean enabled) {
+        binding.btnSaveTransaction.setEnabled(enabled);
+        binding.btnSaveTransaction.setAlpha(enabled ? 1.0f : 0.5f);
+    }
+
     private void saveTransaction() {
+        // Chặn nếu đang trong tiến trình lưu
+        if (isSaving) return;
+
         String amountStr = binding.edtAmount.getText().toString().replaceAll("[.]", "").trim();
         String note = binding.edtNote.getText().toString().trim();
 
@@ -254,19 +260,20 @@ public class AddTransactionActivity extends AppCompatActivity {
         try {
             amount = Long.parseLong(amountStr);
 
-            // Bắt lỗi nếu người dùng nhập 0 đồng
             if (amount <= 0) {
-                //Toast.makeText(this, "Số tiền phải lớn hơn 0!", Toast.LENGTH_SHORT).show();
                 binding.edtAmount.setError("Số tiền phải lớn hơn 0!");
                 return;
             }
         } catch (NumberFormatException e) {
-            // Bắt lỗi tràn số khi người dùng nhập quá 19 chữ số
-           // Toast.makeText(this, "Số tiền quá lớn, vượt quá giới hạn cho phép!", Toast.LENGTH_SHORT).show();
             binding.edtAmount.setError("Số tiền quá lớn, vượt quá giới hạn cho phép!");
             binding.edtAmount.requestFocus();
             return;
         }
+
+        // 🟢 Validate hợp lệ -> Khóa nút Lưu lập tức
+        isSaving = true;
+        setSaveButtonEnabled(false);
+
         long transactionDate = selectedCalendar.getTimeInMillis();
 
         if (isEditMode && currentTransaction != null) {
@@ -282,7 +289,8 @@ public class AddTransactionActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Cập nhật giao dịch thành công!", Toast.LENGTH_SHORT).show();
-                    finish();
+                    setResult(RESULT_OK);
+                    finish(); // Quay lại RecyclerView
                 });
             });
 
@@ -303,8 +311,12 @@ public class AddTransactionActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (result > 0) {
                         Toast.makeText(this, "Lưu giao dịch thành công!", Toast.LENGTH_SHORT).show();
-                        finish();
+                        setResult(RESULT_OK);
+                        finish(); // Quay lại RecyclerView
                     } else {
+                        // 🔴 Thất bại -> Mở lại nút để người dùng ấn thử lại
+                        isSaving = false;
+                        setSaveButtonEnabled(true);
                         Toast.makeText(this, "Lưu giao dịch thất bại!", Toast.LENGTH_SHORT).show();
                     }
                 });
